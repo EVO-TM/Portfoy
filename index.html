@@ -50,20 +50,18 @@
             60% { transform: scale(1.05); opacity: 1; }
             100% { transform: scale(1); opacity: 1; }
         }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         @keyframes floatUp {
             0% { transform: translateY(0) rotate(0deg); opacity: 0; }
             100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
         }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes likeBounce { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
         @keyframes highlightFlash { 
             0% { border-color: var(--accent); transform: scale(1); } 
             50% { border-color: var(--s-red); transform: scale(1.02); } 
             100% { border-color: var(--accent); transform: scale(1); }
         }
 
-        /* --- DİL BUTONU (YENİ) --- */
+        /* --- DİL BUTONU --- */
         .lang-switch {
             position: fixed; top: 20px; right: 20px;
             background: white; border: 2px solid var(--ink);
@@ -94,7 +92,7 @@
         .loading-text { color: white; font-weight: bold; letter-spacing: 2px; }
         .loader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
-        /* --- ARKA PLAN (GLOBAL) --- */
+        /* --- ARKA PLAN --- */
         #bg-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1; overflow: hidden; pointer-events: none;
@@ -104,16 +102,16 @@
             animation: floatUp linear infinite; bottom: -50px;
         }
 
-        /* --- NAV DOCK (KARTON) --- */
+        /* --- MENÜ (NAV DOCK) --- */
         .nav-dock-wrapper {
             position: fixed; bottom: 30px;
             display: flex; justify-content: center;
-            z-index: 100; width: 100%; pointer-events: none; /* Wrapper tıklamayı engellemesin */
+            z-index: 100; width: 100%; pointer-events: none;
         }
         .nav-dock {
-            pointer-events: auto; /* Dock tıklanabilir olsun */
+            pointer-events: auto;
             background-color: #e6dcc6;
-            background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636l-1.414 1.414L38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23d1c4a5' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636l-1.414 1.414L38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636l-1.414 1.414L38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23d1c4a5' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
             padding: 12px 15px; border-radius: 18px; display: flex; gap: 15px;
             border: 3px solid #2d241e;
             box-shadow: 6px 6px 0px #b0a082, 10px 10px 15px rgba(0,0,0,0.15);
@@ -125,7 +123,6 @@
             border-left: 2px dashed rgba(255,255,255,0.6); border-right: 2px dashed rgba(255,255,255,0.6);
             box-shadow: 0 2px 4px rgba(0,0,0,0.1); backdrop-filter: blur(2px); pointer-events: none; z-index: 101;
         }
-        .nav-dock:hover { transform: translateY(-5px); }
         .nav-btn {
             width: 60px; height: 60px; border-radius: 12px; background: #fffcf5;
             border: 3px solid #2d241e; font-size: 24px; cursor: pointer;
@@ -133,16 +130,14 @@
             color: #2d241e; box-shadow: 0 5px 0 #2d241e;
             transition: all 0.1s ease-in-out; position: relative; margin-bottom: 5px;
         }
-        .nav-btn i { transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 0 #2d241e; background: #fff; }
-        .nav-btn:hover i { transform: scale(1.15) rotate(5deg); }
-        .nav-btn:active, .nav-btn.active {
+        .nav-btn i { transition: transform 0.2s; }
+        .nav-btn.active {
             transform: translateY(5px); box-shadow: 0 0 0 #2d241e;
             border-color: #2d241e; background: var(--s-yellow);
         }
         .nav-btn.active i { transform: scale(1.1); color: var(--ink); }
 
-        /* --- SAHNE --- */
+        /* --- SAYFALAR --- */
         .stage {
             width: 100%; max-width: 1000px; height: 80vh;
             position: relative; display: flex;
@@ -155,41 +150,22 @@
             align-items: center; justify-content: center;
             padding: 20px;
         }
-        
-        /* Geçiş Animasyonu Tetikleyicileri */
+        .page-section.active { display: flex; }
         .page-section.active .cardboard-box,
         .page-section.active .project-card,
         .page-section.active .cardboard-about,
         .page-section.active .simple-card,
         .page-section.active .news-container {
-            display: flex; 
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            display: flex; animation: popIn 0.5s forwards;
         }
-        .page-section.active { display: flex; }
 
-        /* --- HOME (KARTON KUTU) --- */
-        .home-scene-wrapper {
-            position: relative; width: 100%; height: 100%;
-            display: flex; justify-content: center; align-items: center; overflow: hidden;
-        }
-        .floating-element {
-            position: absolute; color: rgba(45, 36, 30, 0.1); 
-            font-size: 3rem; z-index: -1; animation: floatAround 15s infinite linear;
-        }
-        @keyframes floatAround {
-            0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
-            20% { opacity: 0.6; }
-            80% { opacity: 0.6; }
-            100% { transform: translate(100px, -150px) rotate(360deg); opacity: 0; }
-        }
+        /* --- HOME --- */
         .cardboard-box {
-            width: 420px; height: 600px;
-            background-color: #dcbfa6; 
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+            width: 420px; height: 600px; background-color: #dcbfa6; 
             border-radius: 15px; position: relative;
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            box-shadow: 1px 1px 0 #c2a68c, 2px 2px 0 #c2a68c, 3px 3px 0 #c2a68c, 4px 4px 0 #c2a68c, 25px 25px 40px rgba(0,0,0,0.2); 
+            box-shadow: 25px 25px 40px rgba(0,0,0,0.2); 
             border: 2px solid #bba38e; padding: 30px;
             text-align: center; transform-style: preserve-3d;
         }
@@ -197,330 +173,176 @@
             position: absolute; background: rgba(255, 255, 255, 0.4);
             box-shadow: 0 1px 3px rgba(0,0,0,0.1); backdrop-filter: blur(2px); z-index: 10;
         }
-        .tape-top-left {
-            width: 120px; height: 35px; top: -15px; left: -30px;
-            transform: rotate(-35deg); border-left: 2px dashed rgba(255,255,255,0.5); border-right: 2px dashed rgba(255,255,255,0.5);
-        }
-        .tape-bottom-right {
-            width: 100px; height: 35px; bottom: 10px; right: -25px;
-            transform: rotate(-40deg); border-left: 2px dashed rgba(255,255,255,0.5); border-right: 2px dashed rgba(255,255,255,0.5);
-        }
+        .tape-top-left { width: 120px; height: 35px; top: -15px; left: -30px; transform: rotate(-35deg); border: 2px dashed rgba(255,255,255,0.5); }
+        .tape-bottom-right { width: 100px; height: 35px; bottom: 10px; right: -25px; transform: rotate(-40deg); border: 2px dashed rgba(255,255,255,0.5); }
         .fragile-sticker {
             position: absolute; top: 30px; right: 30px;
             border: 3px solid #d63031; color: #d63031; padding: 5px 10px;
-            font-weight: 900; font-size: 14px; transform: rotate(15deg);
-            border-radius: 6px; opacity: 0.8; text-transform: uppercase; letter-spacing: 2px;
-            mask-image: url("data:image/svg+xml,%3Csvg width='200' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
+            font-weight: 900; font-size: 14px; transform: rotate(15deg); border-radius: 6px;
         }
         .polaroid-photo {
             background: #fff; padding: 15px 15px 40px 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.15); transform: rotate(-3deg);
-            margin-bottom: 25px; width: 220px; position: relative; transition: transform 0.3s;
+            margin-bottom: 25px; width: 220px; position: relative;
         }
-        .polaroid-photo:hover { transform: rotate(0deg) scale(1.05); }
         .polaroid-photo img { width: 100%; height: auto; background: #f0f0f0; display: block; }
         .polaroid-tape {
-            position: absolute; top: -15px; left: 50%;
-            transform: translateX(-50%) rotate(2deg); width: 60px; height: 25px;
-            background: rgba(230, 200, 100, 0.6); box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(2deg); 
+            width: 60px; height: 25px; background: rgba(230, 200, 100, 0.6);
         }
         .stamp-title {
             font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 48px;
             color: #2d241e; text-transform: uppercase; line-height: 0.9;
-            margin: 10px 0; opacity: 0.9; text-shadow: 1px 1px 0px rgba(255,255,255,0.4); transform: rotate(-2deg);
-        }
-        .box-desc {
-            color: #5d4e42; font-family: 'Courier New', monospace; font-weight: bold;
-            font-size: 16px; margin-bottom: 30px; max-width: 80%;
+            margin: 10px 0; transform: rotate(-2deg);
         }
         .sticker-btn {
             background: #ff6b6b; color: white; font-weight: 800; font-size: 18px;
             padding: 15px 40px; border-radius: 50px 20px 60px 30px;
             text-decoration: none; border: 3px solid white; box-shadow: 0 8px 0 rgba(0,0,0,0.15);
-            transition: all 0.2s; display: inline-block; transform: rotate(2deg); position: relative; overflow: hidden;
+            transition: all 0.2s; display: inline-block; transform: rotate(2deg);
         }
-        .sticker-btn:hover { transform: rotate(0deg) scale(1.1); background: #ff5252; }
-        .sticker-btn::before {
-            content: ''; position: absolute; top: 5px; left: 10px; width: 10px; height: 10px;
-            background: rgba(255,255,255,0.5); border-radius: 50%;
-        }
+        .sticker-btn:active { transform: scale(0.95); }
 
-        /* --- YENİ KARTON ABOUT (HAKKIMDA) --- */
+        /* --- ABOUT --- */
         .cardboard-about {
-            background-color: #dcbfa6;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
-            border: 3px solid #bba38e;
-            border-radius: 20px;
-            width: 100%; max-width: 850px;
-            padding: 50px 40px;
-            display: flex; align-items: center; gap: 50px;
-            position: relative;
-            box-shadow: 10px 10px 0 rgba(0,0,0,0.1), 0 20px 50px rgba(0,0,0,0.1);
-        }
-        .about-tape-top {
-            position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(1deg);
-            width: 150px; height: 40px; background: rgba(255,255,255,0.35);
-            border-left: 2px dashed rgba(255,255,255,0.6); border-right: 2px dashed rgba(255,255,255,0.6);
-            backdrop-filter: blur(2px); box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background-color: #dcbfa6; border: 3px solid #bba38e;
+            border-radius: 20px; width: 100%; max-width: 850px;
+            padding: 50px 40px; display: flex; align-items: center; gap: 50px;
+            position: relative; box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
         }
         .cb-text-content { flex: 1; text-align: left; }
-        
-        /* Founder Damgası */
         .founder-stamp {
-            border: 3px solid #9b59b6; color: #9b59b6;
-            padding: 5px 15px; font-weight: 900; font-family: 'Courier New', monospace;
-            display: inline-block; transform: rotate(-3deg); margin-bottom: 15px;
-            border-radius: 8px; opacity: 0.8; letter-spacing: 1px;
-            mask-image: url("data:image/svg+xml,%3Csvg width='200' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.6'/%3E%3C/svg%3E");
+            border: 3px solid #9b59b6; color: #9b59b6; padding: 5px 15px; 
+            font-weight: 900; display: inline-block; transform: rotate(-3deg); margin-bottom: 15px; border-radius: 8px;
         }
-
-        .cb-title {
-            font-size: 38px; font-weight: 900; margin: 0 0 20px 0;
-            color: #2d241e; line-height: 1.1;
-        }
-        .ink-highlight { color: #6c5ce7; position: relative; }
-        .ink-highlight::after {
-            content: ''; position: absolute; bottom: 2px; left: 0; width: 100%; height: 8px;
-            background: rgba(108, 92, 231, 0.2); z-index: -1; transform: rotate(-1deg);
-        }
-
-        .cb-bio {
-            font-family: 'Courier New', monospace; font-weight: bold;
-            color: #5d4e42; font-size: 16px; line-height: 1.6; margin-bottom: 25px;
-        }
-
-        /* Sticker İkonlar */
+        .cb-title { font-size: 38px; font-weight: 900; margin: 0 0 20px 0; color: #2d241e; }
+        .cb-bio { font-family: 'Courier New', monospace; font-weight: bold; color: #5d4e42; font-size: 16px; margin-bottom: 25px; }
         .cb-socials { display: flex; gap: 15px; }
         .social-sticker {
             width: 50px; height: 50px; background: white; border: 2px solid #2d241e;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 22px; color: #2d241e; text-decoration: none;
-            box-shadow: 2px 2px 0 rgba(0,0,0,0.2); transition: 0.2s;
+            font-size: 22px; color: #2d241e; text-decoration: none; box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
         }
-        .social-sticker:hover { transform: scale(1.1) rotate(10deg); background: #fffae6; }
-        
-        /* --- REFERANS FOTOĞRAF KARTI (AVATAR) --- */
-        .cb-avatar-wrapper { position: relative; }
         .ref-avatar-card {
-            background: white;
-            border: 2px solid #1a1a1a; /* Siyah ince çerçeve */
-            padding: 10px 10px 20px 10px; /* Üst/Yanlar dar, alt geniş */
-            width: 260px;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
-            transform: rotate(3deg);
+            background: white; border: 2px solid #1a1a1a; padding: 10px 10px 20px 10px;
+            width: 260px; box-shadow: 5px 5px 15px rgba(0,0,0,0.2); transform: rotate(3deg);
             display: flex; flex-direction: column; align-items: center;
-            transition: transform 0.3s ease;
         }
-        .ref-avatar-card:hover { transform: rotate(0deg) scale(1.02); }
-
-        /* Fotoğraf Alanı */
-        .ref-photo-frame {
-            width: 100%; height: 260px;
-            background: #f2f2f2; /* Gri arka plan */
-            overflow: hidden;
-            display: flex; justify-content: center; align-items: flex-end;
-            border: 1px solid #eee;
-        }
-        .ref-photo-frame img {
-            width: 100%; height: 100%; object-fit: contain; transform: scale(0.95);
-        }
-
-        /* Alt Metin Alanı */
-        .ref-card-info { margin-top: 15px; text-align: center; font-family: 'Outfit', sans-serif; }
-        .ref-name { font-weight: 900; font-size: 24px; color: #000; letter-spacing: -0.5px; }
-        .ref-handle { color: #999; font-weight: 600; font-size: 14px; margin-top: 2px; }
-
-        /* Kartı Tutan Bant */
+        .ref-photo-frame { width: 100%; height: 260px; background: #f2f2f2; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; }
+        .ref-photo-frame img { width: 100%; height: 100%; object-fit: contain; transform: scale(0.95); }
+        .ref-card-info { margin-top: 15px; text-align: center; }
         .card-tape {
             position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
-            width: 80px; height: 30px; background: rgba(254, 202, 87, 0.7); /* Sarımsı bant */
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1); z-index: 2;
+            width: 80px; height: 30px; background: rgba(254, 202, 87, 0.7); box-shadow: 0 1px 2px rgba(0,0,0,0.1); z-index: 2;
         }
 
-
-        /* --- DİĞER KARTLAR (NEWS, PROJECT, FREE) --- */
-        .project-card {
+        /* --- PROJECT & FREE --- */
+        .project-card, .simple-card {
             background: #fff; border: 4px solid var(--ink); border-radius: 25px; padding: 10px;
             width: 100%; max-width: 500px; flex-direction: column; text-align: center;
             box-shadow: 15px 15px 0 rgba(0,0,0,0.1); position: relative;
         }
-        .game-thumb {
-            width: 100%; height: 280px; background: #333; border-radius: 18px;
-            overflow: hidden; border: 2px solid #eee; position: relative;
-        }
-        .game-thumb img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
-        .game-thumb:hover img { transform: scale(1.05); }
-        .game-info { padding: 20px; }
-        .game-title { font-size: 32px; font-weight: 900; margin: 0; color: var(--ink); }
-        .play-big-btn {
+        .game-thumb { width: 100%; height: 280px; background: #333; border-radius: 18px; overflow: hidden; }
+        .game-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .play-big-btn, .creator-store-link {
             display: block; width: 100%; background: #00b894; color: white;
             padding: 15px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 18px;
-            margin-top: 15px; border: 3px solid var(--ink); box-shadow: 0 5px 0 var(--ink); transition: 0.1s;
+            margin-top: 15px; border: 3px solid var(--ink); box-shadow: 0 5px 0 var(--ink);
         }
-        .play-big-btn:hover { transform: translateY(2px); box-shadow: 0 3px 0 var(--ink); filter: brightness(1.1); }
+        .creator-store-link { background: linear-gradient(135deg, #0984e3, #6c5ce7); display:flex; justify-content:center; gap:10px; align-items:center; }
 
-        .simple-card {
-            background: #fff; border: 3px solid var(--ink); border-radius: 20px; padding: 40px;
-            width: 100%; max-width: 600px; box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
-            display: flex; flex-direction: column; align-items: center; text-align: center;
-        }
-        .creator-store-link {
-            background: linear-gradient(135deg, #0984e3, #6c5ce7); color: white;
-            padding: 20px; width: 100%; margin-top: 20px; border-radius: 15px; text-decoration: none;
-            border: 3px solid var(--ink); display: flex; align-items: center; justify-content: center; gap: 15px;
-            font-size: 20px; font-weight: bold; transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .creator-store-link:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4); }
-
+        /* --- NEWS --- */
         .news-container {
             background: #fafafa; border: 4px solid var(--ink); border-radius: 30px; 
             width: 100%; max-width: 650px; height: 75vh; 
             display: flex; flex-direction: column;
             box-shadow: 15px 15px 0 rgba(0,0,0,0.1); position: relative; overflow: hidden;
-            font-family: 'Inter', sans-serif;
         }
-        .news-header-modern {
-            padding: 20px 25px; background: rgba(255,255,255,0.95);
-            border-bottom: 2px solid #eee; display: flex; justify-content: space-between; align-items: center; z-index: 10;
-        }
-        .nh-title { font-family: 'Outfit', sans-serif; font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-        .news-scroll-area { flex: 1; overflow-y: auto; padding: 20px 25px 50px 25px; scroll-behavior: smooth; }
-        .news-scroll-area::-webkit-scrollbar { width: 6px; }
-        .news-scroll-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .news-header-modern { padding: 20px; background: white; border-bottom: 2px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .nh-title { font-weight: 800; font-size: 24px; display: flex; align-items: center; gap: 10px; }
+        .news-scroll-area { flex: 1; overflow-y: auto; padding: 20px; -webkit-overflow-scrolling: touch; }
         .news-card {
             background: white; border-radius: 20px; border: 1px solid #e0e0e0;
-            margin-bottom: 30px; overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative;
+            margin-bottom: 30px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.03); position: relative;
         }
-        .news-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); border-color: var(--accent); }
-        .news-card.pinned { border: 2px solid var(--s-yellow); background: #fffcf0; order: -1; }
-        .pin-badge {
-            position: absolute; top: 15px; right: 15px; color: var(--s-yellow); font-size: 18px; 
-            transform: rotate(45deg); z-index: 5; filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.1));
-        }
-        .news-card.highlight-news {
-            border: 3px solid var(--accent); animation: highlightFlash 1s ease-in-out;
-            box-shadow: 0 0 20px rgba(108, 92, 231, 0.4);
-        }
-        .nc-header { padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; }
-        .nc-user { display: flex; align-items: center; gap: 10px; }
-        .nc-user-icon { 
-            width: 32px; height: 32px; background: var(--ink); color:white;
-            border-radius: 8px; display:flex; align-items:center; justify-content:center; font-size: 14px;
-        }
+        .news-card.pinned { border: 2px solid var(--s-yellow); background: #fffcf0; }
+        .pin-badge { position: absolute; top: 15px; right: 15px; color: var(--s-yellow); font-size: 18px; transform: rotate(45deg); }
+        .nc-header { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .nc-user { display: flex; gap: 10px; align-items: center; }
+        .nc-user-icon { width: 35px; height: 35px; background: var(--ink); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
         .nc-info { display: flex; flex-direction: column; }
-        .nc-name { font-weight: 800; font-size: 15px; color: var(--ink); }
+        .nc-name { font-weight: 800; font-size: 15px; }
         .nc-date { font-size: 12px; color: #888; }
-        .nc-tag { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; color: white; letter-spacing: 0.5px; }
-        .nc-media-wrapper {
-            width: 100%; height: auto; background: #000; position: relative;
-            display: flex; justify-content: center; align-items: center; min-height: 250px; cursor: zoom-in;
-        }
-        .nc-media { width: 100%; height: 100%; max-height: 400px; object-fit: cover; display: block; }
-        iframe.nc-media { height: 300px; border:none; }
+        .nc-tag { padding: 3px 10px; border-radius: 15px; font-size: 11px; font-weight: 700; color: white; }
+        .nc-media-wrapper { width: 100%; background: #000; display: flex; justify-content: center; }
+        .nc-media { width: 100%; max-height: 400px; object-fit: cover; display: block; }
         .nc-content { padding: 20px; }
-        .nc-title { 
-            font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800; 
-            margin: 0 0 10px 0; line-height: 1.3; transition: color 0.2s;
-        }
-        .nc-title:hover { color: var(--accent); }
-        .nc-desc { font-size: 15px; color: #444; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; }
-        .nc-actions {
-            padding: 10px 20px 20px 20px; display: flex; gap: 20px; border-top: 1px solid #f5f5f5; margin-top: 10px;
-        }
-        .action-btn {
-            background: none; border: none; cursor: pointer; font-size: 20px; color: #888;
-            display: flex; align-items: center; gap: 6px; transition: 0.2s; font-family: 'Outfit', sans-serif; font-weight: 600;
-        }
-        .action-btn:hover { transform: scale(1.1); }
-        .action-btn.like-btn:hover { color: #ff4757; }
+        .nc-title { font-weight: 800; font-size: 20px; margin: 0 0 10px 0; }
+        .nc-desc { color: #444; line-height: 1.5; white-space: pre-wrap; }
+        .nc-actions { padding: 15px 20px; display: flex; gap: 20px; border-top: 1px solid #eee; }
+        .action-btn { background: none; border: none; font-size: 18px; color: #888; display: flex; gap: 5px; align-items: center; cursor: pointer; }
         .action-btn.liked { color: #ff4757; }
-        .action-btn.liked i { animation: likeBounce 0.4s; }
-        .action-btn span { font-size: 14px; }
-        
-        .sticker {
-            position: absolute; width: 45px; height: 45px;
-            background: #fff; border: 3px solid var(--ink);
-            border-radius: 10px; font-size: 20px;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 4px 4px 0 rgba(0,0,0,0.2); z-index: 15;
+
+        /* --- LIGHTBOX --- */
+        #lightbox {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 999999;
+            display: none; justify-content: center; align-items: center;
         }
-        .st-1 { top: 20px; right: -20px; transform: rotate(15deg); color: var(--s-yellow); }
+        #lightbox.active { display: flex; }
+        #lightbox img { max-width: 95%; max-height: 90%; border-radius: 5px; }
+
+        /* --- TOAST --- */
         .toast-notification {
             position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(50px);
             background: var(--ink); color: white; padding: 12px 25px; border-radius: 50px;
-            display: flex; align-items: center; gap: 10px; font-weight: bold;
+            display: flex; gap: 10px; align-items: center; font-weight: bold;
             opacity: 0; visibility: hidden; transition: 0.3s; z-index: 9999;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
         .toast-notification.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-        #lightbox {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 999999;
-            display: none; justify-content: center; align-items: center;
-            cursor: zoom-out; opacity: 0; transition: opacity 0.3s;
-        }
-        #lightbox.active { display: flex; opacity: 1; }
-        #lightbox img {
-            max-width: 90%; max-height: 90%; border-radius: 8px;
-            box-shadow: 0 0 50px rgba(255,255,255,0.1); transform: scale(0.9); transition: transform 0.3s;
-        }
-        #lightbox.active img { transform: scale(1); }
 
-        /* --- MOBİL UYUMLULUK AYARLARI --- */
+        /* --- MOBİL UYUMLULUK --- */
         @media (max-width: 768px) {
-            .nav-dock { width: 95%; gap: 10px; justify-content: space-evenly; padding: 10px 5px; }
-            .nav-btn { width: 50px; height: 50px; font-size: 20px; }
-            .cardboard-about { flex-direction: column-reverse; padding: 30px; text-align: center; }
+            .nav-dock { width: 95%; padding: 10px; gap: 5px; }
+            .nav-btn { width: 45px; height: 45px; font-size: 20px; }
+            .cardboard-about { flex-direction: column-reverse; padding: 30px 20px; text-align: center; }
             .cb-text-content { text-align: center; }
             .cb-socials { justify-content: center; }
-            .simple-card { width: 90%; padding: 25px; }
-            .news-container { width: 95%; height: 78vh; border-width: 3px; }
-            .cardboard-box { width: 90%; height: auto; padding: 40px 20px; transform: none !important; /* Mobilde Tilt İptal */ }
+            .news-container { width: 95%; height: 75vh; }
+            .cardboard-box { width: 90%; height: auto; transform: none !important; }
             .stamp-title { font-size: 36px; }
-            .floating-element { display: none; /* Mobilde performans için arka plan ikonları gizle */ }
-            /* Mobilde kutuların taşmasını önle */
-            .page-section { padding: 10px; }
-            .project-card { width: 95%; }
-            .game-thumb { height: 200px; }
+            .floating-element { display: none; }
+            .project-card, .simple-card { width: 95%; }
+            .game-thumb { height: 180px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- DİL DEĞİŞTİRME BUTONU -->
     <div class="lang-switch">
         <button class="lang-btn active" id="btn-tr" onclick="changeLanguage('tr')">TR</button>
         <button class="lang-btn" id="btn-en" onclick="changeLanguage('en')">EN</button>
     </div>
 
-    <!-- YÜKLEME EKRANI -->
     <div id="loader">
         <div class="spinner"></div>
         <div class="loading-text">EVO STUDIOS...</div>
     </div>
 
-    <!-- HAREKETLİ ARKA PLAN (Global) -->
     <div id="bg-container"></div>
 
-    <!-- TOAST BİLDİRİMİ -->
     <div id="toast" class="toast-notification">
         <i class="fa-solid fa-check-circle" style="color:var(--s-green)"></i>
         <span id="toast-msg">Link Kopyalandı!</span>
     </div>
 
-    <!-- LIGHTBOX (Tam Ekran Resim) -->
     <div id="lightbox" onclick="closeLightbox()">
         <img id="lightbox-img" src="" alt="Full Screen Preview">
     </div>
 
-    <!-- MENÜ (NAV DOCK) - KARTON TEMA -->
     <div class="nav-dock-wrapper">
         <div class="nav-dock">
-            <!-- Bant Süsü -->
             <div class="dock-tape"></div>
-            
             <div class="nav-btn active" data-target="home"><i class="fa-solid fa-house"></i></div>
             <div class="nav-btn" data-target="project"><i class="fa-solid fa-gamepad"></i></div>
             <div class="nav-btn" data-target="news"><i class="fa-solid fa-newspaper"></i></div>
@@ -531,15 +353,11 @@
 
     <div class="stage">
         
-        <!-- === HOME (KARTON TEMA) === -->
+        <!-- HOME -->
         <div id="home" class="page-section active">
             <div class="home-scene-wrapper">
                 <div class="floating-element" style="top:10%; left:10%; animation-duration:12s;"><i class="fa-solid fa-cube"></i></div>
-                <div class="floating-element" style="top:20%; right:15%; animation-duration:18s;"><i class="fa-solid fa-code"></i></div>
-                <div class="floating-element" style="bottom:30%; left:5%; animation-duration:15s; font-size:4rem;"><i class="fa-solid fa-gamepad"></i></div>
                 <div class="floating-element" style="bottom:10%; right:10%; animation-duration:20s;"><i class="fa-solid fa-puzzle-piece"></i></div>
-                <div class="floating-element" style="top:50%; left:80%; animation-duration:14s; color:rgba(255,0,0,0.2);"><i class="fa-solid fa-heart"></i></div>
-
                 <div class="cardboard-box" id="tiltCard">
                     <div class="box-tape tape-top-left"></div>
                     <div class="box-tape tape-bottom-right"></div>
@@ -557,18 +375,16 @@
             </div>
         </div>
 
-        <!-- === PROJECT === -->
+        <!-- PROJECT -->
         <div id="project" class="page-section">
             <div class="project-card">
-                <div class="sticker st-1" style="top:-20px; right:-20px; background:var(--s-red); color:white;"><i class="fa-solid fa-fire"></i></div>
+                <div class="sticker" style="top:-20px; right:-20px; background:var(--s-red); color:white; transform:rotate(15deg); box-shadow:4px 4px 0 rgba(0,0,0,0.2);"><i class="fa-solid fa-fire"></i></div>
                 <div class="game-thumb">
                     <img src="test_place.png" alt="Test Place Game" onerror="this.src='https://via.placeholder.com/500x300/2b303b/ffffff?text=Oyun+Gorseli'">
                 </div>
                 <div class="game-info">
                     <h2 class="game-title">Test Place</h2>
-                    <p style="color:#666; margin: 10px 0 20px 0;" data-t="project_desc">
-                        Geliştirmekte olduğumuz yeni mekanikleri ve sistemleri test ettiğimiz özel alan.
-                    </p>
+                    <p style="color:#666; margin: 10px 0 20px 0;" data-t="project_desc">Geliştirmekte olduğumuz yeni mekanikleri ve sistemleri test ettiğimiz özel alan.</p>
                     <a href="https://www.roblox.com/games/OYUN_ID_YAZ" target="_blank" class="play-big-btn">
                         <i class="fa-solid fa-play"></i> <span data-t="play_btn">Roblox'ta Oyna</span>
                     </a>
@@ -576,7 +392,7 @@
             </div>
         </div>
 
-        <!-- === HABERLER === -->
+        <!-- NEWS -->
         <div id="news" class="page-section">
             <div class="news-container">
                 <div class="news-header-modern">
@@ -591,41 +407,29 @@
             </div>
         </div>
 
-        <!-- === FREE MODELS === -->
+        <!-- FREE -->
         <div id="free" class="page-section">
             <div class="simple-card">
-                <div style="font-size: 50px; color: var(--s-green); margin-bottom: 20px;">
-                    <i class="fa-solid fa-cubes"></i>
-                </div>
+                <div style="font-size: 50px; color: var(--s-green); margin-bottom: 20px;"><i class="fa-solid fa-cubes"></i></div>
                 <h2 style="margin:0; font-size:32px;" data-t="my_creations">Benim Eserlerim</h2>
-                <p style="color:#666; margin-top:10px;" data-t="creations_desc">
-                    Roblox projelerin için hazırladığım ücretsiz modelleri ve özel assetleri buradan bulabilirsin.
-                </p>
+                <p style="color:#666; margin-top:10px;" data-t="creations_desc">Roblox projelerin için hazırladığım ücretsiz modelleri ve özel assetleri buradan bulabilirsin.</p>
                 <a href="https://create.roblox.com/store/list/LINKINI_YAZ" target="_blank" class="creator-store-link">
                     <i class="fa-solid fa-store"></i> <span data-t="store_btn">Creator Store</span>
                 </a>
             </div>
         </div>
 
-        <!-- === ABOUT (YENİLENMİŞ REFERANS STİLİ) === -->
+        <!-- ABOUT -->
         <div id="about" class="page-section">
             <div class="cardboard-about">
-                <!-- Üst Bant Süsü -->
                 <div class="about-tape-top"></div>
-
-                <!-- Sol: Yazı İçeriği -->
                 <div class="cb-text-content">
-                    <div class="founder-stamp">
-                        <i class="fa-solid fa-crown"></i> FOUNDER
-                    </div>
-                    
+                    <div class="founder-stamp"><i class="fa-solid fa-crown"></i> FOUNDER</div>
                     <h2 class="cb-title"><span data-t="hello">MERHABA, BEN</span> <span class="ink-highlight">BURAK</span></h2>
-                    
                     <p class="cb-bio">
                         <span data-t="bio_1">Roblox platformunda sıradan fikirleri</span> <span style="background:var(--s-yellow);" data-t="bio_2">olağanüstü deneyimlere</span> <span data-t="bio_3">dönüştürüyorum.</span><br><br>
                         <span data-t="bio_4">Profesyonel Scripter & UI Designer olarak,</span> <span data-t="bio_5">Evo Studios çatısı altında hayal gücünün sınırlarını zorluyorum.</span>
                     </p>
-
                     <div class="cb-socials">
                         <a href="https://discord.gg/95hcq9HVfn" target="_blank" class="social-sticker"><i class="fa-brands fa-discord"></i></a>
                         <a href="https://x.com/EvoEvostudios" target="_blank" class="social-sticker"><i class="fa-brands fa-x-twitter"></i></a>
@@ -633,400 +437,273 @@
                         <a href="https://www.roblox.com/groups/GRUP_ID_YAZ" target="_blank" class="social-sticker"><i class="fa-solid fa-users-rectangle"></i></a>
                     </div>
                 </div>
-
-                <!-- Sağ: Referans Resme Göre Avatar Kartı -->
                 <div class="cb-avatar-wrapper">
-                    <!-- Bant -->
                     <div class="card-tape"></div>
-                    
                     <div class="ref-avatar-card">
-                        <!-- Fotoğraf Alanı -->
                         <div class="ref-photo-frame">
                             <img id="my-avatar" src="" alt="Avatar" onerror="this.src='https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png'">
                         </div>
-                        <!-- Bilgi Alanı -->
                         <div class="ref-card-info">
                             <div class="ref-name">EVO</div>
                             <div class="ref-handle" id="rbx-user">@SuBuOyundaYTBR</div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 
     </div>
 
     <script>
-        // --- AYARLAR ---
         const ROBLOX_ID = '1992693538'; 
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwcjpNiivxXJk5UeQA5Rbjpv9sJ_I-ZdQRBRfjVxebKUwWWtd2sM-BXRb4dPcLeYqQA/exec';
-        let avatarUrl = "https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png";
-        let currentLang = localStorage.getItem('siteLang') || 'tr'; // Varsayılan Dil
+        let currentLang = localStorage.getItem('siteLang') || 'tr';
 
-        // --- ÇOKLU DİL SİSTEMİ (Gelişmiş) ---
         const langData = {
             tr: {
-                home_subtitle: "Ultimate Roblox Development",
-                about_me_btn: "Hakkımda",
-                project_desc: "Geliştirmekte olduğumuz yeni mekanikleri ve sistemleri test ettiğimiz özel alan.",
-                play_btn: "Roblox'ta Oyna",
-                news_title: "Akış",
-                my_creations: "Benim Eserlerim",
-                creations_desc: "Roblox projelerin için hazırladığım ücretsiz modelleri ve özel assetleri buradan bulabilirsin.",
-                store_btn: "Creator Store",
-                founder_badge: "Evo Studios Kurucusu",
-                hello: "MERHABA, BEN",
-                bio_1: "Roblox platformunda sıradan fikirleri",
-                bio_2: "olağanüstü deneyimlere",
-                bio_3: "dönüştürüyorum.",
-                bio_4: "Profesyonel Scripter & UI Designer olarak,",
-                bio_5: "Evo Studios çatısı altında hayal gücünün sınırlarını zorluyorum.",
-                loading: "Yükleniyor...",
-                share_btn: "Paylaş",
-                default_tag: "Duyuru",
-                toast_copy: "Link Kopyalandı!",
-                toast_fail: "Kopyalama Başarısız!"
+                home_subtitle: "Ultimate Roblox Development", about_me_btn: "Hakkımda", project_desc: "Geliştirmekte olduğumuz yeni mekanikleri ve sistemleri test ettiğimiz özel alan.",
+                play_btn: "Roblox'ta Oyna", news_title: "Akış", my_creations: "Benim Eserlerim", creations_desc: "Roblox projelerin için hazırladığım ücretsiz modelleri ve özel assetleri buradan bulabilirsin.",
+                store_btn: "Creator Store", hello: "MERHABA, BEN", bio_1: "Roblox platformunda sıradan fikirleri", bio_2: "olağanüstü deneyimlere",
+                bio_3: "dönüştürüyorum.", bio_4: "Profesyonel Scripter & UI Designer olarak,", bio_5: "Evo Studios çatısı altında hayal gücünün sınırlarını zorluyorum.",
+                loading: "Yükleniyor...", share_btn: "Paylaş", default_tag: "Duyuru", toast_copy: "Link Kopyalandı!", toast_fail: "Kopyalama Başarısız!",
+                retry: "Tekrar Dene"
             },
             en: {
-                home_subtitle: "Ultimate Roblox Development",
-                about_me_btn: "About Me",
-                project_desc: "A special area where we test new mechanics and systems we are developing.",
-                play_btn: "Play on Roblox",
-                news_title: "Feed",
-                my_creations: "My Creations",
-                creations_desc: "Here you can find free models and custom assets I prepared for your Roblox projects.",
-                store_btn: "Creator Store",
-                founder_badge: "Founder of Evo Studios",
-                hello: "HELLO, I'M",
-                bio_1: "I turn ordinary ideas into",
-                bio_2: "extraordinary experiences",
-                bio_3: "on the Roblox platform.",
-                bio_4: "As a professional Scripter & UI Designer,",
-                bio_5: "I push the limits of imagination under Evo Studios.",
-                loading: "Loading...",
-                share_btn: "Share",
-                default_tag: "Announcement",
-                toast_copy: "Link Copied!",
-                toast_fail: "Copy Failed!"
+                home_subtitle: "Ultimate Roblox Development", about_me_btn: "About Me", project_desc: "A special area where we test new mechanics and systems we are developing.",
+                play_btn: "Play on Roblox", news_title: "Feed", my_creations: "My Creations", creations_desc: "Here you can find free models and custom assets I prepared for your Roblox projects.",
+                store_btn: "Creator Store", hello: "HELLO, I'M", bio_1: "I turn ordinary ideas into", bio_2: "extraordinary experiences",
+                bio_3: "on the Roblox platform.", bio_4: "As a professional Scripter & UI Designer,", bio_5: "I push the limits of imagination under Evo Studios.",
+                loading: "Loading...", share_btn: "Share", default_tag: "Announcement", toast_copy: "Link Copied!", toast_fail: "Copy Failed!",
+                retry: "Retry"
             }
         };
 
         function changeLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('siteLang', lang);
-            
-            // Buton Aktifliği
+            currentLang = lang; localStorage.setItem('siteLang', lang);
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + lang).classList.add('active');
-
-            // Statik Metinleri Güncelle
-            const elements = document.querySelectorAll('[data-t]');
-            elements.forEach(el => {
+            document.querySelectorAll('[data-t]').forEach(el => {
                 const key = el.getAttribute('data-t');
-                if (langData[lang][key]) {
-                    el.innerText = langData[lang][key];
-                }
+                if (langData[lang][key]) el.innerText = langData[lang][key];
             });
-
-            // Haberleri Yeniden Yükle (Dile göre arayüz değişimi için)
             loadNewsFromSheet();
         }
 
-        // --- PRELOADER ---
         function removeLoader() {
             const loader = document.getElementById('loader');
             if (loader) loader.classList.add('loader-hidden');
         }
-        window.addEventListener('load', () => {
-            changeLanguage(currentLang); // Başlangıç dilini ayarla
-            removeLoader();
-            handleUrlParams();
-        });
-        setTimeout(removeLoader, 2500); 
 
-        // --- TAB GEÇİŞLERİ ---
+        window.addEventListener('load', () => {
+            changeLanguage(currentLang);
+            removeLoader();
+            fetchRobloxData();
+        });
+
+        // --- TAB SİSTEMİ ---
         const navBtns = document.querySelectorAll('.nav-btn');
         const sections = document.querySelectorAll('.page-section');
         navBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                switchTab(btn.getAttribute('data-target'));
+                navBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                sections.forEach(s => s.classList.remove('active'));
+                document.getElementById(btn.getAttribute('data-target')).classList.add('active');
             });
         });
-        function switchTab(id) {
-            navBtns.forEach(b => b.classList.remove('active'));
-            const activeBtn = document.querySelector(`.nav-btn[data-target="${id}"]`);
-            if(activeBtn) activeBtn.classList.add('active');
-            
-            sections.forEach(s => s.classList.remove('active'));
-            const activeSec = document.getElementById(id);
-            if(activeSec) activeSec.classList.add('active');
-        }
+        function switchTab(id) { document.querySelector(`.nav-btn[data-target="${id}"]`).click(); }
 
         // --- MEDYA YARDIMCILARI ---
         function getMediaContent(url) {
             if (!url || url.length < 5) return '';
             let clean = url.trim();
-
             if (clean.includes('youtube.com') || clean.includes('youtu.be')) {
                 const match = clean.match(/(?:v=|\/)([\w-]{11})/);
-                if (match && match[1]) {
-                     return `<iframe class="nc-media" src="https://www.youtube.com/embed/${match[1]}" allowfullscreen></iframe>`;
-                }
+                if (match && match[1]) return `<iframe class="nc-media" src="https://www.youtube.com/embed/${match[1]}" allowfullscreen></iframe>`;
             }
-            if (clean.match(/\.(mp4|webm|mov)$/i)) {
-                return `<video src="${clean}" class="nc-media" controls></video>`;
-            }
+            if (clean.match(/\.(mp4|webm|mov)$/i)) return `<video src="${clean}" class="nc-media" controls></video>`;
             if (clean.includes('drive.google.com')) {
-                const idMatch = clean.match(/\/d\/([a-zA-Z0-9_-]+)/) || clean.match(/id=([a-zA-Z0-9_-]+)/);
-                if (idMatch) clean = `https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
+                const match = clean.match(/\/d\/([a-zA-Z0-9_-]+)/) || clean.match(/id=([a-zA-Z0-9_-]+)/);
+                if (match) clean = `https://drive.google.com/uc?export=view&id=${match[1]}`;
             }
-            return `<img src="${clean}" class="nc-media" alt="Medya" onclick="openLightbox('${clean}')" style="cursor:zoom-in" onerror="this.parentElement.style.display='none'">`;
+            return `<img src="${clean}" class="nc-media" onclick="openLightbox('${clean}')" onerror="this.parentElement.style.display='none'">`;
         }
 
-        // --- HABERLERİ ÇEKME (PROXY FIX) ---
+        // --- GÜÇLENDİRİLMİŞ HABER ÇEKME (PROXY FALLBACK) ---
         async function loadNewsFromSheet() {
             const feed = document.getElementById('news-feed');
-            
             if(feed.querySelector('.loading-spinner')) {
                 feed.innerHTML = `<div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> <span>${langData[currentLang].loading}</span></div>`;
             }
 
             try {
-                // FALLBACK MEKANİZMASI: Önce Proxy'yi dene, olmazsa Script'i dene
                 let rawData;
-                const uniqueParam = '&t=' + new Date().getTime();
+                const uniqueParam = '&t=' + new Date().getTime(); // Önbelleği önler
                 
+                // 1. DENEME: CodeTabs (En Hızlısı)
                 try {
-                    // YÖNTEM 1: CodeTabs Proxy (Daha hızlıdır ama bazen mobilde takılır)
                     const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
                     const res = await fetch(proxyUrl);
-                    if(!res.ok) throw new Error("Proxy Failed");
+                    if(!res.ok) throw new Error("Proxy Error");
                     rawData = await res.json();
-                } catch(proxyError) {
-                    console.log("Proxy başarısız, doğrudan fetch deneniyor...", proxyError);
-                    // YÖNTEM 2: Doğrudan Google Script (Daha yavaştır ama mobilde çalışır)
-                    const directRes = await fetch(SCRIPT_URL + "?dummy=1" + uniqueParam);
-                    if(!directRes.ok) throw new Error("Direct Fetch Failed");
-                    // Google script doğrudan JSON dönmez, redirect eder. Bu yüzden text alıp parse etmek gerekebilir.
-                    // Ancak "echo" parametresi ile JSONP benzeri bir yapı kurmadığımız için burada 
-                    // en garanti yöntem YÖNTEM 3: AllOrigins Proxy'dir.
-                    
-                    const backupProxy = 'https://api.allorigins.win/get?url=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
-                    const backupRes = await fetch(backupProxy);
-                    if(!backupRes.ok) throw new Error("Backup Proxy Failed");
-                    const backupJson = await backupRes.json();
-                    rawData = JSON.parse(backupJson.contents);
+                } catch(e) {
+                    console.log("CodeTabs başarısız, AllOrigins deneniyor...");
+                    // 2. DENEME: AllOrigins (Daha Kararlı)
+                    const backupUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
+                    const res2 = await fetch(backupUrl);
+                    if(!res2.ok) throw new Error("AllOrigins Error");
+                    const json2 = await res2.json();
+                    rawData = JSON.parse(json2.contents);
                 }
 
                 if(rawData.error) throw new Error(rawData.error);
 
                 const rows = rawData.reverse();
-                let pinnedPosts = [];
-                let regularPosts = [];
-
-                rows.forEach(item => {
-                    const isPinned = item.pinned && item.pinned.toString().toLowerCase() === 'yes';
-                    if(isPinned) pinnedPosts.push(item);
-                    else regularPosts.push(item);
-                });
-
-                const finalRows = [...pinnedPosts, ...regularPosts];
                 let htmlContent = '';
                 
+                // Pinli postları ayırma
+                const pinned = rows.filter(r => r.pinned && r.pinned.toString().toLowerCase() === 'yes');
+                const others = rows.filter(r => !r.pinned || r.pinned.toString().toLowerCase() !== 'yes');
+                const finalRows = [...pinned, ...others];
+
                 finalRows.forEach((item) => {
                     if(!item.baslik) return;
-
-                    const uniqueId = item.id;
-                    const mediaHtml = getMediaContent(item.gorsel);
-                    
-                    const iLikedIt = localStorage.getItem('liked_' + uniqueId) === 'true';
-                    const likeClass = iLikedIt ? 'liked' : '';
-                    const likeIcon = iLikedIt ? 'fa-solid' : 'fa-regular';
-                    const serverLikes = item.likes;
-
-                    const pinnedClass = (item.pinned && item.pinned.toString().toLowerCase() === 'yes') ? 'pinned' : '';
-                    const pinnedIcon = pinnedClass ? '<i class="fa-solid fa-thumbtack pin-badge"></i>' : '';
-
-                    let dateStr = item.tarih;
-                    if(dateStr && dateStr.toString().includes('T')) {
-                        dateStr = dateStr.toString().split('T')[0];
-                    }
-
-                    const tagText = item.etiket || langData[currentLang].default_tag;
-                    const shareText = langData[currentLang].share_btn;
+                    const id = item.id;
+                    const date = item.tarih ? item.tarih.toString().split('T')[0] : '';
+                    const isLiked = localStorage.getItem('liked_' + id) === 'true';
+                    const likeClass = isLiked ? 'liked' : '';
+                    const likeIcon = isLiked ? 'fa-solid' : 'fa-regular';
+                    const pinIcon = (item.pinned && item.pinned.toString().toLowerCase() === 'yes') ? '<i class="fa-solid fa-thumbtack pin-badge"></i>' : '';
+                    const tag = item.etiket || langData[currentLang].default_tag;
 
                     htmlContent += `
-                    <div class="news-card ${pinnedClass}" id="${uniqueId}">
-                        ${pinnedIcon}
+                    <div class="news-card ${pinIcon ? 'pinned' : ''}" id="${id}">
+                        ${pinIcon}
                         <div class="nc-header">
                             <div class="nc-user">
                                 <div class="nc-user-icon"><i class="fa-solid fa-gamepad"></i></div>
-                                <div class="nc-info">
-                                    <span class="nc-name">Evo Studios</span>
-                                    <span class="nc-date">${dateStr}</span>
-                                </div>
+                                <div class="nc-info"><span class="nc-name">Evo Studios</span><span class="nc-date">${date}</span></div>
                             </div>
-                            <span class="nc-tag" style="background:${item.renk || '#333'}">${tagText}</span>
+                            <span class="nc-tag" style="background:${item.renk || '#333'}">${tag}</span>
                         </div>
-                        ${mediaHtml ? `<div class="nc-media-wrapper">${mediaHtml}</div>` : ''}
+                        <div class="nc-media-wrapper">${getMediaContent(item.gorsel)}</div>
                         <div class="nc-content">
                             <h3 class="nc-title">${item.baslik}</h3>
                             <p class="nc-desc">${item.icerik}</p>
                         </div>
                         <div class="nc-actions">
-                            <button class="action-btn like-btn ${likeClass}" onclick="toggleLike(this, '${uniqueId}')">
-                                <i class="${likeIcon} fa-heart"></i> <span class="like-count">${serverLikes}</span>
+                            <button class="action-btn like-btn ${likeClass}" onclick="toggleLike(this, '${id}')">
+                                <i class="${likeIcon} fa-heart"></i> <span class="like-count">${item.likes}</span>
                             </button>
-                            <button class="action-btn" onclick="sharePost('${uniqueId}')">
-                                <i class="fa-regular fa-paper-plane"></i> <span>${shareText}</span>
+                            <button class="action-btn" onclick="sharePost('${id}')">
+                                <i class="fa-regular fa-paper-plane"></i> <span>${langData[currentLang].share_btn}</span>
                             </button>
                         </div>
                     </div>`;
                 });
-                feed.innerHTML = htmlContent || '<div style="text-align:center; padding:20px;">...</div>';
-                checkDeepLink();
+                feed.innerHTML = htmlContent;
+                
+                // Deep Link Kontrolü
+                const urlParams = new URLSearchParams(window.location.search);
+                const postId = urlParams.get('post');
+                if(postId) {
+                    const el = document.getElementById(postId);
+                    if(el) { switchTab('news'); setTimeout(() => el.scrollIntoView({block:'center'}), 500); el.classList.add('highlight-news'); }
+                }
+
             } catch (err) {
-                console.error("Yükleme Hatası:", err);
-                feed.innerHTML = `<div style="text-align:center; color:red; padding:20px;">
-                    <i class="fa-solid fa-triangle-exclamation"></i><br>
-                    <small>${err.message}</small><br>
-                    <button onclick="loadNewsFromSheet()" style="margin-top:10px; padding:5px 10px; cursor:pointer;">Tekrar Dene</button>
+                console.error(err);
+                feed.innerHTML = `<div style="text-align:center; padding:20px; color:#ff4757;">
+                    <i class="fa-solid fa-triangle-exclamation"></i><br>Bağlantı Hatası.<br>
+                    <button onclick="loadNewsFromSheet()" style="margin-top:10px; padding:8px 15px; border-radius:5px; border:none; background:var(--ink); color:white; font-weight:bold;">${langData[currentLang].retry}</button>
                 </div>`;
             }
         }
 
-        // --- LIKE SİSTEMİ ---
         function toggleLike(btn, id) {
             if(btn.disabled) return;
             btn.disabled = true;
-
             const icon = btn.querySelector('i');
             const span = btn.querySelector('.like-count');
-            let currentCount = parseInt(span.innerText) || 0;
+            let count = parseInt(span.innerText) || 0;
             let isLiked = btn.classList.contains('liked');
-            let action = isLiked ? 'unlike' : 'like';
-
-            if (isLiked) {
-                btn.classList.remove('liked');
-                icon.classList.remove('fa-solid');
-                icon.classList.add('fa-regular');
-                span.innerText = Math.max(0, currentCount - 1);
-                localStorage.removeItem('liked_' + id);
+            
+            if(isLiked) {
+                btn.classList.remove('liked'); icon.className = 'fa-regular fa-heart';
+                span.innerText = Math.max(0, count - 1); localStorage.removeItem('liked_'+id);
             } else {
-                btn.classList.add('liked');
-                icon.classList.remove('fa-regular');
-                icon.classList.add('fa-solid');
-                span.innerText = currentCount + 1;
-                localStorage.setItem('liked_' + id, 'true');
+                btn.classList.add('liked'); icon.className = 'fa-solid fa-heart';
+                span.innerText = count + 1; localStorage.setItem('liked_'+id, 'true');
             }
 
             fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: id, action: action })
-            })
-            .then(() => { setTimeout(() => { btn.disabled = false; }, 500); })
-            .catch(err => { console.error("Like error:", err); btn.disabled = false; });
+                method: 'POST', mode: 'no-cors',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: id, action: isLiked ? 'unlike' : 'like'})
+            }).then(() => setTimeout(() => btn.disabled = false, 500))
+              .catch(() => btn.disabled = false);
         }
 
-        // --- LIGHTBOX ---
-        function openLightbox(url) {
-            if(!url) return;
-            const lightbox = document.getElementById('lightbox');
-            const img = document.getElementById('lightbox-img');
-            img.src = url;
-            lightbox.classList.add('active');
-        }
-        function closeLightbox() {
-            const lightbox = document.getElementById('lightbox');
-            lightbox.classList.remove('active');
-            setTimeout(() => { document.getElementById('lightbox-img').src = ''; }, 300);
+        function sharePost(id) {
+            navigator.clipboard.writeText(window.location.origin + window.location.pathname + '?post=' + id)
+                .then(() => showToast(langData[currentLang].toast_copy))
+                .catch(() => showToast(langData[currentLang].toast_fail));
         }
 
-        // --- PAYLAŞMA & TOAST ---
         function showToast(msg) {
             const t = document.getElementById('toast');
-            const m = document.getElementById('toast-msg');
-            m.innerText = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
-        }
-        function sharePost(id) {
-            const url = window.location.origin + window.location.pathname + '?post=' + id;
-            navigator.clipboard.writeText(url)
-                .then(() => { showToast(langData[currentLang].toast_copy); })
-                .catch(() => { showToast(langData[currentLang].toast_fail); });
+            document.getElementById('toast-msg').innerText = msg;
+            t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
         }
 
-        // --- URL PARAMETRE YÖNETİMİ ---
-        function handleUrlParams() { /* loadNews zaten changeLanguage içinde çağrılıyor */ }
-        function checkDeepLink() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const postId = urlParams.get('post');
-            if(postId) {
-                const element = document.getElementById(postId);
-                if(element) {
-                    switchTab('news');
-                    setTimeout(() => {
-                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        element.classList.add('highlight-news');
-                    }, 500); 
-                }
-            }
+        function openLightbox(url) {
+            document.getElementById('lightbox-img').src = url;
+            document.getElementById('lightbox').classList.add('active');
         }
+        function closeLightbox() { document.getElementById('lightbox').classList.remove('active'); }
 
-        // --- ROBLOX AVATAR ---
         async function fetchRobloxData() {
-            const imgEl = document.getElementById('my-avatar');
-            const userEl = document.getElementById('rbx-user');
             try {
-                const url = `https://thumbnails.roblox.com/v1/users/avatar?userIds=${ROBLOX_ID}&size=420x420&format=Png&isCircular=false`;
-                const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url);
-                const res = await fetch(proxyUrl);
+                // Avatar
+                const res = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(`https://thumbnails.roblox.com/v1/users/avatar?userIds=${ROBLOX_ID}&size=420x420&format=Png&isCircular=false`)}`);
                 const data = await res.json();
-                if (data.data && data.data[0] && data.data[0].imageUrl) {
-                    imgEl.src = data.data[0].imageUrl;
-                    avatarUrl = data.data[0].imageUrl; 
-                } else { imgEl.src = avatarUrl; }
-
-                const userUrl = `https://users.roblox.com/v1/users/${ROBLOX_ID}`;
-                const userProxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(userUrl);
-                const userRes = await fetch(userProxyUrl);
-                const userData = await userRes.json();
-                if (userData.name) { userEl.innerText = "@" + userData.name; }
-            } catch (err) { console.log("Roblox API Hatası:", err); imgEl.src = avatarUrl; }
+                if(data.data && data.data[0]) document.getElementById('my-avatar').src = data.data[0].imageUrl;
+                
+                // Username
+                const res2 = await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(`https://users.roblox.com/v1/users/${ROBLOX_ID}`)}`);
+                const data2 = await res2.json();
+                if(data2.name) document.getElementById('rbx-user').innerText = "@" + data2.name;
+            } catch(e) {}
         }
 
-        // --- TILT EFEKT (HOME) ---
-        const homeCard = document.getElementById('tiltCard');
-        document.getElementById('home').addEventListener('mousemove', (e) => {
-            if(window.innerWidth > 768) {
-                const rect = homeCard.getBoundingClientRect();
-                const x = e.clientX - (rect.left + rect.width / 2);
-                const y = e.clientY - (rect.top + rect.height / 2);
-                homeCard.style.transform = `perspective(1000px) rotateY(${x/60}deg) rotateX(${-y/60}deg)`;
-            }
-        });
-        document.getElementById('home').addEventListener('mouseleave', () => {
-            homeCard.style.transform = 'perspective(1000px) rotateY(0) rotateX(0)';
-        });
+        // TILT EFFECT (Sadece Masaüstü)
+        if(window.innerWidth > 768) {
+            const card = document.getElementById('tiltCard');
+            document.getElementById('home').addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - (rect.left + rect.width/2);
+                const y = e.clientY - (rect.top + rect.height/2);
+                card.style.transform = `perspective(1000px) rotateY(${x/60}deg) rotateX(${-y/60}deg)`;
+            });
+            document.getElementById('home').addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateY(0) rotateX(0)';
+            });
+        }
 
-        // --- ARKA PLAN İKONLARI ---
-        const bgContainer = document.getElementById('bg-container');
+        // ARKA PLAN İKONLARI
         const icons = ['fa-gamepad', 'fa-ghost', 'fa-dice', 'fa-puzzle-piece', 'fa-rocket', 'fa-bolt', 'fa-code', 'fa-dragon'];
-        for(let i=0; i<15; i++) {
-            const el = document.createElement('i');
-            el.className = `fa-solid ${icons[Math.floor(Math.random() * icons.length)]} bg-icon`;
-            el.style.left = Math.random() * 100 + 'vw';
-            el.style.fontSize = (Math.random() * 30 + 15) + 'px';
-            el.style.animationDuration = (Math.random() * 10 + 10) + 's';
-            el.style.animationDelay = (Math.random() * 5) + 's';
-            bgContainer.appendChild(el);
+        const container = document.getElementById('bg-container');
+        if(window.innerWidth > 768) { // Mobilde performansı artırmak için kapatılabilir
+            for(let i=0; i<15; i++) {
+                const el = document.createElement('i');
+                el.className = `fa-solid ${icons[Math.floor(Math.random()*icons.length)]} bg-icon`;
+                el.style.left = Math.random()*100 + 'vw';
+                el.style.fontSize = (Math.random()*30 + 15) + 'px';
+                el.style.animationDuration = (Math.random()*10 + 10) + 's';
+                el.style.animationDelay = (Math.random()*5) + 's';
+                container.appendChild(el);
+            }
         }
-
-        fetchRobloxData();
     </script>
 </body>
 </html>
