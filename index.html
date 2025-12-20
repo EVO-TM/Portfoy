@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Evo Studios | Portfolio</title>
     
     <!-- SİTE LOGOSU (FAVICON) -->
@@ -28,7 +28,7 @@
         }
 
         /* --- TEMEL & ANİMASYONLAR --- */
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             background-color: var(--bg-color);
             background-image: 
@@ -39,7 +39,7 @@
             font-family: 'Outfit', sans-serif;
             color: var(--ink);
             margin: 0; padding: 0;
-            height: 100vh; overflow: hidden; 
+            height: 100vh; width: 100vw; overflow: hidden; 
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
         }
@@ -62,6 +62,21 @@
             50% { border-color: var(--s-red); transform: scale(1.02); } 
             100% { border-color: var(--accent); transform: scale(1); }
         }
+
+        /* --- DİL BUTONU (YENİ) --- */
+        .lang-switch {
+            position: fixed; top: 20px; right: 20px;
+            background: white; border: 2px solid var(--ink);
+            border-radius: 50px; padding: 5px;
+            display: flex; gap: 5px; z-index: 1000;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+        }
+        .lang-btn {
+            border: none; background: none; padding: 5px 12px;
+            font-weight: 800; font-size: 14px; cursor: pointer;
+            border-radius: 20px; transition: 0.2s; color: #999;
+        }
+        .lang-btn.active { background: var(--ink); color: white; }
 
         /* --- PRELOADER --- */
         #loader {
@@ -93,9 +108,10 @@
         .nav-dock-wrapper {
             position: fixed; bottom: 30px;
             display: flex; justify-content: center;
-            z-index: 100;
+            z-index: 100; width: 100%; pointer-events: none; /* Wrapper tıklamayı engellemesin */
         }
         .nav-dock {
+            pointer-events: auto; /* Dock tıklanabilir olsun */
             background-color: #e6dcc6;
             background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636l-1.414 1.414L38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23d1c4a5' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
             padding: 12px 15px; border-radius: 18px; display: flex; gap: 15px;
@@ -452,20 +468,32 @@
         }
         #lightbox.active img { transform: scale(1); }
 
+        /* --- MOBİL UYUMLULUK AYARLARI --- */
         @media (max-width: 768px) {
             .nav-dock { width: 95%; gap: 10px; justify-content: space-evenly; padding: 10px 5px; }
             .nav-btn { width: 50px; height: 50px; font-size: 20px; }
             .cardboard-about { flex-direction: column-reverse; padding: 30px; text-align: center; }
             .cb-text-content { text-align: center; }
             .cb-socials { justify-content: center; }
-            .simple-card { width: 90%; }
-            .news-container { width: 95%; height: 82vh; }
-            .cardboard-box { width: 90%; height: auto; padding: 40px 20px; }
+            .simple-card { width: 90%; padding: 25px; }
+            .news-container { width: 95%; height: 78vh; border-width: 3px; }
+            .cardboard-box { width: 90%; height: auto; padding: 40px 20px; transform: none !important; /* Mobilde Tilt İptal */ }
             .stamp-title { font-size: 36px; }
+            .floating-element { display: none; /* Mobilde performans için arka plan ikonları gizle */ }
+            /* Mobilde kutuların taşmasını önle */
+            .page-section { padding: 10px; }
+            .project-card { width: 95%; }
+            .game-thumb { height: 200px; }
         }
     </style>
 </head>
 <body>
+
+    <!-- DİL DEĞİŞTİRME BUTONU -->
+    <div class="lang-switch">
+        <button class="lang-btn active" id="btn-tr" onclick="changeLanguage('tr')">TR</button>
+        <button class="lang-btn" id="btn-en" onclick="changeLanguage('en')">EN</button>
+    </div>
 
     <!-- YÜKLEME EKRANI -->
     <div id="loader">
@@ -558,7 +586,7 @@
                     <div style="font-size:12px; font-weight:bold; color:#aaa; letter-spacing:1px;">EVO NEWS</div>
                 </div>
                 <div id="news-feed" class="news-scroll-area">
-                    <div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> Yükleniyor...</div>
+                    <div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> <span data-t="loading">Yükleniyor...</span></div>
                 </div>
             </div>
         </div>
@@ -594,14 +622,14 @@
                     <h2 class="cb-title"><span data-t="hello">MERHABA, BEN</span> <span class="ink-highlight">BURAK</span></h2>
                     
                     <p class="cb-bio">
-                        <span data-t="bio_1">Roblox platformunda sıradan fikirleri</span> <span style="background:var(--s-yellow);">olağanüstü deneyimlere</span> <span data-t="bio_3">dönüştürüyorum.</span><br><br>
-                        Profesyonel <b>Scripter</b> & <b>UI Designer</b> olarak, Evo Studios çatısı altında hayal gücünün sınırlarını zorluyorum.
+                        <span data-t="bio_1">Roblox platformunda sıradan fikirleri</span> <span style="background:var(--s-yellow);" data-t="bio_2">olağanüstü deneyimlere</span> <span data-t="bio_3">dönüştürüyorum.</span><br><br>
+                        <span data-t="bio_4">Profesyonel Scripter & UI Designer olarak,</span> <span data-t="bio_5">Evo Studios çatısı altında hayal gücünün sınırlarını zorluyorum.</span>
                     </p>
 
                     <div class="cb-socials">
-                        <a href="https://discord.gg/LINK" target="_blank" class="social-sticker"><i class="fa-brands fa-discord"></i></a>
-                        <a href="https://twitter.com/LINK" target="_blank" class="social-sticker"><i class="fa-brands fa-x-twitter"></i></a>
-                        <a href="#" target="_blank" class="social-sticker"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="https://discord.gg/95hcq9HVfn" target="_blank" class="social-sticker"><i class="fa-brands fa-discord"></i></a>
+                        <a href="https://x.com/EvoEvostudios" target="_blank" class="social-sticker"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="https://www.youtube.com/@EVO_Studio" target="_blank" class="social-sticker"><i class="fa-brands fa-youtube"></i></a>
                         <a href="https://www.roblox.com/groups/GRUP_ID_YAZ" target="_blank" class="social-sticker"><i class="fa-solid fa-users-rectangle"></i></a>
                     </div>
                 </div>
@@ -632,12 +660,11 @@
     <script>
         // --- AYARLAR ---
         const ROBLOX_ID = '1992693538'; 
-        // Verilen Google Apps Script URL'si
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwcjpNiivxXJk5UeQA5Rbjpv9sJ_I-ZdQRBRfjVxebKUwWWtd2sM-BXRb4dPcLeYqQA/exec';
-        
         let avatarUrl = "https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png";
+        let currentLang = localStorage.getItem('siteLang') || 'tr'; // Varsayılan Dil
 
-        // --- ÇOKLU DİL SİSTEMİ ---
+        // --- ÇOKLU DİL SİSTEMİ (Gelişmiş) ---
         const langData = {
             tr: {
                 home_subtitle: "Ultimate Roblox Development",
@@ -653,8 +680,13 @@
                 bio_1: "Roblox platformunda sıradan fikirleri",
                 bio_2: "olağanüstü deneyimlere",
                 bio_3: "dönüştürüyorum.",
-                bio_4: "Profesyonel",
-                bio_5: "Evo Studios çatısı altında hayal gücünün sınırlarını zorluyorum."
+                bio_4: "Profesyonel Scripter & UI Designer olarak,",
+                bio_5: "Evo Studios çatısı altında hayal gücünün sınırlarını zorluyorum.",
+                loading: "Yükleniyor...",
+                share_btn: "Paylaş",
+                default_tag: "Duyuru",
+                toast_copy: "Link Kopyalandı!",
+                toast_fail: "Kopyalama Başarısız!"
             },
             en: {
                 home_subtitle: "Ultimate Roblox Development",
@@ -670,22 +702,35 @@
                 bio_1: "I turn ordinary ideas into",
                 bio_2: "extraordinary experiences",
                 bio_3: "on the Roblox platform.",
-                bio_4: "Professional",
-                bio_5: "pushing the limits of imagination under Evo Studios."
+                bio_4: "As a professional Scripter & UI Designer,",
+                bio_5: "I push the limits of imagination under Evo Studios.",
+                loading: "Loading...",
+                share_btn: "Share",
+                default_tag: "Announcement",
+                toast_copy: "Link Copied!",
+                toast_fail: "Copy Failed!"
             }
         };
 
-        function detectAndSetLanguage() {
-            const userLang = navigator.language || navigator.userLanguage; 
-            const langCode = userLang.startsWith('tr') ? 'tr' : 'en'; 
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('siteLang', lang);
+            
+            // Buton Aktifliği
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + lang).classList.add('active');
 
+            // Statik Metinleri Güncelle
             const elements = document.querySelectorAll('[data-t]');
             elements.forEach(el => {
                 const key = el.getAttribute('data-t');
-                if (langData[langCode][key]) {
-                    el.innerText = langData[langCode][key];
+                if (langData[lang][key]) {
+                    el.innerText = langData[lang][key];
                 }
             });
+
+            // Haberleri Yeniden Yükle (Dile göre arayüz değişimi için)
+            loadNewsFromSheet();
         }
 
         // --- PRELOADER ---
@@ -694,8 +739,7 @@
             if (loader) loader.classList.add('loader-hidden');
         }
         window.addEventListener('load', () => {
-            detectAndSetLanguage(); 
-            // Loader hemen kalkmasın, veriler gelmeye başlayınca daha şık olur ama şimdilik süre verelim
+            changeLanguage(currentLang); // Başlangıç dilini ayarla
             removeLoader();
             handleUrlParams();
         });
@@ -737,30 +781,29 @@
                 const idMatch = clean.match(/\/d\/([a-zA-Z0-9_-]+)/) || clean.match(/id=([a-zA-Z0-9_-]+)/);
                 if (idMatch) clean = `https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
             }
-            
-            // Eğer resimse Lightbox özelliği ekle
             return `<img src="${clean}" class="nc-media" alt="Medya" onclick="openLightbox('${clean}')" style="cursor:zoom-in" onerror="this.parentElement.style.display='none'">`;
         }
 
         // --- HABERLERİ ÇEKME (PROXY FIX) ---
         async function loadNewsFromSheet() {
             const feed = document.getElementById('news-feed');
+            
+            // Eğer yükleniyor mesajı varsa dilini güncelle, yoksa içeriği koru
+            if(feed.querySelector('.loading-spinner')) {
+                feed.innerHTML = `<div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> <span>${langData[currentLang].loading}</span></div>`;
+            }
+
             try {
-                // FIX: Proxy ile çekiyoruz (CORS Hatasını engeller)
-                const uniqueParam = '&t=' + new Date().getTime(); // Önbelleği önler
+                const uniqueParam = '&t=' + new Date().getTime(); 
                 const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
                 
                 const res = await fetch(proxyUrl);
                 if(!res.ok) throw new Error("API Hatası: " + res.status);
                 
                 const rawData = await res.json();
-                
-                // Hata kontrolü
                 if(rawData.error) throw new Error(rawData.error);
 
-                // En yeni en üstte
                 const rows = rawData.reverse();
-
                 let pinnedPosts = [];
                 let regularPosts = [];
 
@@ -779,22 +822,22 @@
                     const uniqueId = item.id;
                     const mediaHtml = getMediaContent(item.gorsel);
                     
-                    // Local'den sadece "Ben beğendim mi?" bilgisini alıyoruz
                     const iLikedIt = localStorage.getItem('liked_' + uniqueId) === 'true';
                     const likeClass = iLikedIt ? 'liked' : '';
                     const likeIcon = iLikedIt ? 'fa-solid' : 'fa-regular';
-                    
-                    // Sayı sunucudan geliyor
                     const serverLikes = item.likes;
 
                     const pinnedClass = (item.pinned && item.pinned.toString().toLowerCase() === 'yes') ? 'pinned' : '';
                     const pinnedIcon = pinnedClass ? '<i class="fa-solid fa-thumbtack pin-badge"></i>' : '';
 
-                    // Tarih formatlama
                     let dateStr = item.tarih;
                     if(dateStr && dateStr.toString().includes('T')) {
                         dateStr = dateStr.toString().split('T')[0];
                     }
+
+                    // Dinamik içerik çevirisi (Basit)
+                    const tagText = item.etiket || langData[currentLang].default_tag;
+                    const shareText = langData[currentLang].share_btn;
 
                     htmlContent += `
                     <div class="news-card ${pinnedClass}" id="${uniqueId}">
@@ -807,7 +850,7 @@
                                     <span class="nc-date">${dateStr}</span>
                                 </div>
                             </div>
-                            <span class="nc-tag" style="background:${item.renk || '#333'}">${item.etiket || 'Duyuru'}</span>
+                            <span class="nc-tag" style="background:${item.renk || '#333'}">${tagText}</span>
                         </div>
                         ${mediaHtml ? `<div class="nc-media-wrapper">${mediaHtml}</div>` : ''}
                         <div class="nc-content">
@@ -819,26 +862,24 @@
                                 <i class="${likeIcon} fa-heart"></i> <span class="like-count">${serverLikes}</span>
                             </button>
                             <button class="action-btn" onclick="sharePost('${uniqueId}')">
-                                <i class="fa-regular fa-paper-plane"></i> <span>Paylaş</span>
+                                <i class="fa-regular fa-paper-plane"></i> <span>${shareText}</span>
                             </button>
                         </div>
                     </div>`;
                 });
-                feed.innerHTML = htmlContent || '<div style="text-align:center; padding:20px;">Henüz haber girilmemiş.</div>';
+                feed.innerHTML = htmlContent || '<div style="text-align:center; padding:20px;">...</div>';
                 checkDeepLink();
             } catch (err) {
                 console.error("Yükleme Hatası:", err);
                 feed.innerHTML = `<div style="text-align:center; color:red; padding:20px;">
                     <i class="fa-solid fa-triangle-exclamation"></i><br>
-                    Veriler çekilemedi.<br>
-                    <small style="color:#666;">Hata: ${err.message}</small>
+                    <small>${err.message}</small>
                 </div>`;
             }
         }
 
-        // --- LIKE SİSTEMİ (DATABASE ENTEGRASYONLU) ---
+        // --- LIKE SİSTEMİ ---
         function toggleLike(btn, id) {
-            // Çift tıklamayı önle
             if(btn.disabled) return;
             btn.disabled = true;
 
@@ -848,7 +889,6 @@
             let isLiked = btn.classList.contains('liked');
             let action = isLiked ? 'unlike' : 'like';
 
-            // 1. Arayüzü Hemen Güncelle (Kullanıcı bekletilmez)
             if (isLiked) {
                 btn.classList.remove('liked');
                 icon.classList.remove('fa-solid');
@@ -863,21 +903,14 @@
                 localStorage.setItem('liked_' + id, 'true');
             }
 
-            // 2. Arka Planda Sunucuya Gönder (Doğrudan istek, Proxy yok)
             fetch(SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors', // Google Script'e veri yollarken CORS hatasını engeller
+                mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: id, action: action })
             })
-            .then(() => {
-                // İşlem başarılı sayılır
-                setTimeout(() => { btn.disabled = false; }, 500);
-            })
-            .catch(err => {
-                console.error("Like gönderilemedi:", err);
-                btn.disabled = false; 
-            });
+            .then(() => { setTimeout(() => { btn.disabled = false; }, 500); })
+            .catch(err => { console.error("Like error:", err); btn.disabled = false; });
         }
 
         // --- LIGHTBOX ---
@@ -904,11 +937,13 @@
         }
         function sharePost(id) {
             const url = window.location.origin + window.location.pathname + '?post=' + id;
-            navigator.clipboard.writeText(url).then(() => { showToast("Bağlantı kopyalandı!"); }).catch(() => { showToast("Kopyalama başarısız!"); });
+            navigator.clipboard.writeText(url)
+                .then(() => { showToast(langData[currentLang].toast_copy); })
+                .catch(() => { showToast(langData[currentLang].toast_fail); });
         }
 
         // --- URL PARAMETRE YÖNETİMİ ---
-        function handleUrlParams() { loadNewsFromSheet(); }
+        function handleUrlParams() { /* loadNews zaten changeLanguage içinde çağrılıyor */ }
         function checkDeepLink() {
             const urlParams = new URLSearchParams(window.location.search);
             const postId = urlParams.get('post');
