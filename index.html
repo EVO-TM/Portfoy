@@ -627,7 +627,9 @@
     <script>
         // --- AYARLAR ---
         const ROBLOX_ID = '1992693538'; 
-        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQkVqqetc0GTQQY624TV66cqU6Xqrao3In-ON9wYbjvpEM2ULkoIWmRAgU0CNbQtIvq9M0hX5difbBk/pub?output=csv';
+        // Verilen Google Apps Script URL'si
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwcjpNiivxXJk5UeQA5Rbjpv9sJ_I-ZdQRBRfjVxebKUwWWtd2sM-BXRb4dPcLeYqQA/exec';
+        
         let avatarUrl = "https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png";
 
         // --- ÇOKLU DİL SİSTEMİ ---
@@ -688,6 +690,7 @@
         }
         window.addEventListener('load', () => {
             detectAndSetLanguage(); 
+            // Loader hemen kalkmasın, veriler gelmeye başlayınca daha şık olur ama şimdilik süre verelim
             removeLoader();
             handleUrlParams();
         });
@@ -711,153 +714,107 @@
             if(activeSec) activeSec.classList.add('active');
         }
 
-        // --- CSV AYRIŞTIRICI ---
-        function parseCSV(text) {
-            let rows = [];
-            let row = [];
-            let currentCell = "";
-            let inQuotes = false;
-            for (let i = 0; i < text.length; i++) {
-                let char = text[i];
-                let nextChar = text[i + 1];
-                if (char === '"') {
-                    if (inQuotes && nextChar === '"') { currentCell += '"'; i++; } 
-                    else { inQuotes = !inQuotes; }
-                } else if (char === ',' && !inQuotes) {
-                    row.push(currentCell); currentCell = "";
-                } else if ((char === '\r' || char === '\n') && !inQuotes) {
-                    if (char === '\r' && nextChar === '\n') i++; 
-                    row.push(currentCell); rows.push(row); row = []; currentCell = "";
-                } else { currentCell += char; }
-            }
-            if (currentCell || row.length > 0) { row.push(currentCell); rows.push(row); }
-            return rows;
-        }
-
         // --- MEDYA YARDIMCILARI ---
-        function getYouTubeId(url) {
-            const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
-            const match = url.match(regExp);
-            return (match && match[1]) ? match[1] : null;
-        }
-
         function getMediaContent(url) {
-            if (!url) return '';
-            let clean = url.replace(/[\r\n]+/g, '').replace(/^"|"$/g, '').trim();
-            if(clean.length < 5) return '';
+            if (!url || url.length < 5) return '';
+            let clean = url.trim();
 
-            const ytId = getYouTubeId(clean);
-            if (ytId) {
-                return `<iframe class="nc-media" src=" allowfullscreen></iframe>`;
+            if (clean.includes('youtube.com') || clean.includes('youtu.be')) {
+                const match = clean.match(/(?:v=|\/)([\w-]{11})/);
+                if (match && match[1]) {
+                     return `<iframe class="nc-media" src="https://www.youtube.com/embed/${match[1]}" allowfullscreen></iframe>`;
+                }
             }
             if (clean.match(/\.(mp4|webm|mov)$/i)) {
                 return `<video src="${clean}" class="nc-media" controls></video>`;
             }
             if (clean.includes('drive.google.com')) {
-                let id = "";
-                const idMatch = clean.match(/\/d\/([a-zA-Z0-9_-]+)/);
-                const idMatch2 = clean.match(/id=([a-zA-Z0-9_-]+)/);
-                if (idMatch && idMatch[1]) id = idMatch[1];
-                else if (idMatch2 && idMatch2[1]) id = idMatch2[1];
-                if (id) clean = `https://drive.google.com/uc?export=view&id=${id}`;
+                const idMatch = clean.match(/\/d\/([a-zA-Z0-9_-]+)/) || clean.match(/id=([a-zA-Z0-9_-]+)/);
+                if (idMatch) clean = `https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
             }
-            return `<img src="${clean}" class="nc-media" alt="Post Medya" onerror="this.parentElement.style.display='none'">`;
+            
+            // Eğer resimse Lightbox özelliği ekle
+            return `<img src="${clean}" class="nc-media" alt="Medya" onclick="openLightbox('${clean}')" style="cursor:zoom-in" onerror="this.parentElement.style.display='none'">`;
         }
 
-        // --- BENZERSİZ ID OLUŞTURUCU ---
-        function generateId(str) {
-            let hash = 0, i, chr;
-            if (str.length === 0) return hash;
-            for (i = 0; i < str.length; i++) {
-                chr = str.charCodeAt(i);
-                hash = ((hash << 5) - hash) + chr;
-                hash |= 0; 
-            }
-            return "post_" + Math.abs(hash);
-        }
-
-        // --- HABERLERİ ÇEKME & SIRALAMA ---
+        // --- HABERLERİ ÇEKME (JSON API) ---
         async function loadNewsFromSheet() {
             const feed = document.getElementById('news-feed');
             try {
-                const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(SHEET_URL);
-                const res = await fetch(proxyUrl);
-                if(!res.ok) throw new Error("Veri çekilemedi: " + res.status);
+                // CSV yerine JSON çekiyoruz
+                const res = await fetch(SCRIPT_URL);
+                if(!res.ok) throw new Error("API Hatası");
                 
-                const csvText = await res.text();
-                const parsedRows = parseCSV(csvText);
-                const rows = parsedRows.slice(1);
+                const rawData = await res.json();
                 
-                rows.reverse();
+                // Hata kontrolü
+                if(rawData.error) throw new Error(rawData.error);
+
+                // En yeni en üstte
+                const rows = rawData.reverse();
 
                 let pinnedPosts = [];
                 let regularPosts = [];
 
-                rows.forEach(cols => {
-                    if(cols.length < 2) return;
-                    const isPinned = (cols[6] && cols[6].toLowerCase().trim() === 'yes');
-                    if(isPinned) pinnedPosts.push(cols);
-                    else regularPosts.push(cols);
+                rows.forEach(item => {
+                    const isPinned = item.pinned && item.pinned.toString().toLowerCase() === 'yes';
+                    if(isPinned) pinnedPosts.push(item);
+                    else regularPosts.push(item);
                 });
 
                 const finalRows = [...pinnedPosts, ...regularPosts];
                 let htmlContent = '';
                 
-                finalRows.forEach((cols) => {
-                    const clean = (text) => text ? text.trim() : '';
+                finalRows.forEach((item) => {
+                    if(!item.baslik) return;
+
+                    const uniqueId = item.id;
+                    const mediaHtml = getMediaContent(item.gorsel);
                     
-                    const tarih = clean(cols[0]);
-                    const baslik = clean(cols[1]);
-                    const icerik = clean(cols[2]);
-                    const etiket = clean(cols[3]) || 'Duyuru';
-                    const renk = clean(cols[4]) || '#333';
-                    const medyaUrl = clean(cols[5]); 
-                    const isPinned = (cols[6] && cols[6].toLowerCase().trim() === 'yes');
-
-                    const uniqueId = generateId(tarih + baslik);
-                    const mediaHtml = getMediaContent(medyaUrl);
+                    // Local'den sadece "Ben beğendim mi?" bilgisini alıyoruz
+                    const iLikedIt = localStorage.getItem('liked_' + uniqueId) === 'true';
+                    const likeClass = iLikedIt ? 'liked' : '';
+                    const likeIcon = iLikedIt ? 'fa-solid' : 'fa-regular';
                     
-                    const isLiked = localStorage.getItem('liked_' + uniqueId) === 'true';
-                    const likeCount = isLiked ? 1 : 0; 
-                    const likeClass = isLiked ? 'liked' : '';
-                    const likeIcon = isLiked ? 'fa-solid' : 'fa-regular';
+                    // Sayı sunucudan geliyor
+                    const serverLikes = item.likes;
 
-                    const pinnedClass = isPinned ? 'pinned' : '';
-                    const pinnedIcon = isPinned ? '<i class="fa-solid fa-thumbtack pin-badge"></i>' : '';
+                    const pinnedClass = (item.pinned && item.pinned.toString().toLowerCase() === 'yes') ? 'pinned' : '';
+                    const pinnedIcon = pinnedClass ? '<i class="fa-solid fa-thumbtack pin-badge"></i>' : '';
 
-                    const isImage = medyaUrl.match(/\.(jpeg|jpg|gif|png|webp)$/i) != null || medyaUrl.includes('drive.google.com');
-                    const clickAction = isImage ? `onclick="openLightbox('${medyaUrl}')"` : '';
-                    const titleCursor = isImage ? 'style="cursor:pointer;"' : '';
-
-                    if(baslik) { 
-                        htmlContent += `
-                        <div class="news-card ${pinnedClass}" id="${uniqueId}">
-                            ${pinnedIcon}
-                            <div class="nc-header">
-                                <div class="nc-user">
-                                    <div class="nc-user-icon"><i class="fa-solid fa-gamepad"></i></div>
-                                    <div class="nc-info">
-                                        <span class="nc-name">Evo Studios</span>
-                                        <span class="nc-date">${tarih}</span>
-                                    </div>
-                                </div>
-                                <span class="nc-tag" style="background:${renk}">${etiket}</span>
-                            </div>
-                            ${mediaHtml ? `<div class="nc-media-wrapper" ${clickAction}>${mediaHtml}</div>` : ''}
-                            <div class="nc-content">
-                                <h3 class="nc-title" ${clickAction} ${titleCursor}>${baslik}</h3>
-                                <p class="nc-desc">${icerik}</p>
-                            </div>
-                            <div class="nc-actions">
-                                <button class="action-btn like-btn ${likeClass}" onclick="toggleLike(this, '${uniqueId}')">
-                                    <i class="${likeIcon} fa-heart"></i> <span>${likeCount}</span>
-                                </button>
-                                <button class="action-btn" onclick="sharePost('${uniqueId}')">
-                                    <i class="fa-regular fa-paper-plane"></i> <span>Paylaş</span>
-                                </button>
-                            </div>
-                        </div>`;
+                    // Tarih formatlama
+                    let dateStr = item.tarih;
+                    if(dateStr && dateStr.toString().includes('T')) {
+                        dateStr = dateStr.toString().split('T')[0];
                     }
+
+                    htmlContent += `
+                    <div class="news-card ${pinnedClass}" id="${uniqueId}">
+                        ${pinnedIcon}
+                        <div class="nc-header">
+                            <div class="nc-user">
+                                <div class="nc-user-icon"><i class="fa-solid fa-gamepad"></i></div>
+                                <div class="nc-info">
+                                    <span class="nc-name">Evo Studios</span>
+                                    <span class="nc-date">${dateStr}</span>
+                                </div>
+                            </div>
+                            <span class="nc-tag" style="background:${item.renk || '#333'}">${item.etiket || 'Duyuru'}</span>
+                        </div>
+                        ${mediaHtml ? `<div class="nc-media-wrapper">${mediaHtml}</div>` : ''}
+                        <div class="nc-content">
+                            <h3 class="nc-title">${item.baslik}</h3>
+                            <p class="nc-desc">${item.icerik}</p>
+                        </div>
+                        <div class="nc-actions">
+                            <button class="action-btn like-btn ${likeClass}" onclick="toggleLike(this, '${uniqueId}')">
+                                <i class="${likeIcon} fa-heart"></i> <span class="like-count">${serverLikes}</span>
+                            </button>
+                            <button class="action-btn" onclick="sharePost('${uniqueId}')">
+                                <i class="fa-regular fa-paper-plane"></i> <span>Paylaş</span>
+                            </button>
+                        </div>
+                    </div>`;
                 });
                 feed.innerHTML = htmlContent || '<div style="text-align:center; padding:20px;">Henüz haber girilmemiş.</div>';
                 checkDeepLink();
@@ -867,17 +824,54 @@
             }
         }
 
+        // --- LIKE SİSTEMİ (DATABASE ENTEGRASYONLU) ---
+        function toggleLike(btn, id) {
+            // Çift tıklamayı önle
+            if(btn.disabled) return;
+            btn.disabled = true;
+
+            const icon = btn.querySelector('i');
+            const span = btn.querySelector('.like-count');
+            let currentCount = parseInt(span.innerText) || 0;
+            let isLiked = btn.classList.contains('liked');
+            let action = isLiked ? 'unlike' : 'like';
+
+            // 1. Arayüzü Hemen Güncelle (Kullanıcı bekletilmez)
+            if (isLiked) {
+                btn.classList.remove('liked');
+                icon.classList.remove('fa-solid');
+                icon.classList.add('fa-regular');
+                span.innerText = Math.max(0, currentCount - 1);
+                localStorage.removeItem('liked_' + id);
+            } else {
+                btn.classList.add('liked');
+                icon.classList.remove('fa-regular');
+                icon.classList.add('fa-solid');
+                span.innerText = currentCount + 1;
+                localStorage.setItem('liked_' + id, 'true');
+            }
+
+            // 2. Arka Planda Sunucuya Gönder
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Google Script'e veri yollarken CORS hatasını engeller
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id, action: action })
+            })
+            .then(() => {
+                // İşlem başarılı sayılır
+                setTimeout(() => { btn.disabled = false; }, 500);
+            })
+            .catch(err => {
+                console.error("Like gönderilemedi:", err);
+                // İsteğe bağlı: Hata olursa UI'yı geri alabilirsin ama genelde gerekmez
+                btn.disabled = false; 
+            });
+        }
+
         // --- LIGHTBOX ---
         function openLightbox(url) {
             if(!url) return;
-            if (url.includes('drive.google.com')) {
-                let id = "";
-                const idMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-                const idMatch2 = url.match(/id=([a-zA-Z0-9_-]+)/);
-                if (idMatch && idMatch[1]) id = idMatch[1];
-                else if (idMatch2 && idMatch2[1]) id = idMatch2[1];
-                if (id) url = `https://drive.google.com/uc?export=view&id=${id}`;
-            }
             const lightbox = document.getElementById('lightbox');
             const img = document.getElementById('lightbox-img');
             img.src = url;
@@ -887,26 +881,6 @@
             const lightbox = document.getElementById('lightbox');
             lightbox.classList.remove('active');
             setTimeout(() => { document.getElementById('lightbox-img').src = ''; }, 300);
-        }
-
-        // --- LIKE SİSTEMİ ---
-        function toggleLike(btn, id) {
-            const icon = btn.querySelector('i');
-            const span = btn.querySelector('span');
-            let isLiked = btn.classList.contains('liked');
-            if(isLiked) {
-                btn.classList.remove('liked');
-                icon.classList.remove('fa-solid');
-                icon.classList.add('fa-regular');
-                span.innerText = "0";
-                localStorage.removeItem('liked_' + id);
-            } else {
-                btn.classList.add('liked');
-                icon.classList.remove('fa-regular');
-                icon.classList.add('fa-solid');
-                span.innerText = "1";
-                localStorage.setItem('liked_' + id, 'true');
-            }
         }
 
         // --- PAYLAŞMA & TOAST ---
