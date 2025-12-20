@@ -737,13 +737,16 @@
             return `<img src="${clean}" class="nc-media" alt="Medya" onclick="openLightbox('${clean}')" style="cursor:zoom-in" onerror="this.parentElement.style.display='none'">`;
         }
 
-        // --- HABERLERİ ÇEKME (JSON API) ---
+        // --- HABERLERİ ÇEKME (PROXY FIX) ---
         async function loadNewsFromSheet() {
             const feed = document.getElementById('news-feed');
             try {
-                // CSV yerine JSON çekiyoruz
-                const res = await fetch(SCRIPT_URL);
-                if(!res.ok) throw new Error("API Hatası");
+                // FIX: Proxy ile çekiyoruz (CORS Hatasını engeller)
+                const uniqueParam = '&t=' + new Date().getTime(); // Önbelleği önler
+                const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
+                
+                const res = await fetch(proxyUrl);
+                if(!res.ok) throw new Error("API Hatası: " + res.status);
                 
                 const rawData = await res.json();
                 
@@ -819,8 +822,12 @@
                 feed.innerHTML = htmlContent || '<div style="text-align:center; padding:20px;">Henüz haber girilmemiş.</div>';
                 checkDeepLink();
             } catch (err) {
-                console.error(err);
-                feed.innerHTML = '<div style="text-align:center; color:red; padding:20px;">Bağlantı Hatası.<br>Lütfen daha sonra tekrar deneyin.</div>';
+                console.error("Yükleme Hatası:", err);
+                feed.innerHTML = `<div style="text-align:center; color:red; padding:20px;">
+                    <i class="fa-solid fa-triangle-exclamation"></i><br>
+                    Veriler çekilemedi.<br>
+                    <small style="color:#666;">Hata: ${err.message}</small>
+                </div>`;
             }
         }
 
@@ -851,7 +858,7 @@
                 localStorage.setItem('liked_' + id, 'true');
             }
 
-            // 2. Arka Planda Sunucuya Gönder
+            // 2. Arka Planda Sunucuya Gönder (Doğrudan istek, Proxy yok)
             fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors', // Google Script'e veri yollarken CORS hatasını engeller
@@ -864,7 +871,6 @@
             })
             .catch(err => {
                 console.error("Like gönderilemedi:", err);
-                // İsteğe bağlı: Hata olursa UI'yı geri alabilirsin ama genelde gerekmez
                 btn.disabled = false; 
             });
         }
