@@ -788,19 +788,37 @@
         async function loadNewsFromSheet() {
             const feed = document.getElementById('news-feed');
             
-            // Eğer yükleniyor mesajı varsa dilini güncelle, yoksa içeriği koru
             if(feed.querySelector('.loading-spinner')) {
                 feed.innerHTML = `<div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> <span>${langData[currentLang].loading}</span></div>`;
             }
 
             try {
-                const uniqueParam = '&t=' + new Date().getTime(); 
-                const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
+                // FALLBACK MEKANİZMASI: Önce Proxy'yi dene, olmazsa Script'i dene
+                let rawData;
+                const uniqueParam = '&t=' + new Date().getTime();
                 
-                const res = await fetch(proxyUrl);
-                if(!res.ok) throw new Error("API Hatası: " + res.status);
-                
-                const rawData = await res.json();
+                try {
+                    // YÖNTEM 1: CodeTabs Proxy (Daha hızlıdır ama bazen mobilde takılır)
+                    const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
+                    const res = await fetch(proxyUrl);
+                    if(!res.ok) throw new Error("Proxy Failed");
+                    rawData = await res.json();
+                } catch(proxyError) {
+                    console.log("Proxy başarısız, doğrudan fetch deneniyor...", proxyError);
+                    // YÖNTEM 2: Doğrudan Google Script (Daha yavaştır ama mobilde çalışır)
+                    const directRes = await fetch(SCRIPT_URL + "?dummy=1" + uniqueParam);
+                    if(!directRes.ok) throw new Error("Direct Fetch Failed");
+                    // Google script doğrudan JSON dönmez, redirect eder. Bu yüzden text alıp parse etmek gerekebilir.
+                    // Ancak "echo" parametresi ile JSONP benzeri bir yapı kurmadığımız için burada 
+                    // en garanti yöntem YÖNTEM 3: AllOrigins Proxy'dir.
+                    
+                    const backupProxy = 'https://api.allorigins.win/get?url=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
+                    const backupRes = await fetch(backupProxy);
+                    if(!backupRes.ok) throw new Error("Backup Proxy Failed");
+                    const backupJson = await backupRes.json();
+                    rawData = JSON.parse(backupJson.contents);
+                }
+
                 if(rawData.error) throw new Error(rawData.error);
 
                 const rows = rawData.reverse();
@@ -835,7 +853,6 @@
                         dateStr = dateStr.toString().split('T')[0];
                     }
 
-                    // Dinamik içerik çevirisi (Basit)
                     const tagText = item.etiket || langData[currentLang].default_tag;
                     const shareText = langData[currentLang].share_btn;
 
@@ -873,7 +890,8 @@
                 console.error("Yükleme Hatası:", err);
                 feed.innerHTML = `<div style="text-align:center; color:red; padding:20px;">
                     <i class="fa-solid fa-triangle-exclamation"></i><br>
-                    <small>${err.message}</small>
+                    <small>${err.message}</small><br>
+                    <button onclick="loadNewsFromSheet()" style="margin-top:10px; padding:5px 10px; cursor:pointer;">Tekrar Dene</button>
                 </div>`;
             }
         }
