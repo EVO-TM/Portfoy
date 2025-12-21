@@ -660,7 +660,6 @@
     <script>
         // --- AYARLAR ---
         const ROBLOX_ID = '1992693538'; 
-        // YENİ URL İLE GÜNCELLENDİ (Redirect sorunu çözümü için)
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzhrovDIz0cBWy72hsfbIDBfD53qORf9OBz4akWyQKiJBHH1F6mDFrjRp9DuUf4p4ti/exec';
         let avatarUrl = "https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png";
         let currentLang = localStorage.getItem('siteLang') || 'tr'; // Varsayılan Dil
@@ -798,46 +797,44 @@
             const uniqueParam = '&t=' + new Date().getTime();
             let rawData = null;
             let success = false;
+            let parsingError = false;
 
-            // PROXY LİSTESİ (En iyisinden en güçlüsüne)
-            // 1. AllOrigins: JSON sararması yapar (contents içinde), çok hızlıdır.
-            // 2. CorsProxy.io: Direkt veri basar, mobilde çok stabildir.
-            // 3. CodeTabs: Eski dost, bazen yavaştır ama çalışır.
+            // PROXY LİSTESİ (Güncellenmiş Sıralama)
+            // CorsProxy.io şu an mobilde en stabil olanıdır.
             const methods = [
-                {
-                    name: 'AllOrigins',
-                    url: url => `https://api.allorigins.win/get?url=${encodeURIComponent(url + "?dummy=1" + uniqueParam)}`,
-                    type: 'wrapper' // Veriyi {contents: "..."} içine sarar
-                },
                 {
                     name: 'CorsProxy',
                     url: url => `https://corsproxy.io/?${encodeURIComponent(url + "?dummy=1" + uniqueParam)}`,
-                    type: 'direct' // Direkt veri döner
+                    type: 'direct' 
                 },
                 {
-                    name: 'CodeTabs',
-                    url: url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url + "?dummy=1" + uniqueParam)}`,
+                    name: 'AllOrigins-Raw',
+                    url: url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url + "?dummy=1" + uniqueParam)}`,
                     type: 'direct'
                 }
             ];
 
             // Zincirleme Deneme Döngüsü
             for (const method of methods) {
-                if (success) break; // Zaten bulduysak döngüden çık
+                if (success) break;
                 
                 try {
-                    // console.log(`Deneme yapılıyor: ${method.name}`); // Debug için kaldırılabilir
                     const res = await fetch(method.url(SCRIPT_URL));
                     if(res.ok) {
-                        const json = await res.json();
+                        const text = await res.text(); // Önce text olarak al
                         
-                        // Parse Etme Mantığı
-                        if(method.type === 'wrapper' && json.contents) {
-                            try { rawData = JSON.parse(json.contents); success = true; }
-                            catch(e) { /* Parse hatası olursa sonraki metoda geç */ }
-                        } else if(method.type === 'direct') {
-                            rawData = json;
-                            success = true;
+                        // Google Login Sayfası Kontrolü (HTML dönerse hata var demektir)
+                        if(text.trim().startsWith("<") || text.includes("<!DOCTYPE html>")) {
+                             console.warn("HTML yanıtı alındı, JSON değil.");
+                             parsingError = true; // Bu bir Erişim Hatasıdır
+                             continue;
+                        }
+
+                        try { 
+                            rawData = JSON.parse(text); 
+                            success = true; 
+                        } catch(jsonErr) {
+                            console.warn("JSON Parse Hatası:", jsonErr);
                         }
                     }
                 } catch(e) {
@@ -846,15 +843,23 @@
             }
 
             // TÜM YÖNTEMLER BAŞARISIZ OLURSA
-            if(!success || !rawData || rawData.error) {
+            if(!success) {
+                let errorMsg = "Bağlantı Kurulamadı";
+                let subMsg = "İnternet bağlantınızı kontrol edip tekrar deneyin.";
+                
+                if(parsingError) {
+                    errorMsg = "Google İzin Hatası";
+                    subMsg = "Google Script 'Anyone' erişimine kapalı görünüyor.";
+                }
+
                 feed.innerHTML = `<div style="text-align:center; color:red; padding:20px;">
                     <i class="fa-solid fa-triangle-exclamation" style="font-size:30px; margin-bottom:10px;"></i><br>
-                    <strong>Bağlantı Kurulamadı</strong><br>
-                    <small>İnternet bağlantınızı kontrol edip tekrar deneyin.</small><br>
+                    <strong>${errorMsg}</strong><br>
+                    <small>${subMsg}</small><br>
                     <br><button onclick="loadNewsFromSheet()" style="background:var(--ink); color:white; border:none; padding:8px 16px; border-radius:20px; cursor:pointer;">
                         <i class="fa-solid fa-rotate-right"></i> Yenile
                     </button>
-                    <div style="margin-top:10px; font-size:9px; color:#aaa;">CORS_ALL_FAIL</div>
+                    <div style="margin-top:10px; font-size:9px; color:#aaa;">ERR_MOBILE_FETCH</div>
                 </div>`;
                 return;
             }
