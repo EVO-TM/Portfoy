@@ -660,7 +660,8 @@
     <script>
         // --- AYARLAR ---
         const ROBLOX_ID = '1992693538'; 
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwcjpNiivxXJk5UeQA5Rbjpv9sJ_I-ZdQRBRfjVxebKUwWWtd2sM-BXRb4dPcLeYqQA/exec';
+        // YENİ URL İLE GÜNCELLENDİ (Redirect sorunu çözümü için)
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzhrovDIz0cBWy72hsfbIDBfD53qORf9OBz4akWyQKiJBHH1F6mDFrjRp9DuUf4p4ti/exec';
         let avatarUrl = "https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png";
         let currentLang = localStorage.getItem('siteLang') || 'tr'; // Varsayılan Dil
 
@@ -729,7 +730,7 @@
                 }
             });
 
-            // Haberleri Yeniden Yükle (Dile göre arayüz değişimi için)
+            // Haberleri Yeniden Yükle
             loadNewsFromSheet();
         }
 
@@ -784,7 +785,7 @@
             return `<img src="${clean}" class="nc-media" alt="Medya" onclick="openLightbox('${clean}')" style="cursor:zoom-in" onerror="this.parentElement.style.display='none'">`;
         }
 
-        // --- HABERLERİ ÇEKME (TELEFON FIX - ZİNCİRLEME PROXY) ---
+        // --- GELİŞMİŞ HABER ÇEKİCİ (MOBİL UYUMLU TANK VERSİYON) ---
         async function loadNewsFromSheet() {
             const feed = document.getElementById('news-feed');
             
@@ -796,60 +797,78 @@
             // Önbellek sorunlarını önlemek için zaman damgası
             const uniqueParam = '&t=' + new Date().getTime();
             let rawData = null;
-            let finalError = null;
+            let success = false;
 
-            // --- AŞAMA 1: AllOrigins (Mobilde Genelde Daha Kararlıdır) ---
-            try {
-                // AllOrigins JSON wrapper döndürür, bu yüzden doğrudan JSON parse edilebilir.
-                const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
-                const res = await fetch(proxyUrl);
-                if(res.ok) {
-                    const json = await res.json();
-                    if(json.contents) {
-                        try {
-                            rawData = JSON.parse(json.contents); // Google Script çıktısını parse et
-                        } catch(parseErr) {
-                            console.warn("AllOrigins JSON parse hatası, diğerine geçiliyor.");
+            // PROXY LİSTESİ (En iyisinden en güçlüsüne)
+            // 1. AllOrigins: JSON sararması yapar (contents içinde), çok hızlıdır.
+            // 2. CorsProxy.io: Direkt veri basar, mobilde çok stabildir.
+            // 3. CodeTabs: Eski dost, bazen yavaştır ama çalışır.
+            const methods = [
+                {
+                    name: 'AllOrigins',
+                    url: url => `https://api.allorigins.win/get?url=${encodeURIComponent(url + "?dummy=1" + uniqueParam)}`,
+                    type: 'wrapper' // Veriyi {contents: "..."} içine sarar
+                },
+                {
+                    name: 'CorsProxy',
+                    url: url => `https://corsproxy.io/?${encodeURIComponent(url + "?dummy=1" + uniqueParam)}`,
+                    type: 'direct' // Direkt veri döner
+                },
+                {
+                    name: 'CodeTabs',
+                    url: url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url + "?dummy=1" + uniqueParam)}`,
+                    type: 'direct'
+                }
+            ];
+
+            // Zincirleme Deneme Döngüsü
+            for (const method of methods) {
+                if (success) break; // Zaten bulduysak döngüden çık
+                
+                try {
+                    // console.log(`Deneme yapılıyor: ${method.name}`); // Debug için kaldırılabilir
+                    const res = await fetch(method.url(SCRIPT_URL));
+                    if(res.ok) {
+                        const json = await res.json();
+                        
+                        // Parse Etme Mantığı
+                        if(method.type === 'wrapper' && json.contents) {
+                            try { rawData = JSON.parse(json.contents); success = true; }
+                            catch(e) { /* Parse hatası olursa sonraki metoda geç */ }
+                        } else if(method.type === 'direct') {
+                            rawData = json;
+                            success = true;
                         }
                     }
-                }
-            } catch(e) { 
-                console.log("1. Yöntem (AllOrigins) başarısız oldu, 2. Yöntem deneniyor..."); 
-            }
-
-            // --- AŞAMA 2: CodeTabs (Yedek) ---
-            // Eğer 1. aşama başarısızsa (rawData null ise) burası çalışır.
-            if(!rawData) {
-                try {
-                    const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
-                    const res = await fetch(proxyUrl);
-                    if(res.ok) {
-                        rawData = await res.json();
-                    }
-                } catch(e) { 
-                    console.log("2. Yöntem (CodeTabs) de başarısız oldu."); 
-                    finalError = e.message;
+                } catch(e) {
+                    // Bu metod başarısız oldu, sessizce diğerine geçiliyor
                 }
             }
 
-            // --- AŞAMA 3: Hata Kontrolü ve Ekrana Basma ---
-            if(!rawData || rawData.error) {
-                console.error("Kritik Hata: Tüm proxy'ler başarısız oldu.");
+            // TÜM YÖNTEMLER BAŞARISIZ OLURSA
+            if(!success || !rawData || rawData.error) {
                 feed.innerHTML = `<div style="text-align:center; color:red; padding:20px;">
                     <i class="fa-solid fa-triangle-exclamation" style="font-size:30px; margin-bottom:10px;"></i><br>
-                    <strong>Bağlantı Hatası</strong><br>
-                    <small>Haberler yüklenirken bir sorun oluştu.</small><br>
-                    <button onclick="loadNewsFromSheet()" style="margin-top:15px; padding:8px 15px; border-radius:20px; border:none; background:var(--ink); color:white; font-weight:bold; cursor:pointer;">
-                        <i class="fa-solid fa-rotate-right"></i> Tekrar Dene
+                    <strong>Bağlantı Kurulamadı</strong><br>
+                    <small>İnternet bağlantınızı kontrol edip tekrar deneyin.</small><br>
+                    <br><button onclick="loadNewsFromSheet()" style="background:var(--ink); color:white; border:none; padding:8px 16px; border-radius:20px; cursor:pointer;">
+                        <i class="fa-solid fa-rotate-right"></i> Yenile
                     </button>
-                    <br><br><small style="color:#999; font-size:10px;">(Hata: ${finalError || 'CORS/Proxy'})</small>
+                    <div style="margin-top:10px; font-size:9px; color:#aaa;">CORS_ALL_FAIL</div>
                 </div>`;
                 return;
             }
 
-            // --- AŞAMA 4: Veriyi İşleme (Eğer rawData geldiyse) ---
+            // VERİYİ İŞLEME VE EKRANA BASMA (Renderer)
             try {
-                const rows = rawData.reverse();
+                // Google Script'ten bazen tek obje gelebilir, diziye çevir
+                const rows = Array.isArray(rawData) ? rawData.reverse() : (rawData.data ? rawData.data.reverse() : []);
+                
+                if (rows.length === 0) {
+                     feed.innerHTML = '<div style="text-align:center; padding:20px; color:#999;">Henüz bir haber yok.</div>';
+                     return;
+                }
+
                 let pinnedPosts = [];
                 let regularPosts = [];
 
@@ -912,10 +931,11 @@
                         </div>
                     </div>`;
                 });
-                feed.innerHTML = htmlContent || '<div style="text-align:center; padding:20px; color:#999;">Henüz bir haber yok...</div>';
+                feed.innerHTML = htmlContent;
                 checkDeepLink();
             } catch (renderErr) {
                 console.error("Render hatası:", renderErr);
+                feed.innerHTML = '<div style="text-align:center">Veri işlenemedi.</div>';
             }
         }
 
@@ -944,10 +964,10 @@
                 localStorage.setItem('liked_' + id, 'true');
             }
 
-            fetch(SCRIPT_URL, {
+            // Like işlemi de Proxy üzerinden denenerek gönderilir (CORS sorununu önlemek için)
+            fetch(`https://corsproxy.io/?${encodeURIComponent(SCRIPT_URL)}`, {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
+                // Google Script text olarak POST bekler
                 body: JSON.stringify({ id: id, action: action })
             })
             .then(() => { setTimeout(() => { btn.disabled = false; }, 500); })
@@ -1006,18 +1026,22 @@
             const userEl = document.getElementById('rbx-user');
             try {
                 const url = `https://thumbnails.roblox.com/v1/users/avatar?userIds=${ROBLOX_ID}&size=420x420&format=Png&isCircular=false`;
-                const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url);
+                const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(url);
                 const res = await fetch(proxyUrl);
-                const data = await res.json();
+                const json = await res.json();
+                const data = JSON.parse(json.contents); // AllOrigins için parse
+                
                 if (data.data && data.data[0] && data.data[0].imageUrl) {
                     imgEl.src = data.data[0].imageUrl;
                     avatarUrl = data.data[0].imageUrl; 
                 } else { imgEl.src = avatarUrl; }
 
                 const userUrl = `https://users.roblox.com/v1/users/${ROBLOX_ID}`;
-                const userProxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(userUrl);
+                const userProxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(userUrl);
                 const userRes = await fetch(userProxyUrl);
-                const userData = await userRes.json();
+                const userJson = await userRes.json();
+                const userData = JSON.parse(userJson.contents);
+                
                 if (userData.name) { userEl.innerText = "@" + userData.name; }
             } catch (err) { console.log("Roblox API Hatası:", err); imgEl.src = avatarUrl; }
         }
