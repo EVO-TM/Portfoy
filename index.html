@@ -771,7 +771,7 @@
             if (clean.includes('youtube.com') || clean.includes('youtu.be')) {
                 const match = clean.match(/(?:v=|\/)([\w-]{11})/);
                 if (match && match[1]) {
-                     return `<iframe class="nc-media" src="https://www.youtube.com/embed/${match[1]}" allowfullscreen></iframe>`;
+                     return `<iframe class="nc-media" src=" allowfullscreen></iframe>`;
                 }
             }
             if (clean.match(/\.(mp4|webm|mov)$/i)) {
@@ -784,43 +784,71 @@
             return `<img src="${clean}" class="nc-media" alt="Medya" onclick="openLightbox('${clean}')" style="cursor:zoom-in" onerror="this.parentElement.style.display='none'">`;
         }
 
-        // --- HABERLERİ ÇEKME (PROXY FIX) ---
+        // --- HABERLERİ ÇEKME (TELEFON FIX - ZİNCİRLEME PROXY) ---
         async function loadNewsFromSheet() {
             const feed = document.getElementById('news-feed');
             
-            if(feed.querySelector('.loading-spinner')) {
+            // Eğer yükleniyor ikonu zaten yoksa ekle
+            if(!feed.querySelector('.loading-spinner')) {
                 feed.innerHTML = `<div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> <span>${langData[currentLang].loading}</span></div>`;
             }
 
+            // Önbellek sorunlarını önlemek için zaman damgası
+            const uniqueParam = '&t=' + new Date().getTime();
+            let rawData = null;
+            let finalError = null;
+
+            // --- AŞAMA 1: AllOrigins (Mobilde Genelde Daha Kararlıdır) ---
             try {
-                // FALLBACK MEKANİZMASI: Önce Proxy'yi dene, olmazsa Script'i dene
-                let rawData;
-                const uniqueParam = '&t=' + new Date().getTime();
-                
+                // AllOrigins JSON wrapper döndürür, bu yüzden doğrudan JSON parse edilebilir.
+                const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
+                const res = await fetch(proxyUrl);
+                if(res.ok) {
+                    const json = await res.json();
+                    if(json.contents) {
+                        try {
+                            rawData = JSON.parse(json.contents); // Google Script çıktısını parse et
+                        } catch(parseErr) {
+                            console.warn("AllOrigins JSON parse hatası, diğerine geçiliyor.");
+                        }
+                    }
+                }
+            } catch(e) { 
+                console.log("1. Yöntem (AllOrigins) başarısız oldu, 2. Yöntem deneniyor..."); 
+            }
+
+            // --- AŞAMA 2: CodeTabs (Yedek) ---
+            // Eğer 1. aşama başarısızsa (rawData null ise) burası çalışır.
+            if(!rawData) {
                 try {
-                    // YÖNTEM 1: CodeTabs Proxy (Daha hızlıdır ama bazen mobilde takılır)
                     const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
                     const res = await fetch(proxyUrl);
-                    if(!res.ok) throw new Error("Proxy Failed");
-                    rawData = await res.json();
-                } catch(proxyError) {
-                    console.log("Proxy başarısız, doğrudan fetch deneniyor...", proxyError);
-                    // YÖNTEM 2: Doğrudan Google Script (Daha yavaştır ama mobilde çalışır)
-                    const directRes = await fetch(SCRIPT_URL + "?dummy=1" + uniqueParam);
-                    if(!directRes.ok) throw new Error("Direct Fetch Failed");
-                    // Google script doğrudan JSON dönmez, redirect eder. Bu yüzden text alıp parse etmek gerekebilir.
-                    // Ancak "echo" parametresi ile JSONP benzeri bir yapı kurmadığımız için burada 
-                    // en garanti yöntem YÖNTEM 3: AllOrigins Proxy'dir.
-                    
-                    const backupProxy = 'https://api.allorigins.win/get?url=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
-                    const backupRes = await fetch(backupProxy);
-                    if(!backupRes.ok) throw new Error("Backup Proxy Failed");
-                    const backupJson = await backupRes.json();
-                    rawData = JSON.parse(backupJson.contents);
+                    if(res.ok) {
+                        rawData = await res.json();
+                    }
+                } catch(e) { 
+                    console.log("2. Yöntem (CodeTabs) de başarısız oldu."); 
+                    finalError = e.message;
                 }
+            }
 
-                if(rawData.error) throw new Error(rawData.error);
+            // --- AŞAMA 3: Hata Kontrolü ve Ekrana Basma ---
+            if(!rawData || rawData.error) {
+                console.error("Kritik Hata: Tüm proxy'ler başarısız oldu.");
+                feed.innerHTML = `<div style="text-align:center; color:red; padding:20px;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size:30px; margin-bottom:10px;"></i><br>
+                    <strong>Bağlantı Hatası</strong><br>
+                    <small>Haberler yüklenirken bir sorun oluştu.</small><br>
+                    <button onclick="loadNewsFromSheet()" style="margin-top:15px; padding:8px 15px; border-radius:20px; border:none; background:var(--ink); color:white; font-weight:bold; cursor:pointer;">
+                        <i class="fa-solid fa-rotate-right"></i> Tekrar Dene
+                    </button>
+                    <br><br><small style="color:#999; font-size:10px;">(Hata: ${finalError || 'CORS/Proxy'})</small>
+                </div>`;
+                return;
+            }
 
+            // --- AŞAMA 4: Veriyi İşleme (Eğer rawData geldiyse) ---
+            try {
                 const rows = rawData.reverse();
                 let pinnedPosts = [];
                 let regularPosts = [];
@@ -884,15 +912,10 @@
                         </div>
                     </div>`;
                 });
-                feed.innerHTML = htmlContent || '<div style="text-align:center; padding:20px;">...</div>';
+                feed.innerHTML = htmlContent || '<div style="text-align:center; padding:20px; color:#999;">Henüz bir haber yok...</div>';
                 checkDeepLink();
-            } catch (err) {
-                console.error("Yükleme Hatası:", err);
-                feed.innerHTML = `<div style="text-align:center; color:red; padding:20px;">
-                    <i class="fa-solid fa-triangle-exclamation"></i><br>
-                    <small>${err.message}</small><br>
-                    <button onclick="loadNewsFromSheet()" style="margin-top:10px; padding:5px 10px; cursor:pointer;">Tekrar Dene</button>
-                </div>`;
+            } catch (renderErr) {
+                console.error("Render hatası:", renderErr);
             }
         }
 
