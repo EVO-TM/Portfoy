@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Evo Studios | Portfolio</title>
     
-    <!-- SİTE LOGOSU (FAVICON) -->
+    <!-- SİTE LOGOSU -->
     <link rel="icon" type="image/png" href="evo_logo.png">
     <link rel="apple-touch-icon" href="evo_logo.png">
     <meta property="og:image" content="evo_logo.png">
@@ -27,7 +27,7 @@
             --s-purple: #9b59b6;
         }
 
-        /* --- TEMEL & ANİMASYONLAR --- */
+        /* --- TEMEL AYARLAR --- */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             background-color: var(--bg-color);
@@ -45,22 +45,11 @@
         }
 
         /* Animasyonlar */
-        @keyframes popIn {
-            0% { transform: scale(0.8) translateY(20px); opacity: 0; }
-            60% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
-        }
+        @keyframes popIn { 0% { transform: scale(0.8) translateY(20px); opacity: 0; } 60% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes likeBounce { 0% { transform: scale(1); } 50% { transform: scale(1.4); } 100% { transform: scale(1); } }
-        @keyframes highlightFlash { 
-            0% { border-color: var(--accent); transform: scale(1); } 
-            50% { border-color: var(--s-red); transform: scale(1.02); } 
-            100% { border-color: var(--accent); transform: scale(1); }
-        }
+        @keyframes highlightFlash { 0% { border-color: var(--accent); transform: scale(1); } 50% { border-color: var(--s-red); transform: scale(1.02); } 100% { border-color: var(--accent); transform: scale(1); } }
 
         /* --- DİL BUTONU --- */
         .lang-switch {
@@ -93,26 +82,14 @@
         .loading-text { color: white; font-weight: bold; letter-spacing: 2px; }
         .loader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
-        /* --- ARKA PLAN (GLOBAL) --- */
-        #bg-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; overflow: hidden; pointer-events: none;
-        }
-        .bg-icon {
-            position: absolute; color: rgba(0,0,0,0.05);
-            animation: floatUp linear infinite; bottom: -50px;
-        }
+        /* --- ARKA PLAN --- */
+        #bg-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; pointer-events: none; }
+        .bg-icon { position: absolute; color: rgba(0,0,0,0.05); animation: floatUp linear infinite; bottom: -50px; }
 
-        /* --- NAV DOCK (KARTON) --- */
-        .nav-dock-wrapper {
-            position: fixed; bottom: 30px;
-            display: flex; justify-content: center;
-            z-index: 100; width: 100%; pointer-events: none;
-            /* Mobilde Home Bar'dan kaçınmak için alt boşluğu artıracağız (Media Query'de) */
-        }
+        /* --- NAV DOCK --- */
+        .nav-dock-wrapper { position: fixed; bottom: 30px; display: flex; justify-content: center; z-index: 100; width: 100%; pointer-events: none; }
         .nav-dock {
-            pointer-events: auto;
-            background-color: #e6dcc6;
+            pointer-events: auto; background-color: #e6dcc6;
             background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636l-1.414 1.414L38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23d1c4a5' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
             padding: 12px 15px; border-radius: 18px; display: flex; gap: 15px;
             border: 3px solid #2d241e;
@@ -133,13 +110,8 @@
             color: #2d241e; box-shadow: 0 5px 0 #2d241e;
             transition: all 0.1s ease-in-out; position: relative; margin-bottom: 5px;
         }
-        .nav-btn i { transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 0 #2d241e; background: #fff; }
-        .nav-btn:hover i { transform: scale(1.15) rotate(5deg); }
-        .nav-btn:active, .nav-btn.active {
-            transform: translateY(5px); box-shadow: 0 0 0 #2d241e;
-            border-color: #2d241e; background: var(--s-yellow);
-        }
+        .nav-btn.active { transform: translateY(5px); box-shadow: 0 0 0 #2d241e; border-color: #2d241e; background: var(--s-yellow); }
         .nav-btn.active i { transform: scale(1.1); color: var(--ink); }
 
         /* --- SAHNE --- */
@@ -165,19 +137,19 @@
         }
         .page-section.active { display: flex; }
 
+        /* --- ORTAK KARTON STILLERI --- */
+        .cardboard-bg {
+            background-color: #dcbfa6;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+        }
+        
         /* --- HOME --- */
         .home-scene-wrapper { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden; }
         .floating-element { position: absolute; color: rgba(45, 36, 30, 0.1); font-size: 3rem; z-index: -1; animation: floatAround 15s infinite linear; }
-        @keyframes floatAround {
-            0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
-            20% { opacity: 0.6; }
-            80% { opacity: 0.6; }
-            100% { transform: translate(100px, -150px) rotate(360deg); opacity: 0; }
-        }
+        @keyframes floatAround { 0% { transform: translate(0, 0) rotate(0deg); opacity: 0; } 100% { transform: translate(100px, -150px) rotate(360deg); opacity: 0; } }
+        
         .cardboard-box {
             width: 420px; height: 600px;
-            background-color: #dcbfa6; 
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
             border-radius: 15px; position: relative;
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
@@ -185,9 +157,16 @@
             border: 2px solid #bba38e; padding: 30px;
             text-align: center; transform-style: preserve-3d;
         }
+        /* Home'a özel sınıf ekleyelim */
+        .box-home {
+            background-color: #dcbfa6; 
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+        }
+        
         .box-tape { position: absolute; background: rgba(255, 255, 255, 0.4); box-shadow: 0 1px 3px rgba(0,0,0,0.1); backdrop-filter: blur(2px); z-index: 10; }
         .tape-top-left { width: 120px; height: 35px; top: -15px; left: -30px; transform: rotate(-35deg); border-left: 2px dashed rgba(255,255,255,0.5); border-right: 2px dashed rgba(255,255,255,0.5); }
         .tape-bottom-right { width: 100px; height: 35px; bottom: 10px; right: -25px; transform: rotate(-40deg); border-left: 2px dashed rgba(255,255,255,0.5); border-right: 2px dashed rgba(255,255,255,0.5); }
+        
         .fragile-sticker {
             position: absolute; top: 30px; right: 30px;
             border: 3px solid #d63031; color: #d63031; padding: 5px 10px;
@@ -200,7 +179,6 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.15); transform: rotate(-3deg);
             margin-bottom: 25px; width: 220px; position: relative; transition: transform 0.3s;
         }
-        .polaroid-photo:hover { transform: rotate(0deg) scale(1.05); }
         .polaroid-photo img { width: 100%; height: auto; background: #f0f0f0; display: block; }
         .polaroid-tape { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(2deg); width: 60px; height: 25px; background: rgba(230, 200, 100, 0.6); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
         .stamp-title { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 48px; color: #2d241e; text-transform: uppercase; line-height: 0.9; margin: 10px 0; opacity: 0.9; text-shadow: 1px 1px 0px rgba(255,255,255,0.4); transform: rotate(-2deg); }
@@ -216,8 +194,6 @@
 
         /* --- ABOUT --- */
         .cardboard-about {
-            background-color: #dcbfa6;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
             border: 3px solid #bba38e; border-radius: 20px; width: 100%; max-width: 850px;
             padding: 50px 40px; display: flex; align-items: center; gap: 50px; position: relative;
             box-shadow: 10px 10px 0 rgba(0,0,0,0.1), 0 20px 50px rgba(0,0,0,0.1);
@@ -285,90 +261,122 @@
         }
         .creator-store-link:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4); }
 
-        /* --- HABERLER (GELİŞMİŞ) --- */
+        /* --- HABERLER (YENİLENMİŞ KARTON TASARIM) --- */
         .news-container {
-            background: #fafafa; border: 4px solid var(--ink); border-radius: 30px; 
+            /* Karton Arka Plan */
+            background-color: #dcbfa6;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+            border: 4px solid #bba38e; border-radius: 20px; 
             width: 100%; max-width: 650px; height: 75vh; 
             display: flex; flex-direction: column;
-            box-shadow: 15px 15px 0 rgba(0,0,0,0.1); position: relative; overflow: hidden;
+            box-shadow: 15px 15px 0 rgba(0,0,0,0.1), inset 0 0 50px rgba(0,0,0,0.05);
+            position: relative; overflow: hidden;
             font-family: 'Inter', sans-serif;
         }
         
-        /* Haber Başlık ve Filtreler */
         .news-header-modern {
-            padding: 20px 25px 0 25px; /* Alt boşluğu kaldırdık, filtreler hemen altında */
-            background: rgba(255,255,255,0.95);
-            display: flex; flex-direction: column; gap: 15px;
-            border-bottom: 2px solid #eee; z-index: 10;
+            padding: 15px 20px 0 20px;
+            background: rgba(255, 255, 255, 0.4); /* Hafif transparan */
+            backdrop-filter: blur(5px);
+            border-bottom: 2px dashed rgba(0,0,0,0.1);
+            display: flex; flex-direction: column; gap: 10px; z-index: 10;
         }
         .nh-top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .nh-title { font-family: 'Outfit', sans-serif; font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .nh-title { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 900; color: #2d241e; display: flex; align-items: center; gap: 10px; text-shadow: 1px 1px 0 rgba(255,255,255,0.5); }
         
-        /* Sekme/Filtre Tasarımı (Dosya Klasörü) */
+        /* Filtreler (Dosya Sekmesi Gibi) */
         .news-filters {
-            display: flex; gap: 5px; width: 100%; overflow-x: auto; 
-            padding-bottom: 0;
-            scrollbar-width: none; /* Firefox scrollbar gizle */
+            display: flex; gap: -5px; width: 100%; overflow-x: auto; 
+            padding-bottom: 0; padding-top: 5px;
+            scrollbar-width: none;
         }
         .news-filters::-webkit-scrollbar { display: none; }
         
         .filter-btn {
-            background: #e0e0e0; border: none; padding: 10px 18px;
-            border-radius: 12px 12px 0 0; /* Üst köşeler yuvarlak */
-            font-weight: 700; color: #777; cursor: pointer;
+            background: #f1e7d0; border: 2px solid #bba38e; 
+            border-bottom: none;
+            padding: 8px 16px;
+            border-radius: 10px 10px 0 0;
+            font-weight: 700; color: #88786a; cursor: pointer;
             font-size: 13px; white-space: nowrap; transition: 0.2s;
-            border-bottom: 3px solid transparent; flex-shrink: 0;
             font-family: 'Outfit', sans-serif;
+            position: relative; z-index: 1;
+            margin-right: 2px;
         }
         .filter-btn.active {
-            background: var(--ink); color: #fff;
-            border-bottom: 3px solid var(--accent);
+            background: #fff; color: var(--ink);
+            z-index: 2; height: 38px; margin-top: -4px;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
         }
-        .filter-btn:hover:not(.active) { background: #d0d0d0; }
-
-        /* Haber İçerik Alanı */
-        .news-scroll-area { flex: 1; overflow-y: auto; padding: 20px 25px 50px 25px; scroll-behavior: smooth; }
-        .news-scroll-area::-webkit-scrollbar { width: 6px; }
-        .news-scroll-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         
+        /* Haber Alanı */
+        .news-scroll-area { 
+            flex: 1; overflow-y: auto; padding: 25px 25px 50px 25px; 
+            scroll-behavior: smooth;
+        }
+        
+        /* Karton/Kağıt Haber Kartı */
         .news-card {
-            background: white; border-radius: 20px; border: 1px solid #e0e0e0;
-            margin-bottom: 30px; overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative;
+            background: #fff; 
+            border-radius: 2px; /* Keskin kağıt kenarı */
+            margin-bottom: 35px;
+            box-shadow: 2px 4px 8px rgba(0,0,0,0.15);
+            position: relative;
+            transform: rotate(-1deg);
+            transition: transform 0.3s ease;
+            border: 1px solid #ddd;
         }
-        .news-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); border-color: var(--accent); }
+        /* Her kartı rastgele biraz yamuk yapalım */
+        .news-card:nth-child(even) { transform: rotate(1.5deg); }
+        .news-card:hover { transform: scale(1.02) rotate(0deg) !important; z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         
-        /* Sabitlenmiş Post */
-        .news-card.pinned { border: 2px solid var(--s-yellow); background: linear-gradient(to bottom right, #fffcf0, #fff); order: -1; }
+        /* Haber Bandı (Tape) */
+        .news-tape {
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+            width: 90px; height: 25px; background: rgba(255, 255, 255, 0.45);
+            border-left: 2px dashed rgba(255,255,255,0.6); border-right: 2px dashed rgba(255,255,255,0.6);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); backdrop-filter: blur(2px); z-index: 2;
+        }
+        
+        .news-card.pinned { background: #fffcf0; border: 1px solid #e0d0b0; }
         .pin-badge {
-            position: absolute; top: -10px; right: 20px; color: #d63031; font-size: 24px; 
-            transform: rotate(15deg); z-index: 5; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
+            position: absolute; top: -12px; right: 15px; color: #d63031; font-size: 22px; 
+            z-index: 10; filter: drop-shadow(2px 2px 1px rgba(0,0,0,0.2));
+            transform: rotate(10deg);
         }
         
-        .news-card.highlight-news { border: 3px solid var(--accent); animation: highlightFlash 1s ease-in-out; box-shadow: 0 0 20px rgba(108, 92, 231, 0.4); }
-        
-        .nc-header { padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; }
+        .nc-header { padding: 20px 20px 10px 20px; display: flex; align-items: center; justify-content: space-between; }
         .nc-user { display: flex; align-items: center; gap: 10px; }
-        .nc-user-icon { width: 32px; height: 32px; background: var(--ink); color:white; border-radius: 8px; display:flex; align-items:center; justify-content:center; font-size: 14px; }
+        .nc-user-icon { width: 32px; height: 32px; background: var(--ink); color:white; border-radius: 50%; display:flex; align-items:center; justify-content:center; font-size: 14px; }
         .nc-info { display: flex; flex-direction: column; }
         .nc-name { font-weight: 800; font-size: 15px; color: var(--ink); }
-        .nc-date { font-size: 12px; color: #888; }
-        .nc-tag { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; color: white; letter-spacing: 0.5px; }
-        .nc-media-wrapper { width: 100%; height: auto; background: #000; position: relative; display: flex; justify-content: center; align-items: center; min-height: 250px; cursor: zoom-in; }
-        .nc-media { width: 100%; height: 100%; max-height: 400px; object-fit: cover; display: block; }
-        iframe.nc-media { height: 300px; border:none; }
-        .nc-content { padding: 20px; }
-        .nc-title { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800; margin: 0 0 10px 0; line-height: 1.3; transition: color 0.2s; }
-        .nc-title:hover { color: var(--accent); }
-        .nc-desc { font-size: 15px; color: #444; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; }
-        .nc-actions { padding: 10px 20px 20px 20px; display: flex; gap: 20px; border-top: 1px solid #f5f5f5; margin-top: 10px; }
-        .action-btn { background: none; border: none; cursor: pointer; font-size: 20px; color: #888; display: flex; align-items: center; gap: 6px; transition: 0.2s; font-family: 'Outfit', sans-serif; font-weight: 600; }
-        .action-btn:hover { transform: scale(1.1); }
-        .action-btn.like-btn:hover { color: #ff4757; }
+        .nc-date { font-size: 12px; color: #888; font-family: 'Courier New', monospace; font-weight: bold; }
+        .nc-tag { 
+            padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 900; 
+            color: var(--ink); border: 2px solid var(--ink); background: #fff;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            transform: rotate(-3deg);
+        }
+        
+        .nc-media-wrapper { 
+            width: calc(100% - 20px); margin: 5px 10px; 
+            height: auto; background: #000; position: relative; 
+            display: flex; justify-content: center; align-items: center; 
+            min-height: 200px; cursor: zoom-in;
+            border: 2px solid #eee; border-radius: 4px;
+        }
+        .nc-media { width: 100%; height: 100%; max-height: 350px; object-fit: cover; display: block; }
+        iframe.nc-media { height: 250px; border:none; }
+        
+        .nc-content { padding: 10px 20px 15px 20px; }
+        .nc-title { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800; margin: 0 0 8px 0; line-height: 1.2; }
+        .nc-desc { font-size: 15px; color: #444; line-height: 1.6; white-space: pre-wrap; font-family: 'Inter', sans-serif; }
+        
+        .nc-actions { padding: 10px 20px 15px 20px; display: flex; gap: 20px; border-top: 1px dashed #ddd; margin-top: 5px; }
+        .action-btn { background: none; border: none; cursor: pointer; font-size: 18px; color: #888; display: flex; align-items: center; gap: 6px; transition: 0.2s; font-family: 'Outfit', sans-serif; font-weight: 700; }
+        .action-btn:hover { transform: translateY(-2px); color: var(--ink); }
         .action-btn.liked { color: #ff4757; }
         .action-btn.liked i { animation: likeBounce 0.4s; }
-        .action-btn span { font-size: 14px; }
 
         /* Hata Kutusu */
         .error-box { text-align: center; padding: 40px 20px; color: #ff6b6b; display: flex; flex-direction: column; align-items: center; gap: 15px; }
@@ -386,7 +394,6 @@
 
         /* --- MOBİL UYUMLULUK --- */
         @media (max-width: 768px) {
-            /* Dock'u Home Bar'dan yukarı çek */
             .nav-dock-wrapper { bottom: 45px; } 
             .nav-dock { width: 95%; gap: 10px; justify-content: space-evenly; padding: 10px 5px; }
             .nav-btn { width: 50px; height: 50px; font-size: 20px; }
@@ -394,7 +401,6 @@
             .cb-text-content { text-align: center; }
             .cb-socials { justify-content: center; }
             .simple-card { width: 90%; padding: 25px; }
-            /* Haber kutusu mobilde daha optimize */
             .news-container { width: 95%; height: 75vh; border-width: 3px; }
             .cardboard-box { width: 90%; height: auto; padding: 40px 20px; transform: none !important; }
             .stamp-title { font-size: 36px; }
@@ -419,7 +425,7 @@
         <div class="loading-text">EVO STUDIOS...</div>
     </div>
 
-    <!-- HAREKETLİ ARKA PLAN (Global) -->
+    <!-- HAREKETLİ ARKA PLAN -->
     <div id="bg-container"></div>
 
     <!-- TOAST BİLDİRİMİ -->
@@ -428,12 +434,12 @@
         <span id="toast-msg">Link Kopyalandı!</span>
     </div>
 
-    <!-- LIGHTBOX (Tam Ekran Resim) -->
+    <!-- LIGHTBOX -->
     <div id="lightbox" onclick="closeLightbox()">
         <img id="lightbox-img" src="" alt="Full Screen Preview">
     </div>
 
-    <!-- MENÜ (NAV DOCK) - KARTON TEMA -->
+    <!-- MENÜ (NAV DOCK) -->
     <div class="nav-dock-wrapper">
         <div class="nav-dock">
             <div class="dock-tape"></div>
@@ -456,7 +462,7 @@
                 <div class="floating-element" style="bottom:10%; right:10%; animation-duration:20s;"><i class="fa-solid fa-puzzle-piece"></i></div>
                 <div class="floating-element" style="top:50%; left:80%; animation-duration:14s; color:rgba(255,0,0,0.2);"><i class="fa-solid fa-heart"></i></div>
 
-                <div class="cardboard-box" id="tiltCard">
+                <div class="cardboard-box box-home" id="tiltCard">
                     <div class="box-tape tape-top-left"></div>
                     <div class="box-tape tape-bottom-right"></div>
                     <div class="fragile-sticker"><i class="fa-solid fa-box-open"></i> FRAGILE</div>
@@ -492,19 +498,17 @@
             </div>
         </div>
 
-        <!-- === HABERLER (GÜNCELLENMİŞ) === -->
+        <!-- === HABERLER (YENİ KARTON TASARIM & FALLBACK SİSTEMİ) === -->
         <div id="news" class="page-section">
-            <div class="news-container">
-                <!-- Üst Alan ve Filtreler -->
+            <div class="news-container cardboard-bg">
                 <div class="news-header-modern">
                     <div class="nh-top-row">
                         <div class="nh-title">
-                            <i class="fa-solid fa-rss" style="color:var(--accent)"></i> <span data-t="news_title">Evo Feed</span>
+                            <i class="fa-solid fa-rss" style="color:#2d241e"></i> <span data-t="news_title">Evo Feed</span>
                         </div>
-                        <div style="font-size:12px; font-weight:bold; color:#aaa; letter-spacing:1px;">EVO NEWS</div>
+                        <div style="font-size:12px; font-weight:bold; color:#88786a; letter-spacing:1px; opacity:0.8;">EVO NEWS</div>
                     </div>
                     
-                    <!-- Filtre Butonları -->
                     <div class="news-filters">
                         <button class="filter-btn active" onclick="filterNews('all', this)" data-t="filter_all">Tümü</button>
                         <button class="filter-btn" onclick="filterNews('update', this)" data-t="filter_update">Güncelleme</button>
@@ -514,9 +518,9 @@
                 </div>
 
                 <div id="news-feed" class="news-scroll-area">
-                    <div class="loading-spinner" style="margin-top:50px;">
-                        <div class="spinner" style="border-width:3px; width:30px; height:30px; margin:0 auto;"></div>
-                        <div style="text-align:center; font-size:12px; color:#999; font-weight:bold; margin-top:10px;" data-t="loading">Yükleniyor...</div>
+                    <div class="loading-spinner" style="margin-top:50px; text-align:center;">
+                        <div class="spinner" style="border-width:3px; width:30px; height:30px; margin:0 auto; border-top-color:#2d241e; border-color:rgba(45,36,30,0.2); border-top-color:#2d241e;"></div>
+                        <div style="font-size:12px; color:#5d4e42; font-weight:bold; margin-top:10px;" data-t="loading">Yükleniyor...</div>
                     </div>
                 </div>
             </div>
@@ -536,7 +540,7 @@
 
         <!-- === ABOUT === -->
         <div id="about" class="page-section">
-            <div class="cardboard-about">
+            <div class="cardboard-about cardboard-bg">
                 <div class="about-tape-top"></div>
                 <div class="cb-text-content">
                     <div class="founder-stamp"><i class="fa-solid fa-crown"></i> FOUNDER</div>
@@ -575,7 +579,13 @@
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwcjpNiivxXJk5UeQA5Rbjpv9sJ_I-ZdQRBRfjVxebKUwWWtd2sM-BXRb4dPcLeYqQA/exec';
         let avatarUrl = "https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png";
         let currentLang = localStorage.getItem('siteLang') || 'tr';
-        let globalNewsData = []; // Haberleri önbellekte tutmak için
+        let globalNewsData = [];
+
+        // --- YEDEK HABERLER (İNTERNET GİTSE BİLE SİTE BOŞ GÖRÜNMEZ) ---
+        const FALLBACK_NEWS = [
+            { id: 'fb1', baslik: 'Sitemize Hoşgeldiniz!', icerik: 'İnternet bağlantısında bir sorun var gibi görünüyor, ancak sitemizi gezmeye devam edebilirsiniz. Yeni oyunlarımız çok yakında!', tarih: new Date().toISOString(), etiket: 'Duyuru', pinned: 'yes', likes: 99 },
+            { id: 'fb2', baslik: 'Discord Sunucumuz', icerik: 'Topluluğumuza katılarak anlık gelişmelerden haberdar olabilirsin. Discord: discord.gg/evo', tarih: new Date().toISOString(), etiket: 'Önemli', likes: 45 }
+        ];
 
         // --- DİL VERİLERİ ---
         const langData = {
@@ -640,7 +650,6 @@
         function changeLanguage(lang) {
             currentLang = lang;
             localStorage.setItem('siteLang', lang);
-            
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + lang).classList.add('active');
 
@@ -650,10 +659,13 @@
                 if (langData[lang][key]) el.innerText = langData[lang][key];
             });
 
-            // Haberler zaten yüklüyse arayüz dilini güncellemek için tekrar render et
             if(globalNewsData.length > 0) {
-                const activeFilter = document.querySelector('.filter-btn.active').getAttribute('onclick').match(/'([^']+)'/)[1];
-                renderNews(activeFilter);
+                const activeFilterBtn = document.querySelector('.filter-btn.active');
+                if (activeFilterBtn) {
+                     // onclick attribute'undan filtre tipini çekiyoruz
+                    const filterMatch = activeFilterBtn.getAttribute('onclick').match(/'([^']+)'/);
+                    if(filterMatch) renderNews(filterMatch[1]);
+                }
             } else {
                 loadNewsFromSheet();
             }
@@ -710,95 +722,83 @@
             return `<img src="${clean}" class="nc-media" alt="Medya" onclick="openLightbox('${clean}')" onerror="this.parentElement.style.display='none'">`;
         }
 
-        // --- GÜÇLENDİRİLMİŞ HABER YÜKLEME (RETRY + CACHE + PROXY FALLBACK) ---
+        // --- GÜÇLENDİRİLMİŞ HABER YÜKLEME (3 FARKLI PROXY + MOCK DATA) ---
         async function loadNewsFromSheet() {
             const feed = document.getElementById('news-feed');
             
-            // Veri zaten varsa tekrar yükleme, sadece render et
-            if (globalNewsData.length > 0) {
-                renderNews('all');
-                return;
-            }
+            if (globalNewsData.length > 0) { renderNews('all'); return; }
 
-            // Yükleniyor animasyonu
             feed.innerHTML = `
                 <div class="loading-spinner" style="margin-top:50px; text-align:center;">
-                    <div class="spinner" style="border-width:3px; width:30px; height:30px; margin:0 auto;"></div>
-                    <div style="font-size:12px; color:#999; font-weight:bold; margin-top:10px;">${langData[currentLang].loading}</div>
+                    <div class="spinner" style="border-width:3px; width:30px; height:30px; margin:0 auto; border-top-color:#2d241e; border-color:rgba(45,36,30,0.2); border-top-color:#2d241e;"></div>
+                    <div style="font-size:12px; color:#5d4e42; font-weight:bold; margin-top:10px;">${langData[currentLang].loading}</div>
                 </div>`;
 
             const uniqueParam = '&t=' + new Date().getTime();
             let rawData = null;
 
-            // 1. Yöntem: AllOrigins
+            // 1. AllOrigins
             try {
-                const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
-                const res = await fetch(proxyUrl);
+                const res = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam));
                 if(res.ok) {
                     const json = await res.json();
                     if(json.contents) rawData = JSON.parse(json.contents);
                 }
             } catch(e) { console.warn("Proxy 1 Failed"); }
 
-            // 2. Yöntem: CodeTabs (Yedek)
+            // 2. CorsProxy.io (Çok Kararlı)
             if(!rawData || rawData.error) {
                 try {
-                    const proxyUrl2 = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
-                    const res2 = await fetch(proxyUrl2);
-                    if(res2.ok) rawData = await res2.json();
+                    const res = await fetch('https://corsproxy.io/?' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam));
+                    if(res.ok) rawData = await res.json();
                 } catch(e) { console.warn("Proxy 2 Failed"); }
             }
 
-            // Hata Kontrolü
+            // 3. CodeTabs (Yedek)
             if(!rawData || rawData.error) {
-                showErrorState();
+                try {
+                    const res = await fetch('https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam));
+                    if(res.ok) rawData = await res.json();
+                } catch(e) { console.warn("Proxy 3 Failed"); }
+            }
+
+            // HİÇBİRİ ÇALIŞMAZSA => FALLBACK (YEDEK) VERİLERİ KULLAN
+            if(!rawData || rawData.error) {
+                console.log("Internet/Proxy Error: Using Fallback Data");
+                globalNewsData = FALLBACK_NEWS; // Yedek veriyi yükle
+                renderNews('all');
+                // Kullanıcıya küçük bir hata bildirimi (opsiyonel)
+                showToast("Offline Mod: Yedek veriler yüklendi."); 
                 return;
             }
 
-            // Başarılı! Veriyi sakla ve render et
+            // Başarılı
             globalNewsData = rawData.reverse();
             renderNews('all');
         }
 
-        function showErrorState() {
-            const feed = document.getElementById('news-feed');
-            feed.innerHTML = `
-                <div class="error-box">
-                    <i class="fa-solid fa-wifi" style="font-size:40px; opacity:0.5;"></i>
-                    <div>
-                        <strong>${langData[currentLang].connection_error}</strong>
-                        <p style="font-size:12px; margin-top:5px; color:#666;">${langData[currentLang].error_desc}</p>
-                    </div>
-                    <button class="retry-btn" onclick="loadNewsFromSheet()">
-                        <i class="fa-solid fa-rotate-right"></i> ${langData[currentLang].retry_btn}
-                    </button>
-                </div>`;
-        }
-
-        // --- HABERLERİ EKRANA BASMA (FİLTRELEMELİ) ---
+        // --- HABERLERİ EKRANA BASMA ---
         function renderNews(filterType) {
             const feed = document.getElementById('news-feed');
             let htmlContent = '';
 
-            // Filtreleme
             const filteredData = globalNewsData.filter(item => {
                 if(filterType === 'all') return true;
                 const tag = (item.etiket || '').toLowerCase();
                 if(filterType === 'update' && (tag.includes('güncelleme') || tag.includes('update'))) return true;
                 if(filterType === 'leak' && (tag.includes('sızıntı') || tag.includes('leak') || tag.includes('sneak'))) return true;
-                if(filterType === 'info' && (tag.includes('duyuru') || tag.includes('info') || tag.includes('haber'))) return true;
+                if(filterType === 'info' && (tag.includes('duyuru') || tag.includes('info') || tag.includes('haber') || tag.includes('önemli'))) return true;
                 return false;
             });
 
-            // Sabitlenenleri en üste al (Sort)
             filteredData.sort((a, b) => {
                 const aPin = (a.pinned && a.pinned.toString().toLowerCase() === 'yes') ? 1 : 0;
                 const bPin = (b.pinned && b.pinned.toString().toLowerCase() === 'yes') ? 1 : 0;
-                return bPin - aPin; // 1 olanlar üste
+                return bPin - aPin;
             });
 
             if(filteredData.length === 0) {
-                feed.innerHTML = `<div style="text-align:center; padding:30px; color:#999;">Burada henüz bir şey yok...</div>`;
+                feed.innerHTML = `<div style="text-align:center; padding:30px; color:#88786a;">Burada henüz bir şey yok...</div>`;
                 return;
             }
 
@@ -813,21 +813,16 @@
                 const mediaHtml = getMediaContent(item.gorsel);
                 const timeAgoText = timeAgo(item.tarih);
                 
-                // Beğeni Durumu
                 const iLikedIt = localStorage.getItem('liked_' + uniqueId) === 'true';
                 const likeClass = iLikedIt ? 'liked' : '';
                 const likeIcon = iLikedIt ? 'fa-solid' : 'fa-regular';
 
-                // Etiket Rengi
-                let tagColor = '#333';
-                const tagLower = (item.etiket || '').toLowerCase();
-                if(tagLower.includes('güncelleme')) tagColor = '#00b894';
-                else if(tagLower.includes('sızıntı')) tagColor = '#e17055';
-                else if(tagLower.includes('önemli')) tagColor = '#d63031';
-                else if(tagLower.includes('duyuru')) tagColor = '#0984e3';
-
+                // Etiket stilini belirle (Karton temaya uygun renkler)
+                let tagText = item.etiket || 'Duyuru';
+                
                 htmlContent += `
                 <div class="news-card ${pinnedClass}" id="${uniqueId}">
+                    <div class="news-tape"></div>
                     ${pinIcon}
                     <div class="nc-header">
                         <div class="nc-user">
@@ -837,7 +832,7 @@
                                 <span class="nc-date">${timeAgoText}</span>
                             </div>
                         </div>
-                        <span class="nc-tag" style="background:${tagColor}">${item.etiket || 'Duyuru'}</span>
+                        <span class="nc-tag">${tagText}</span>
                     </div>
                     ${mediaHtml ? `<div class="nc-media-wrapper">${mediaHtml}</div>` : ''}
                     <div class="nc-content">
@@ -859,13 +854,11 @@
         }
 
         function filterNews(type, btn) {
-            // Buton aktiflik durumu
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
             renderNews(type);
         }
 
-        // --- ZAMAN FORMATLAYICI ---
         function timeAgo(dateString) {
             if(!dateString) return '';
             const date = new Date(dateString);
@@ -873,19 +866,18 @@
             const seconds = Math.floor((now - date) / 1000);
             
             let interval = seconds / 31536000;
-            if (interval > 1) return Math.floor(interval) + (currentLang === 'tr' ? " yıl önce" : " years ago");
+            if (interval > 1) return Math.floor(interval) + (currentLang === 'tr' ? "y" : "y");
             interval = seconds / 2592000;
-            if (interval > 1) return Math.floor(interval) + (currentLang === 'tr' ? " ay önce" : " months ago");
+            if (interval > 1) return Math.floor(interval) + (currentLang === 'tr' ? "ay" : "m");
             interval = seconds / 86400;
-            if (interval > 1) return Math.floor(interval) + (currentLang === 'tr' ? " gün önce" : " days ago");
+            if (interval > 1) return Math.floor(interval) + (currentLang === 'tr' ? "g" : "d");
             interval = seconds / 3600;
-            if (interval > 1) return Math.floor(interval) + (currentLang === 'tr' ? " saat önce" : " hours ago");
+            if (interval > 1) return Math.floor(interval) + (currentLang === 'tr' ? "s" : "h");
             interval = seconds / 60;
-            if (interval > 1) return Math.floor(interval) + (currentLang === 'tr' ? " dk önce" : " min ago");
-            return (currentLang === 'tr' ? "Az önce" : "Just now");
+            if (interval > 1) return Math.floor(interval) + (currentLang === 'tr' ? "dk" : "m");
+            return (currentLang === 'tr' ? "Şimdi" : "Now");
         }
 
-        // --- LIKE SİSTEMİ ---
         function toggleLike(btn, id) {
             if(btn.disabled) return;
             btn.disabled = true;
@@ -920,7 +912,6 @@
             .catch(err => { console.error("Like error:", err); btn.disabled = false; });
         }
 
-        // --- LIGHTBOX ---
         function openLightbox(url) {
             if(!url) return;
             const lightbox = document.getElementById('lightbox');
@@ -934,7 +925,6 @@
             setTimeout(() => { document.getElementById('lightbox-img').src = ''; }, 300);
         }
 
-        // --- PAYLAŞMA & TOAST ---
         function showToast(msg) {
             const t = document.getElementById('toast');
             const m = document.getElementById('toast-msg');
@@ -949,7 +939,6 @@
                 .catch(() => { showToast(langData[currentLang].toast_fail); });
         }
 
-        // --- URL PARAMETRE YÖNETİMİ ---
         function handleUrlParams() { /* loadNews zaten changeLanguage içinde çağrılıyor */ }
         function checkDeepLink() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -966,13 +955,12 @@
             }
         }
 
-        // --- ROBLOX AVATAR ---
         async function fetchRobloxData() {
             const imgEl = document.getElementById('my-avatar');
             const userEl = document.getElementById('rbx-user');
             try {
                 const url = `https://thumbnails.roblox.com/v1/users/avatar?userIds=${ROBLOX_ID}&size=420x420&format=Png&isCircular=false`;
-                const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url);
+                const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
                 const res = await fetch(proxyUrl);
                 const data = await res.json();
                 if (data.data && data.data[0] && data.data[0].imageUrl) {
@@ -981,14 +969,13 @@
                 } else { imgEl.src = avatarUrl; }
 
                 const userUrl = `https://users.roblox.com/v1/users/${ROBLOX_ID}`;
-                const userProxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(userUrl);
+                const userProxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(userUrl);
                 const userRes = await fetch(userProxyUrl);
                 const userData = await userRes.json();
                 if (userData.name) { userEl.innerText = "@" + userData.name; }
             } catch (err) { console.log("Roblox API Hatası:", err); imgEl.src = avatarUrl; }
         }
 
-        // --- TILT EFEKT (HOME) ---
         const homeCard = document.getElementById('tiltCard');
         document.getElementById('home').addEventListener('mousemove', (e) => {
             if(window.innerWidth > 768) {
@@ -1002,7 +989,6 @@
             homeCard.style.transform = 'perspective(1000px) rotateY(0) rotateX(0)';
         });
 
-        // --- ARKA PLAN İKONLARI ---
         const bgContainer = document.getElementById('bg-container');
         const icons = ['fa-gamepad', 'fa-ghost', 'fa-dice', 'fa-puzzle-piece', 'fa-rocket', 'fa-bolt', 'fa-code', 'fa-dragon'];
         for(let i=0; i<15; i++) {
