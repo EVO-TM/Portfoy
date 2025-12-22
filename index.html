@@ -50,7 +50,6 @@
             60% { transform: scale(1.05); opacity: 1; }
             100% { transform: scale(1); opacity: 1; }
         }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         @keyframes floatUp {
             0% { transform: translateY(0) rotate(0deg); opacity: 0; }
             100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
@@ -63,7 +62,7 @@
             100% { border-color: var(--accent); transform: scale(1); }
         }
 
-        /* --- DİL BUTONU (YENİ) --- */
+        /* --- DİL BUTONU --- */
         .lang-switch {
             position: fixed; top: 20px; right: 20px;
             background: white; border: 2px solid var(--ink);
@@ -108,10 +107,11 @@
         .nav-dock-wrapper {
             position: fixed; bottom: 30px;
             display: flex; justify-content: center;
-            z-index: 100; width: 100%; pointer-events: none; /* Wrapper tıklamayı engellemesin */
+            z-index: 100; width: 100%; pointer-events: none;
+            /* Mobilde Home Bar'dan kaçınmak için alt boşluğu artıracağız (Media Query'de) */
         }
         .nav-dock {
-            pointer-events: auto; /* Dock tıklanabilir olsun */
+            pointer-events: auto;
             background-color: #e6dcc6;
             background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636l-1.414 1.414L38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23d1c4a5' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
             padding: 12px 15px; border-radius: 18px; display: flex; gap: 15px;
@@ -155,8 +155,6 @@
             align-items: center; justify-content: center;
             padding: 20px;
         }
-        
-        /* Geçiş Animasyonu Tetikleyicileri */
         .page-section.active .cardboard-box,
         .page-section.active .project-card,
         .page-section.active .cardboard-about,
@@ -167,15 +165,9 @@
         }
         .page-section.active { display: flex; }
 
-        /* --- HOME (KARTON KUTU) --- */
-        .home-scene-wrapper {
-            position: relative; width: 100%; height: 100%;
-            display: flex; justify-content: center; align-items: center; overflow: hidden;
-        }
-        .floating-element {
-            position: absolute; color: rgba(45, 36, 30, 0.1); 
-            font-size: 3rem; z-index: -1; animation: floatAround 15s infinite linear;
-        }
+        /* --- HOME --- */
+        .home-scene-wrapper { position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .floating-element { position: absolute; color: rgba(45, 36, 30, 0.1); font-size: 3rem; z-index: -1; animation: floatAround 15s infinite linear; }
         @keyframes floatAround {
             0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
             20% { opacity: 0.6; }
@@ -193,18 +185,9 @@
             border: 2px solid #bba38e; padding: 30px;
             text-align: center; transform-style: preserve-3d;
         }
-        .box-tape {
-            position: absolute; background: rgba(255, 255, 255, 0.4);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1); backdrop-filter: blur(2px); z-index: 10;
-        }
-        .tape-top-left {
-            width: 120px; height: 35px; top: -15px; left: -30px;
-            transform: rotate(-35deg); border-left: 2px dashed rgba(255,255,255,0.5); border-right: 2px dashed rgba(255,255,255,0.5);
-        }
-        .tape-bottom-right {
-            width: 100px; height: 35px; bottom: 10px; right: -25px;
-            transform: rotate(-40deg); border-left: 2px dashed rgba(255,255,255,0.5); border-right: 2px dashed rgba(255,255,255,0.5);
-        }
+        .box-tape { position: absolute; background: rgba(255, 255, 255, 0.4); box-shadow: 0 1px 3px rgba(0,0,0,0.1); backdrop-filter: blur(2px); z-index: 10; }
+        .tape-top-left { width: 120px; height: 35px; top: -15px; left: -30px; transform: rotate(-35deg); border-left: 2px dashed rgba(255,255,255,0.5); border-right: 2px dashed rgba(255,255,255,0.5); }
+        .tape-bottom-right { width: 100px; height: 35px; bottom: 10px; right: -25px; transform: rotate(-40deg); border-left: 2px dashed rgba(255,255,255,0.5); border-right: 2px dashed rgba(255,255,255,0.5); }
         .fragile-sticker {
             position: absolute; top: 30px; right: 30px;
             border: 3px solid #d63031; color: #d63031; padding: 5px 10px;
@@ -219,20 +202,9 @@
         }
         .polaroid-photo:hover { transform: rotate(0deg) scale(1.05); }
         .polaroid-photo img { width: 100%; height: auto; background: #f0f0f0; display: block; }
-        .polaroid-tape {
-            position: absolute; top: -15px; left: 50%;
-            transform: translateX(-50%) rotate(2deg); width: 60px; height: 25px;
-            background: rgba(230, 200, 100, 0.6); box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-        .stamp-title {
-            font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 48px;
-            color: #2d241e; text-transform: uppercase; line-height: 0.9;
-            margin: 10px 0; opacity: 0.9; text-shadow: 1px 1px 0px rgba(255,255,255,0.4); transform: rotate(-2deg);
-        }
-        .box-desc {
-            color: #5d4e42; font-family: 'Courier New', monospace; font-weight: bold;
-            font-size: 16px; margin-bottom: 30px; max-width: 80%;
-        }
+        .polaroid-tape { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(2deg); width: 60px; height: 25px; background: rgba(230, 200, 100, 0.6); box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+        .stamp-title { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 48px; color: #2d241e; text-transform: uppercase; line-height: 0.9; margin: 10px 0; opacity: 0.9; text-shadow: 1px 1px 0px rgba(255,255,255,0.4); transform: rotate(-2deg); }
+        .box-desc { color: #5d4e42; font-family: 'Courier New', monospace; font-weight: bold; font-size: 16px; margin-bottom: 30px; max-width: 80%; }
         .sticker-btn {
             background: #ff6b6b; color: white; font-weight: 800; font-size: 18px;
             padding: 15px 40px; border-radius: 50px 20px 60px 30px;
@@ -240,21 +212,14 @@
             transition: all 0.2s; display: inline-block; transform: rotate(2deg); position: relative; overflow: hidden;
         }
         .sticker-btn:hover { transform: rotate(0deg) scale(1.1); background: #ff5252; }
-        .sticker-btn::before {
-            content: ''; position: absolute; top: 5px; left: 10px; width: 10px; height: 10px;
-            background: rgba(255,255,255,0.5); border-radius: 50%;
-        }
+        .sticker-btn::before { content: ''; position: absolute; top: 5px; left: 10px; width: 10px; height: 10px; background: rgba(255,255,255,0.5); border-radius: 50%; }
 
-        /* --- YENİ KARTON ABOUT (HAKKIMDA) --- */
+        /* --- ABOUT --- */
         .cardboard-about {
             background-color: #dcbfa6;
             background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
-            border: 3px solid #bba38e;
-            border-radius: 20px;
-            width: 100%; max-width: 850px;
-            padding: 50px 40px;
-            display: flex; align-items: center; gap: 50px;
-            position: relative;
+            border: 3px solid #bba38e; border-radius: 20px; width: 100%; max-width: 850px;
+            padding: 50px 40px; display: flex; align-items: center; gap: 50px; position: relative;
             box-shadow: 10px 10px 0 rgba(0,0,0,0.1), 0 20px 50px rgba(0,0,0,0.1);
         }
         .about-tape-top {
@@ -264,114 +229,63 @@
             backdrop-filter: blur(2px); box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .cb-text-content { flex: 1; text-align: left; }
-        
-        /* Founder Damgası */
         .founder-stamp {
-            border: 3px solid #9b59b6; color: #9b59b6;
-            padding: 5px 15px; font-weight: 900; font-family: 'Courier New', monospace;
-            display: inline-block; transform: rotate(-3deg); margin-bottom: 15px;
-            border-radius: 8px; opacity: 0.8; letter-spacing: 1px;
+            border: 3px solid #9b59b6; color: #9b59b6; padding: 5px 15px; font-weight: 900; font-family: 'Courier New', monospace;
+            display: inline-block; transform: rotate(-3deg); margin-bottom: 15px; border-radius: 8px; opacity: 0.8; letter-spacing: 1px;
             mask-image: url("data:image/svg+xml,%3Csvg width='200' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.6'/%3E%3C/svg%3E");
         }
-
-        .cb-title {
-            font-size: 38px; font-weight: 900; margin: 0 0 20px 0;
-            color: #2d241e; line-height: 1.1;
-        }
+        .cb-title { font-size: 38px; font-weight: 900; margin: 0 0 20px 0; color: #2d241e; line-height: 1.1; }
         .ink-highlight { color: #6c5ce7; position: relative; }
-        .ink-highlight::after {
-            content: ''; position: absolute; bottom: 2px; left: 0; width: 100%; height: 8px;
-            background: rgba(108, 92, 231, 0.2); z-index: -1; transform: rotate(-1deg);
-        }
-
-        .cb-bio {
-            font-family: 'Courier New', monospace; font-weight: bold;
-            color: #5d4e42; font-size: 16px; line-height: 1.6; margin-bottom: 25px;
-        }
-
-        /* Sticker İkonlar */
+        .ink-highlight::after { content: ''; position: absolute; bottom: 2px; left: 0; width: 100%; height: 8px; background: rgba(108, 92, 231, 0.2); z-index: -1; transform: rotate(-1deg); }
+        .cb-bio { font-family: 'Courier New', monospace; font-weight: bold; color: #5d4e42; font-size: 16px; line-height: 1.6; margin-bottom: 25px; }
         .cb-socials { display: flex; gap: 15px; }
         .social-sticker {
-            width: 50px; height: 50px; background: white; border: 2px solid #2d241e;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 22px; color: #2d241e; text-decoration: none;
+            width: 50px; height: 50px; background: white; border: 2px solid #2d241e; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 22px; color: #2d241e; text-decoration: none;
             box-shadow: 2px 2px 0 rgba(0,0,0,0.2); transition: 0.2s;
         }
         .social-sticker:hover { transform: scale(1.1) rotate(10deg); background: #fffae6; }
-        
-        /* --- REFERANS FOTOĞRAF KARTI (AVATAR) --- */
         .cb-avatar-wrapper { position: relative; }
         .ref-avatar-card {
-            background: white;
-            border: 2px solid #1a1a1a; /* Siyah ince çerçeve */
-            padding: 10px 10px 20px 10px; /* Üst/Yanlar dar, alt geniş */
-            width: 260px;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
-            transform: rotate(3deg);
-            display: flex; flex-direction: column; align-items: center;
-            transition: transform 0.3s ease;
+            background: white; border: 2px solid #1a1a1a; padding: 10px 10px 20px 10px; width: 260px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.2); transform: rotate(3deg); display: flex; flex-direction: column; align-items: center; transition: transform 0.3s ease;
         }
         .ref-avatar-card:hover { transform: rotate(0deg) scale(1.02); }
-
-        /* Fotoğraf Alanı */
-        .ref-photo-frame {
-            width: 100%; height: 260px;
-            background: #f2f2f2; /* Gri arka plan */
-            overflow: hidden;
-            display: flex; justify-content: center; align-items: flex-end;
-            border: 1px solid #eee;
-        }
-        .ref-photo-frame img {
-            width: 100%; height: 100%; object-fit: contain; transform: scale(0.95);
-        }
-
-        /* Alt Metin Alanı */
+        .ref-photo-frame { width: 100%; height: 260px; background: #f2f2f2; overflow: hidden; display: flex; justify-content: center; align-items: flex-end; border: 1px solid #eee; }
+        .ref-photo-frame img { width: 100%; height: 100%; object-fit: contain; transform: scale(0.95); }
         .ref-card-info { margin-top: 15px; text-align: center; font-family: 'Outfit', sans-serif; }
         .ref-name { font-weight: 900; font-size: 24px; color: #000; letter-spacing: -0.5px; }
         .ref-handle { color: #999; font-weight: 600; font-size: 14px; margin-top: 2px; }
+        .card-tape { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 80px; height: 30px; background: rgba(254, 202, 87, 0.7); box-shadow: 0 1px 2px rgba(0,0,0,0.1); z-index: 2; }
 
-        /* Kartı Tutan Bant */
-        .card-tape {
-            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
-            width: 80px; height: 30px; background: rgba(254, 202, 87, 0.7); /* Sarımsı bant */
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1); z-index: 2;
-        }
-
-
-        /* --- DİĞER KARTLAR (NEWS, PROJECT, FREE) --- */
+        /* --- DİĞER KARTLAR --- */
         .project-card {
-            background: #fff; border: 4px solid var(--ink); border-radius: 25px; padding: 10px;
-            width: 100%; max-width: 500px; flex-direction: column; text-align: center;
-            box-shadow: 15px 15px 0 rgba(0,0,0,0.1); position: relative;
+            background: #fff; border: 4px solid var(--ink); border-radius: 25px; padding: 10px; width: 100%; max-width: 500px;
+            flex-direction: column; text-align: center; box-shadow: 15px 15px 0 rgba(0,0,0,0.1); position: relative;
         }
-        .game-thumb {
-            width: 100%; height: 280px; background: #333; border-radius: 18px;
-            overflow: hidden; border: 2px solid #eee; position: relative;
-        }
+        .game-thumb { width: 100%; height: 280px; background: #333; border-radius: 18px; overflow: hidden; border: 2px solid #eee; position: relative; }
         .game-thumb img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
         .game-thumb:hover img { transform: scale(1.05); }
         .game-info { padding: 20px; }
         .game-title { font-size: 32px; font-weight: 900; margin: 0; color: var(--ink); }
         .play-big-btn {
-            display: block; width: 100%; background: #00b894; color: white;
-            padding: 15px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 18px;
-            margin-top: 15px; border: 3px solid var(--ink); box-shadow: 0 5px 0 var(--ink); transition: 0.1s;
+            display: block; width: 100%; background: #00b894; color: white; padding: 15px; border-radius: 12px;
+            text-decoration: none; font-weight: bold; font-size: 18px; margin-top: 15px; border: 3px solid var(--ink);
+            box-shadow: 0 5px 0 var(--ink); transition: 0.1s;
         }
         .play-big-btn:hover { transform: translateY(2px); box-shadow: 0 3px 0 var(--ink); filter: brightness(1.1); }
-
         .simple-card {
-            background: #fff; border: 3px solid var(--ink); border-radius: 20px; padding: 40px;
-            width: 100%; max-width: 600px; box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
-            display: flex; flex-direction: column; align-items: center; text-align: center;
+            background: #fff; border: 3px solid var(--ink); border-radius: 20px; padding: 40px; width: 100%; max-width: 600px;
+            box-shadow: 10px 10px 0 rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; text-align: center;
         }
         .creator-store-link {
-            background: linear-gradient(135deg, #0984e3, #6c5ce7); color: white;
-            padding: 20px; width: 100%; margin-top: 20px; border-radius: 15px; text-decoration: none;
-            border: 3px solid var(--ink); display: flex; align-items: center; justify-content: center; gap: 15px;
-            font-size: 20px; font-weight: bold; transition: transform 0.2s, box-shadow 0.2s;
+            background: linear-gradient(135deg, #0984e3, #6c5ce7); color: white; padding: 20px; width: 100%; margin-top: 20px;
+            border-radius: 15px; text-decoration: none; border: 3px solid var(--ink); display: flex; align-items: center; justify-content: center;
+            gap: 15px; font-size: 20px; font-weight: bold; transition: transform 0.2s, box-shadow 0.2s;
         }
         .creator-store-link:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4); }
 
+        /* --- HABERLER (GELİŞMİŞ) --- */
         .news-container {
             background: #fafafa; border: 4px solid var(--ink); border-radius: 30px; 
             width: 100%; max-width: 650px; height: 75vh; 
@@ -379,14 +293,44 @@
             box-shadow: 15px 15px 0 rgba(0,0,0,0.1); position: relative; overflow: hidden;
             font-family: 'Inter', sans-serif;
         }
+        
+        /* Haber Başlık ve Filtreler */
         .news-header-modern {
-            padding: 20px 25px; background: rgba(255,255,255,0.95);
-            border-bottom: 2px solid #eee; display: flex; justify-content: space-between; align-items: center; z-index: 10;
+            padding: 20px 25px 0 25px; /* Alt boşluğu kaldırdık, filtreler hemen altında */
+            background: rgba(255,255,255,0.95);
+            display: flex; flex-direction: column; gap: 15px;
+            border-bottom: 2px solid #eee; z-index: 10;
         }
+        .nh-top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .nh-title { font-family: 'Outfit', sans-serif; font-size: 24px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        
+        /* Sekme/Filtre Tasarımı (Dosya Klasörü) */
+        .news-filters {
+            display: flex; gap: 5px; width: 100%; overflow-x: auto; 
+            padding-bottom: 0;
+            scrollbar-width: none; /* Firefox scrollbar gizle */
+        }
+        .news-filters::-webkit-scrollbar { display: none; }
+        
+        .filter-btn {
+            background: #e0e0e0; border: none; padding: 10px 18px;
+            border-radius: 12px 12px 0 0; /* Üst köşeler yuvarlak */
+            font-weight: 700; color: #777; cursor: pointer;
+            font-size: 13px; white-space: nowrap; transition: 0.2s;
+            border-bottom: 3px solid transparent; flex-shrink: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+        .filter-btn.active {
+            background: var(--ink); color: #fff;
+            border-bottom: 3px solid var(--accent);
+        }
+        .filter-btn:hover:not(.active) { background: #d0d0d0; }
+
+        /* Haber İçerik Alanı */
         .news-scroll-area { flex: 1; overflow-y: auto; padding: 20px 25px 50px 25px; scroll-behavior: smooth; }
         .news-scroll-area::-webkit-scrollbar { width: 6px; }
         .news-scroll-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
         .news-card {
             background: white; border-radius: 20px; border: 1px solid #e0e0e0;
             margin-bottom: 30px; overflow: hidden;
@@ -394,93 +338,67 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative;
         }
         .news-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); border-color: var(--accent); }
-        .news-card.pinned { border: 2px solid var(--s-yellow); background: #fffcf0; order: -1; }
+        
+        /* Sabitlenmiş Post */
+        .news-card.pinned { border: 2px solid var(--s-yellow); background: linear-gradient(to bottom right, #fffcf0, #fff); order: -1; }
         .pin-badge {
-            position: absolute; top: 15px; right: 15px; color: var(--s-yellow); font-size: 18px; 
-            transform: rotate(45deg); z-index: 5; filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.1));
+            position: absolute; top: -10px; right: 20px; color: #d63031; font-size: 24px; 
+            transform: rotate(15deg); z-index: 5; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
         }
-        .news-card.highlight-news {
-            border: 3px solid var(--accent); animation: highlightFlash 1s ease-in-out;
-            box-shadow: 0 0 20px rgba(108, 92, 231, 0.4);
-        }
+        
+        .news-card.highlight-news { border: 3px solid var(--accent); animation: highlightFlash 1s ease-in-out; box-shadow: 0 0 20px rgba(108, 92, 231, 0.4); }
+        
         .nc-header { padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; }
         .nc-user { display: flex; align-items: center; gap: 10px; }
-        .nc-user-icon { 
-            width: 32px; height: 32px; background: var(--ink); color:white;
-            border-radius: 8px; display:flex; align-items:center; justify-content:center; font-size: 14px;
-        }
+        .nc-user-icon { width: 32px; height: 32px; background: var(--ink); color:white; border-radius: 8px; display:flex; align-items:center; justify-content:center; font-size: 14px; }
         .nc-info { display: flex; flex-direction: column; }
         .nc-name { font-weight: 800; font-size: 15px; color: var(--ink); }
         .nc-date { font-size: 12px; color: #888; }
         .nc-tag { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; color: white; letter-spacing: 0.5px; }
-        .nc-media-wrapper {
-            width: 100%; height: auto; background: #000; position: relative;
-            display: flex; justify-content: center; align-items: center; min-height: 250px; cursor: zoom-in;
-        }
+        .nc-media-wrapper { width: 100%; height: auto; background: #000; position: relative; display: flex; justify-content: center; align-items: center; min-height: 250px; cursor: zoom-in; }
         .nc-media { width: 100%; height: 100%; max-height: 400px; object-fit: cover; display: block; }
         iframe.nc-media { height: 300px; border:none; }
         .nc-content { padding: 20px; }
-        .nc-title { 
-            font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800; 
-            margin: 0 0 10px 0; line-height: 1.3; transition: color 0.2s;
-        }
+        .nc-title { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800; margin: 0 0 10px 0; line-height: 1.3; transition: color 0.2s; }
         .nc-title:hover { color: var(--accent); }
         .nc-desc { font-size: 15px; color: #444; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; }
-        .nc-actions {
-            padding: 10px 20px 20px 20px; display: flex; gap: 20px; border-top: 1px solid #f5f5f5; margin-top: 10px;
-        }
-        .action-btn {
-            background: none; border: none; cursor: pointer; font-size: 20px; color: #888;
-            display: flex; align-items: center; gap: 6px; transition: 0.2s; font-family: 'Outfit', sans-serif; font-weight: 600;
-        }
+        .nc-actions { padding: 10px 20px 20px 20px; display: flex; gap: 20px; border-top: 1px solid #f5f5f5; margin-top: 10px; }
+        .action-btn { background: none; border: none; cursor: pointer; font-size: 20px; color: #888; display: flex; align-items: center; gap: 6px; transition: 0.2s; font-family: 'Outfit', sans-serif; font-weight: 600; }
         .action-btn:hover { transform: scale(1.1); }
         .action-btn.like-btn:hover { color: #ff4757; }
         .action-btn.liked { color: #ff4757; }
         .action-btn.liked i { animation: likeBounce 0.4s; }
         .action-btn span { font-size: 14px; }
-        
-        .sticker {
-            position: absolute; width: 45px; height: 45px;
-            background: #fff; border: 3px solid var(--ink);
-            border-radius: 10px; font-size: 20px;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 4px 4px 0 rgba(0,0,0,0.2); z-index: 15;
-        }
+
+        /* Hata Kutusu */
+        .error-box { text-align: center; padding: 40px 20px; color: #ff6b6b; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .retry-btn { background: var(--ink); color: white; border: none; padding: 10px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .retry-btn:active { transform: scale(0.95); }
+
+        .sticker { position: absolute; width: 45px; height: 45px; background: #fff; border: 3px solid var(--ink); border-radius: 10px; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); z-index: 15; }
         .st-1 { top: 20px; right: -20px; transform: rotate(15deg); color: var(--s-yellow); }
-        .toast-notification {
-            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(50px);
-            background: var(--ink); color: white; padding: 12px 25px; border-radius: 50px;
-            display: flex; align-items: center; gap: 10px; font-weight: bold;
-            opacity: 0; visibility: hidden; transition: 0.3s; z-index: 9999;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
+        .toast-notification { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(50px); background: var(--ink); color: white; padding: 12px 25px; border-radius: 50px; display: flex; align-items: center; gap: 10px; font-weight: bold; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 9999; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .toast-notification.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
-        #lightbox {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 999999;
-            display: none; justify-content: center; align-items: center;
-            cursor: zoom-out; opacity: 0; transition: opacity 0.3s;
-        }
+        #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; justify-content: center; align-items: center; cursor: zoom-out; opacity: 0; transition: opacity 0.3s; }
         #lightbox.active { display: flex; opacity: 1; }
-        #lightbox img {
-            max-width: 90%; max-height: 90%; border-radius: 8px;
-            box-shadow: 0 0 50px rgba(255,255,255,0.1); transform: scale(0.9); transition: transform 0.3s;
-        }
+        #lightbox img { max-width: 90%; max-height: 90%; border-radius: 8px; box-shadow: 0 0 50px rgba(255,255,255,0.1); transform: scale(0.9); transition: transform 0.3s; }
         #lightbox.active img { transform: scale(1); }
 
-        /* --- MOBİL UYUMLULUK AYARLARI --- */
+        /* --- MOBİL UYUMLULUK --- */
         @media (max-width: 768px) {
+            /* Dock'u Home Bar'dan yukarı çek */
+            .nav-dock-wrapper { bottom: 45px; } 
             .nav-dock { width: 95%; gap: 10px; justify-content: space-evenly; padding: 10px 5px; }
             .nav-btn { width: 50px; height: 50px; font-size: 20px; }
             .cardboard-about { flex-direction: column-reverse; padding: 30px; text-align: center; }
             .cb-text-content { text-align: center; }
             .cb-socials { justify-content: center; }
             .simple-card { width: 90%; padding: 25px; }
-            .news-container { width: 95%; height: 78vh; border-width: 3px; }
-            .cardboard-box { width: 90%; height: auto; padding: 40px 20px; transform: none !important; /* Mobilde Tilt İptal */ }
+            /* Haber kutusu mobilde daha optimize */
+            .news-container { width: 95%; height: 75vh; border-width: 3px; }
+            .cardboard-box { width: 90%; height: auto; padding: 40px 20px; transform: none !important; }
             .stamp-title { font-size: 36px; }
-            .floating-element { display: none; /* Mobilde performans için arka plan ikonları gizle */ }
-            /* Mobilde kutuların taşmasını önle */
+            .floating-element { display: none; }
             .page-section { padding: 10px; }
             .project-card { width: 95%; }
             .game-thumb { height: 200px; }
@@ -518,9 +436,7 @@
     <!-- MENÜ (NAV DOCK) - KARTON TEMA -->
     <div class="nav-dock-wrapper">
         <div class="nav-dock">
-            <!-- Bant Süsü -->
             <div class="dock-tape"></div>
-            
             <div class="nav-btn active" data-target="home"><i class="fa-solid fa-house"></i></div>
             <div class="nav-btn" data-target="project"><i class="fa-solid fa-gamepad"></i></div>
             <div class="nav-btn" data-target="news"><i class="fa-solid fa-newspaper"></i></div>
@@ -531,7 +447,7 @@
 
     <div class="stage">
         
-        <!-- === HOME (KARTON TEMA) === -->
+        <!-- === HOME === -->
         <div id="home" class="page-section active">
             <div class="home-scene-wrapper">
                 <div class="floating-element" style="top:10%; left:10%; animation-duration:12s;"><i class="fa-solid fa-cube"></i></div>
@@ -576,17 +492,32 @@
             </div>
         </div>
 
-        <!-- === HABERLER === -->
+        <!-- === HABERLER (GÜNCELLENMİŞ) === -->
         <div id="news" class="page-section">
             <div class="news-container">
+                <!-- Üst Alan ve Filtreler -->
                 <div class="news-header-modern">
-                    <div class="nh-title">
-                        <i class="fa-solid fa-rss" style="color:var(--accent)"></i> <span data-t="news_title">Akış</span>
+                    <div class="nh-top-row">
+                        <div class="nh-title">
+                            <i class="fa-solid fa-rss" style="color:var(--accent)"></i> <span data-t="news_title">Evo Feed</span>
+                        </div>
+                        <div style="font-size:12px; font-weight:bold; color:#aaa; letter-spacing:1px;">EVO NEWS</div>
                     </div>
-                    <div style="font-size:12px; font-weight:bold; color:#aaa; letter-spacing:1px;">EVO NEWS</div>
+                    
+                    <!-- Filtre Butonları -->
+                    <div class="news-filters">
+                        <button class="filter-btn active" onclick="filterNews('all', this)" data-t="filter_all">Tümü</button>
+                        <button class="filter-btn" onclick="filterNews('update', this)" data-t="filter_update">Güncelleme</button>
+                        <button class="filter-btn" onclick="filterNews('leak', this)" data-t="filter_leak">Sızıntı</button>
+                        <button class="filter-btn" onclick="filterNews('info', this)" data-t="filter_info">Duyuru</button>
+                    </div>
                 </div>
+
                 <div id="news-feed" class="news-scroll-area">
-                    <div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> <span data-t="loading">Yükleniyor...</span></div>
+                    <div class="loading-spinner" style="margin-top:50px;">
+                        <div class="spinner" style="border-width:3px; width:30px; height:30px; margin:0 auto;"></div>
+                        <div style="text-align:center; font-size:12px; color:#999; font-weight:bold; margin-top:10px;" data-t="loading">Yükleniyor...</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -594,38 +525,26 @@
         <!-- === FREE MODELS === -->
         <div id="free" class="page-section">
             <div class="simple-card">
-                <div style="font-size: 50px; color: var(--s-green); margin-bottom: 20px;">
-                    <i class="fa-solid fa-cubes"></i>
-                </div>
+                <div style="font-size: 50px; color: var(--s-green); margin-bottom: 20px;"><i class="fa-solid fa-cubes"></i></div>
                 <h2 style="margin:0; font-size:32px;" data-t="my_creations">Benim Eserlerim</h2>
-                <p style="color:#666; margin-top:10px;" data-t="creations_desc">
-                    Roblox projelerin için hazırladığım ücretsiz modelleri ve özel assetleri buradan bulabilirsin.
-                </p>
+                <p style="color:#666; margin-top:10px;" data-t="creations_desc">Roblox projelerin için hazırladığım ücretsiz modelleri ve özel assetleri buradan bulabilirsin.</p>
                 <a href="https://create.roblox.com/store/list/LINKINI_YAZ" target="_blank" class="creator-store-link">
                     <i class="fa-solid fa-store"></i> <span data-t="store_btn">Creator Store</span>
                 </a>
             </div>
         </div>
 
-        <!-- === ABOUT (YENİLENMİŞ REFERANS STİLİ) === -->
+        <!-- === ABOUT === -->
         <div id="about" class="page-section">
             <div class="cardboard-about">
-                <!-- Üst Bant Süsü -->
                 <div class="about-tape-top"></div>
-
-                <!-- Sol: Yazı İçeriği -->
                 <div class="cb-text-content">
-                    <div class="founder-stamp">
-                        <i class="fa-solid fa-crown"></i> FOUNDER
-                    </div>
-                    
+                    <div class="founder-stamp"><i class="fa-solid fa-crown"></i> FOUNDER</div>
                     <h2 class="cb-title"><span data-t="hello">MERHABA, BEN</span> <span class="ink-highlight">BURAK</span></h2>
-                    
                     <p class="cb-bio">
                         <span data-t="bio_1">Roblox platformunda sıradan fikirleri</span> <span style="background:var(--s-yellow);" data-t="bio_2">olağanüstü deneyimlere</span> <span data-t="bio_3">dönüştürüyorum.</span><br><br>
                         <span data-t="bio_4">Profesyonel Scripter & UI Designer olarak,</span> <span data-t="bio_5">Evo Studios çatısı altında hayal gücünün sınırlarını zorluyorum.</span>
                     </p>
-
                     <div class="cb-socials">
                         <a href="https://discord.gg/95hcq9HVfn" target="_blank" class="social-sticker"><i class="fa-brands fa-discord"></i></a>
                         <a href="https://x.com/EvoEvostudios" target="_blank" class="social-sticker"><i class="fa-brands fa-x-twitter"></i></a>
@@ -633,25 +552,18 @@
                         <a href="https://www.roblox.com/groups/GRUP_ID_YAZ" target="_blank" class="social-sticker"><i class="fa-solid fa-users-rectangle"></i></a>
                     </div>
                 </div>
-
-                <!-- Sağ: Referans Resme Göre Avatar Kartı -->
                 <div class="cb-avatar-wrapper">
-                    <!-- Bant -->
                     <div class="card-tape"></div>
-                    
                     <div class="ref-avatar-card">
-                        <!-- Fotoğraf Alanı -->
                         <div class="ref-photo-frame">
                             <img id="my-avatar" src="" alt="Avatar" onerror="this.src='https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png'">
                         </div>
-                        <!-- Bilgi Alanı -->
                         <div class="ref-card-info">
                             <div class="ref-name">EVO</div>
                             <div class="ref-handle" id="rbx-user">@SuBuOyundaYTBR</div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -662,20 +574,24 @@
         const ROBLOX_ID = '1992693538'; 
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwcjpNiivxXJk5UeQA5Rbjpv9sJ_I-ZdQRBRfjVxebKUwWWtd2sM-BXRb4dPcLeYqQA/exec';
         let avatarUrl = "https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png";
-        let currentLang = localStorage.getItem('siteLang') || 'tr'; // Varsayılan Dil
+        let currentLang = localStorage.getItem('siteLang') || 'tr';
+        let globalNewsData = []; // Haberleri önbellekte tutmak için
 
-        // --- ÇOKLU DİL SİSTEMİ (Gelişmiş) ---
+        // --- DİL VERİLERİ ---
         const langData = {
             tr: {
                 home_subtitle: "Ultimate Roblox Development",
                 about_me_btn: "Hakkımda",
                 project_desc: "Geliştirmekte olduğumuz yeni mekanikleri ve sistemleri test ettiğimiz özel alan.",
                 play_btn: "Roblox'ta Oyna",
-                news_title: "Akış",
+                news_title: "Evo Feed",
+                filter_all: "Tümü",
+                filter_update: "Güncelleme",
+                filter_leak: "Sızıntı",
+                filter_info: "Duyuru",
                 my_creations: "Benim Eserlerim",
                 creations_desc: "Roblox projelerin için hazırladığım ücretsiz modelleri ve özel assetleri buradan bulabilirsin.",
                 store_btn: "Creator Store",
-                founder_badge: "Evo Studios Kurucusu",
                 hello: "MERHABA, BEN",
                 bio_1: "Roblox platformunda sıradan fikirleri",
                 bio_2: "olağanüstü deneyimlere",
@@ -686,18 +602,24 @@
                 share_btn: "Paylaş",
                 default_tag: "Duyuru",
                 toast_copy: "Link Kopyalandı!",
-                toast_fail: "Kopyalama Başarısız!"
+                toast_fail: "Kopyalama Başarısız!",
+                retry_btn: "Tekrar Dene",
+                connection_error: "Bağlantı Hatası",
+                error_desc: "Veriler alınamadı. İnternetini kontrol et."
             },
             en: {
                 home_subtitle: "Ultimate Roblox Development",
                 about_me_btn: "About Me",
                 project_desc: "A special area where we test new mechanics and systems we are developing.",
                 play_btn: "Play on Roblox",
-                news_title: "Feed",
+                news_title: "Evo Feed",
+                filter_all: "All",
+                filter_update: "Update",
+                filter_leak: "Leak",
+                filter_info: "News",
                 my_creations: "My Creations",
                 creations_desc: "Here you can find free models and custom assets I prepared for your Roblox projects.",
                 store_btn: "Creator Store",
-                founder_badge: "Founder of Evo Studios",
                 hello: "HELLO, I'M",
                 bio_1: "I turn ordinary ideas into",
                 bio_2: "extraordinary experiences",
@@ -708,7 +630,10 @@
                 share_btn: "Share",
                 default_tag: "Announcement",
                 toast_copy: "Link Copied!",
-                toast_fail: "Copy Failed!"
+                toast_fail: "Copy Failed!",
+                retry_btn: "Retry",
+                connection_error: "Connection Error",
+                error_desc: "Could not fetch data. Check internet."
             }
         };
 
@@ -716,21 +641,22 @@
             currentLang = lang;
             localStorage.setItem('siteLang', lang);
             
-            // Buton Aktifliği
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + lang).classList.add('active');
 
-            // Statik Metinleri Güncelle
             const elements = document.querySelectorAll('[data-t]');
             elements.forEach(el => {
                 const key = el.getAttribute('data-t');
-                if (langData[lang][key]) {
-                    el.innerText = langData[lang][key];
-                }
+                if (langData[lang][key]) el.innerText = langData[lang][key];
             });
 
-            // Haberleri Yeniden Yükle (Dile göre arayüz değişimi için)
-            loadNewsFromSheet();
+            // Haberler zaten yüklüyse arayüz dilini güncellemek için tekrar render et
+            if(globalNewsData.length > 0) {
+                const activeFilter = document.querySelector('.filter-btn.active').getAttribute('onclick').match(/'([^']+)'/)[1];
+                renderNews(activeFilter);
+            } else {
+                loadNewsFromSheet();
+            }
         }
 
         // --- PRELOADER ---
@@ -739,7 +665,7 @@
             if (loader) loader.classList.add('loader-hidden');
         }
         window.addEventListener('load', () => {
-            changeLanguage(currentLang); // Başlangıç dilini ayarla
+            changeLanguage(currentLang);
             removeLoader();
             handleUrlParams();
         });
@@ -771,7 +697,7 @@
             if (clean.includes('youtube.com') || clean.includes('youtu.be')) {
                 const match = clean.match(/(?:v=|\/)([\w-]{11})/);
                 if (match && match[1]) {
-                     return `<iframe class="nc-media" src=" allowfullscreen></iframe>`;
+                     return `<iframe class="nc-media" src="https://www.youtube.com/embed/${match[1]}" allowfullscreen></iframe>`;
                 }
             }
             if (clean.match(/\.(mp4|webm|mov)$/i)) {
@@ -781,142 +707,182 @@
                 const idMatch = clean.match(/\/d\/([a-zA-Z0-9_-]+)/) || clean.match(/id=([a-zA-Z0-9_-]+)/);
                 if (idMatch) clean = `https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
             }
-            return `<img src="${clean}" class="nc-media" alt="Medya" onclick="openLightbox('${clean}')" style="cursor:zoom-in" onerror="this.parentElement.style.display='none'">`;
+            return `<img src="${clean}" class="nc-media" alt="Medya" onclick="openLightbox('${clean}')" onerror="this.parentElement.style.display='none'">`;
         }
 
-        // --- HABERLERİ ÇEKME (TELEFON FIX - ZİNCİRLEME PROXY) ---
+        // --- GÜÇLENDİRİLMİŞ HABER YÜKLEME (RETRY + CACHE + PROXY FALLBACK) ---
         async function loadNewsFromSheet() {
             const feed = document.getElementById('news-feed');
             
-            // Eğer yükleniyor ikonu zaten yoksa ekle
-            if(!feed.querySelector('.loading-spinner')) {
-                feed.innerHTML = `<div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> <span>${langData[currentLang].loading}</span></div>`;
+            // Veri zaten varsa tekrar yükleme, sadece render et
+            if (globalNewsData.length > 0) {
+                renderNews('all');
+                return;
             }
 
-            // Önbellek sorunlarını önlemek için zaman damgası
+            // Yükleniyor animasyonu
+            feed.innerHTML = `
+                <div class="loading-spinner" style="margin-top:50px; text-align:center;">
+                    <div class="spinner" style="border-width:3px; width:30px; height:30px; margin:0 auto;"></div>
+                    <div style="font-size:12px; color:#999; font-weight:bold; margin-top:10px;">${langData[currentLang].loading}</div>
+                </div>`;
+
             const uniqueParam = '&t=' + new Date().getTime();
             let rawData = null;
-            let finalError = null;
 
-            // --- AŞAMA 1: AllOrigins (Mobilde Genelde Daha Kararlıdır) ---
+            // 1. Yöntem: AllOrigins
             try {
-                // AllOrigins JSON wrapper döndürür, bu yüzden doğrudan JSON parse edilebilir.
                 const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
                 const res = await fetch(proxyUrl);
                 if(res.ok) {
                     const json = await res.json();
-                    if(json.contents) {
-                        try {
-                            rawData = JSON.parse(json.contents); // Google Script çıktısını parse et
-                        } catch(parseErr) {
-                            console.warn("AllOrigins JSON parse hatası, diğerine geçiliyor.");
-                        }
-                    }
+                    if(json.contents) rawData = JSON.parse(json.contents);
                 }
-            } catch(e) { 
-                console.log("1. Yöntem (AllOrigins) başarısız oldu, 2. Yöntem deneniyor..."); 
-            }
+            } catch(e) { console.warn("Proxy 1 Failed"); }
 
-            // --- AŞAMA 2: CodeTabs (Yedek) ---
-            // Eğer 1. aşama başarısızsa (rawData null ise) burası çalışır.
-            if(!rawData) {
-                try {
-                    const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
-                    const res = await fetch(proxyUrl);
-                    if(res.ok) {
-                        rawData = await res.json();
-                    }
-                } catch(e) { 
-                    console.log("2. Yöntem (CodeTabs) de başarısız oldu."); 
-                    finalError = e.message;
-                }
-            }
-
-            // --- AŞAMA 3: Hata Kontrolü ve Ekrana Basma ---
+            // 2. Yöntem: CodeTabs (Yedek)
             if(!rawData || rawData.error) {
-                console.error("Kritik Hata: Tüm proxy'ler başarısız oldu.");
-                feed.innerHTML = `<div style="text-align:center; color:red; padding:20px;">
-                    <i class="fa-solid fa-triangle-exclamation" style="font-size:30px; margin-bottom:10px;"></i><br>
-                    <strong>Bağlantı Hatası</strong><br>
-                    <small>Haberler yüklenirken bir sorun oluştu.</small><br>
-                    <button onclick="loadNewsFromSheet()" style="margin-top:15px; padding:8px 15px; border-radius:20px; border:none; background:var(--ink); color:white; font-weight:bold; cursor:pointer;">
-                        <i class="fa-solid fa-rotate-right"></i> Tekrar Dene
-                    </button>
-                    <br><br><small style="color:#999; font-size:10px;">(Hata: ${finalError || 'CORS/Proxy'})</small>
-                </div>`;
+                try {
+                    const proxyUrl2 = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
+                    const res2 = await fetch(proxyUrl2);
+                    if(res2.ok) rawData = await res2.json();
+                } catch(e) { console.warn("Proxy 2 Failed"); }
+            }
+
+            // Hata Kontrolü
+            if(!rawData || rawData.error) {
+                showErrorState();
                 return;
             }
 
-            // --- AŞAMA 4: Veriyi İşleme (Eğer rawData geldiyse) ---
-            try {
-                const rows = rawData.reverse();
-                let pinnedPosts = [];
-                let regularPosts = [];
+            // Başarılı! Veriyi sakla ve render et
+            globalNewsData = rawData.reverse();
+            renderNews('all');
+        }
 
-                rows.forEach(item => {
-                    const isPinned = item.pinned && item.pinned.toString().toLowerCase() === 'yes';
-                    if(isPinned) pinnedPosts.push(item);
-                    else regularPosts.push(item);
-                });
+        function showErrorState() {
+            const feed = document.getElementById('news-feed');
+            feed.innerHTML = `
+                <div class="error-box">
+                    <i class="fa-solid fa-wifi" style="font-size:40px; opacity:0.5;"></i>
+                    <div>
+                        <strong>${langData[currentLang].connection_error}</strong>
+                        <p style="font-size:12px; margin-top:5px; color:#666;">${langData[currentLang].error_desc}</p>
+                    </div>
+                    <button class="retry-btn" onclick="loadNewsFromSheet()">
+                        <i class="fa-solid fa-rotate-right"></i> ${langData[currentLang].retry_btn}
+                    </button>
+                </div>`;
+        }
 
-                const finalRows = [...pinnedPosts, ...regularPosts];
-                let htmlContent = '';
-                
-                finalRows.forEach((item) => {
-                    if(!item.baslik) return;
+        // --- HABERLERİ EKRANA BASMA (FİLTRELEMELİ) ---
+        function renderNews(filterType) {
+            const feed = document.getElementById('news-feed');
+            let htmlContent = '';
 
-                    const uniqueId = item.id;
-                    const mediaHtml = getMediaContent(item.gorsel);
-                    
-                    const iLikedIt = localStorage.getItem('liked_' + uniqueId) === 'true';
-                    const likeClass = iLikedIt ? 'liked' : '';
-                    const likeIcon = iLikedIt ? 'fa-solid' : 'fa-regular';
-                    const serverLikes = item.likes;
+            // Filtreleme
+            const filteredData = globalNewsData.filter(item => {
+                if(filterType === 'all') return true;
+                const tag = (item.etiket || '').toLowerCase();
+                if(filterType === 'update' && (tag.includes('güncelleme') || tag.includes('update'))) return true;
+                if(filterType === 'leak' && (tag.includes('sızıntı') || tag.includes('leak') || tag.includes('sneak'))) return true;
+                if(filterType === 'info' && (tag.includes('duyuru') || tag.includes('info') || tag.includes('haber'))) return true;
+                return false;
+            });
 
-                    const pinnedClass = (item.pinned && item.pinned.toString().toLowerCase() === 'yes') ? 'pinned' : '';
-                    const pinnedIcon = pinnedClass ? '<i class="fa-solid fa-thumbtack pin-badge"></i>' : '';
+            // Sabitlenenleri en üste al (Sort)
+            filteredData.sort((a, b) => {
+                const aPin = (a.pinned && a.pinned.toString().toLowerCase() === 'yes') ? 1 : 0;
+                const bPin = (b.pinned && b.pinned.toString().toLowerCase() === 'yes') ? 1 : 0;
+                return bPin - aPin; // 1 olanlar üste
+            });
 
-                    let dateStr = item.tarih;
-                    if(dateStr && dateStr.toString().includes('T')) {
-                        dateStr = dateStr.toString().split('T')[0];
-                    }
-
-                    const tagText = item.etiket || langData[currentLang].default_tag;
-                    const shareText = langData[currentLang].share_btn;
-
-                    htmlContent += `
-                    <div class="news-card ${pinnedClass}" id="${uniqueId}">
-                        ${pinnedIcon}
-                        <div class="nc-header">
-                            <div class="nc-user">
-                                <div class="nc-user-icon"><i class="fa-solid fa-gamepad"></i></div>
-                                <div class="nc-info">
-                                    <span class="nc-name">Evo Studios</span>
-                                    <span class="nc-date">${dateStr}</span>
-                                </div>
-                            </div>
-                            <span class="nc-tag" style="background:${item.renk || '#333'}">${tagText}</span>
-                        </div>
-                        ${mediaHtml ? `<div class="nc-media-wrapper">${mediaHtml}</div>` : ''}
-                        <div class="nc-content">
-                            <h3 class="nc-title">${item.baslik}</h3>
-                            <p class="nc-desc">${item.icerik}</p>
-                        </div>
-                        <div class="nc-actions">
-                            <button class="action-btn like-btn ${likeClass}" onclick="toggleLike(this, '${uniqueId}')">
-                                <i class="${likeIcon} fa-heart"></i> <span class="like-count">${serverLikes}</span>
-                            </button>
-                            <button class="action-btn" onclick="sharePost('${uniqueId}')">
-                                <i class="fa-regular fa-paper-plane"></i> <span>${shareText}</span>
-                            </button>
-                        </div>
-                    </div>`;
-                });
-                feed.innerHTML = htmlContent || '<div style="text-align:center; padding:20px; color:#999;">Henüz bir haber yok...</div>';
-                checkDeepLink();
-            } catch (renderErr) {
-                console.error("Render hatası:", renderErr);
+            if(filteredData.length === 0) {
+                feed.innerHTML = `<div style="text-align:center; padding:30px; color:#999;">Burada henüz bir şey yok...</div>`;
+                return;
             }
+
+            filteredData.forEach(item => {
+                if(!item.baslik) return;
+                
+                const uniqueId = item.id;
+                const isPinned = item.pinned && item.pinned.toString().toLowerCase() === 'yes';
+                const pinnedClass = isPinned ? 'pinned' : '';
+                const pinIcon = isPinned ? '<i class="fa-solid fa-thumbtack pin-badge"></i>' : '';
+                
+                const mediaHtml = getMediaContent(item.gorsel);
+                const timeAgoText = timeAgo(item.tarih);
+                
+                // Beğeni Durumu
+                const iLikedIt = localStorage.getItem('liked_' + uniqueId) === 'true';
+                const likeClass = iLikedIt ? 'liked' : '';
+                const likeIcon = iLikedIt ? 'fa-solid' : 'fa-regular';
+
+                // Etiket Rengi
+                let tagColor = '#333';
+                const tagLower = (item.etiket || '').toLowerCase();
+                if(tagLower.includes('güncelleme')) tagColor = '#00b894';
+                else if(tagLower.includes('sızıntı')) tagColor = '#e17055';
+                else if(tagLower.includes('önemli')) tagColor = '#d63031';
+                else if(tagLower.includes('duyuru')) tagColor = '#0984e3';
+
+                htmlContent += `
+                <div class="news-card ${pinnedClass}" id="${uniqueId}">
+                    ${pinIcon}
+                    <div class="nc-header">
+                        <div class="nc-user">
+                            <div class="nc-user-icon"><i class="fa-solid fa-code"></i></div>
+                            <div class="nc-info">
+                                <span class="nc-name">Evo Studios</span>
+                                <span class="nc-date">${timeAgoText}</span>
+                            </div>
+                        </div>
+                        <span class="nc-tag" style="background:${tagColor}">${item.etiket || 'Duyuru'}</span>
+                    </div>
+                    ${mediaHtml ? `<div class="nc-media-wrapper">${mediaHtml}</div>` : ''}
+                    <div class="nc-content">
+                        <h3 class="nc-title">${item.baslik}</h3>
+                        <p class="nc-desc">${item.icerik.replace(/\n/g, '<br>')}</p>
+                    </div>
+                    <div class="nc-actions">
+                        <button class="action-btn like-btn ${likeClass}" onclick="toggleLike(this, '${uniqueId}')">
+                            <i class="${likeIcon} fa-heart"></i> <span class="like-count">${item.likes || 0}</span>
+                        </button>
+                        <button class="action-btn" onclick="sharePost('${uniqueId}')">
+                            <i class="fa-regular fa-paper-plane"></i> <span>${langData[currentLang].share_btn}</span>
+                        </button>
+                    </div>
+                </div>`;
+            });
+
+            feed.innerHTML = htmlContent;
+        }
+
+        function filterNews(type, btn) {
+            // Buton aktiflik durumu
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            renderNews(type);
+        }
+
+        // --- ZAMAN FORMATLAYICI ---
+        function timeAgo(dateString) {
+            if(!dateString) return '';
+            const date = new Date(dateString);
+            const now = new Date();
+            const seconds = Math.floor((now - date) / 1000);
+            
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + (currentLang === 'tr' ? " yıl önce" : " years ago");
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + (currentLang === 'tr' ? " ay önce" : " months ago");
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + (currentLang === 'tr' ? " gün önce" : " days ago");
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + (currentLang === 'tr' ? " saat önce" : " hours ago");
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + (currentLang === 'tr' ? " dk önce" : " min ago");
+            return (currentLang === 'tr' ? "Az önce" : "Just now");
         }
 
         // --- LIKE SİSTEMİ ---
