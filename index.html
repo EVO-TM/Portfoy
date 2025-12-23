@@ -22,7 +22,7 @@
             --accent: #6c5ce7; 
             --s-red: #ff6b6b;
             --s-yellow: #feca57;
-            --s-green: #1dd1a1; /* Spotify Yeşili Uyumlu */
+            --s-green: #1dd1a1;
             --s-blue: #48dbfb;
             --s-purple: #9b59b6;
         }
@@ -48,7 +48,9 @@
         @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes blinkLive { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-        
+        @keyframes borderPulse { 0% { border-color: rgba(255,255,255,0.2); } 50% { border-color: rgba(29, 185, 84, 0.8); } 100% { border-color: rgba(255,255,255,0.2); } }
+        @keyframes equalizer { 0% { height: 10px; } 50% { height: 25px; } 100% { height: 10px; } }
+
         /* --- UI ELEMENTS --- */
         .lang-switch { position: fixed; top: 20px; right: 20px; background: white; border: 2px solid var(--ink); border-radius: 50px; padding: 5px; display: flex; gap: 5px; z-index: 1000; box-shadow: 4px 4px 0 rgba(0,0,0,0.1); }
         .lang-btn { border: none; background: none; padding: 5px 12px; font-weight: 800; font-size: 14px; cursor: pointer; border-radius: 20px; transition: 0.2s; color: #999; }
@@ -62,29 +64,50 @@
         #bg-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; pointer-events: none; }
         .bg-icon { position: absolute; color: rgba(0,0,0,0.05); animation: floatUp linear infinite; bottom: -50px; }
 
-        /* --- WALKMAN PLAYER (SPOTIFY) --- */
+        /* --- GELİŞMİŞ WALKMAN PLAYER (RETRO STİL) --- */
         #walkman-container {
-            position: fixed; bottom: -300px; right: 20px; width: 320px; height: 155px;
-            background: #ff6b6b; /* Evo Kırmızısı */
-            border: 4px solid #2d3436; border-radius: 15px;
-            z-index: 9999; transition: bottom 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            display: flex; flex-direction: column; padding: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+            position: fixed; bottom: -400px; right: 30px; 
+            width: 320px; height: 180px; 
+            background: #2d3436; 
+            background-image: linear-gradient(135deg, #2d3436 0%, #000000 100%);
+            border: 4px solid #b2bec3; 
+            border-radius: 20px 20px 5px 5px;
+            z-index: 9999; 
+            transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; flex-direction: column; padding: 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 2px 5px rgba(255,255,255,0.1);
         }
         #walkman-container.active { bottom: 30px; }
-        
-        /* Dekoratif Walkman Detayları */
-        #walkman-container::before { content:''; position: absolute; top: 10px; left: 10px; right: 40px; height: 2px; background: rgba(0,0,0,0.1); }
-        
-        .wm-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .wm-title { color: white; font-weight: 900; font-style: italic; font-size: 16px; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 8px; }
-        .wm-close { background: #2d3436; border: 2px solid white; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; transition: transform 0.2s; }
-        .wm-close:hover { transform: scale(1.1) rotate(90deg); background: #000; }
-        
-        .wm-screen { flex: 1; background: #000; border-radius: 8px; overflow: hidden; position: relative; border: 3px solid #2d3436; }
-        #spotify-frame { width: 100%; height: 100%; border: none; } /* İzinler JS'de ayarlanacak */
 
-        /* --- NAV DOCK (FIXED) --- */
+        /* Walkman üst kısım detayları */
+        #walkman-container::before { content: ''; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); width: 60px; height: 4px; background: #636e72; border-radius: 10px; }
+        #walkman-container::after { content: ''; position: absolute; top: 15px; right: 15px; width: 8px; height: 8px; background: #ff7675; border-radius: 50%; box-shadow: 0 0 10px #ff7675; animation: blinkLive 1s infinite; }
+
+        .wm-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 5px; }
+        .wm-logo { color: #b2bec3; font-family: 'Courier New', monospace; font-weight: bold; font-size: 14px; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
+        .wm-logo i { color: #1DB954; font-size: 16px; }
+        .wm-close { background: #d63031; border: 2px solid #ff7675; color: white; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: transform 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .wm-close:hover { transform: scale(1.2); background: #ff0000; }
+
+        .wm-screen-frame { 
+            flex: 1; 
+            background: #1a1a1a; 
+            border-radius: 8px; 
+            padding: 8px; 
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8); 
+            border: 1px solid #444; 
+            position: relative;
+            overflow: hidden;
+        }
+        .wm-screen { width: 100%; height: 100%; border-radius: 4px; overflow: hidden; background: #000; }
+        #spotify-frame { width: 100%; height: 100%; border: none; }
+        
+        /* Walkman düğmeleri (Dekoratif) */
+        .wm-buttons { display: flex; gap: 8px; margin-top: 10px; justify-content: center; }
+        .wm-btn-deco { width: 30px; height: 8px; background: #636e72; border-radius: 4px; box-shadow: 0 2px 2px rgba(0,0,0,0.5); }
+
+
+        /* --- NAV DOCK (FIXED - SAĞLAMLAŞTIRILDI) --- */
         .nav-dock-wrapper { 
             position: fixed; 
             bottom: 30px; 
@@ -93,50 +116,55 @@
             display: flex; 
             justify-content: center; 
             z-index: 1000; 
-            pointer-events: none;
+            pointer-events: none; /* Boşluklara tıklama geçsin */
+            height: 100px; /* Hover alanı için yükseklik */
+            align-items: flex-end;
         }
         
         .nav-dock { 
-            pointer-events: auto; 
+            pointer-events: auto; /* Dock kendisine tıklamayı kabul etsin */
             background-color: #e6dcc6; 
             background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636l-1.414 1.414L38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23d1c4a5' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E"); 
-            padding: 12px 15px; 
-            border-radius: 24px; 
+            padding: 10px 15px; 
+            border-radius: 26px; 
             display: flex; 
-            align-items: flex-end;
+            align-items: center; 
             gap: 15px; 
             border: 3px solid #2d241e; 
-            box-shadow: 6px 6px 0px #b0a082, 10px 10px 15px rgba(0,0,0,0.15); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2), 0 5px 0 #b0a082; 
             transform: translateY(0); 
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            transition: transform 0.3s ease; 
             position: relative; 
+            margin-bottom: 5px;
         }
         
         .dock-tape { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-2deg); width: 100px; height: 35px; background: rgba(255, 255, 255, 0.4); border-left: 2px dashed rgba(255,255,255,0.6); border-right: 2px dashed rgba(255,255,255,0.6); box-shadow: 0 2px 4px rgba(0,0,0,0.1); backdrop-filter: blur(2px); pointer-events: none; z-index: 101; }
         
-        .nav-dock:hover { transform: translateY(-5px); }
+        /* Hover durumunda dock'un titremesini önleyen yapı */
+        .nav-dock:hover { transform: translateY(-2px); }
         
         .nav-btn { 
-            width: 60px; height: 60px; 
+            width: 55px; height: 55px; 
             border-radius: 14px; 
             background: #fffcf5; 
             border: 3px solid #2d241e; 
-            font-size: 24px; 
+            font-size: 22px; 
             cursor: pointer; 
             display: flex; align-items: center; justify-content: center; 
             color: #2d241e; 
             position: relative; 
-            margin-bottom: 0;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             box-shadow: 0 4px 0 #2d241e; 
+            margin-top: 0;
         }
         
-        .nav-btn:hover { transform: translateY(-4px); box-shadow: 0 8px 0 #2d241e; background: #fff; z-index: 10; }
+        .nav-btn:hover { transform: translateY(-5px); box-shadow: 0 9px 0 #2d241e; background: #fff; z-index: 10; }
         .nav-btn:hover i { transform: scale(1.15) rotate(5deg); }
+        .nav-btn:active { transform: translateY(-2px); box-shadow: 0 6px 0 #2d241e; }
         
         .nav-btn.active { 
-            transform: translateY(-8px) scale(1.05); 
-            box-shadow: 0 10px 0 #2d241e;
+            transform: translateY(-8px); 
+            box-shadow: 0 10px 0 #2d241e; 
             border-color: #2d241e; 
             background: var(--s-yellow); 
             z-index: 10;
@@ -234,8 +262,12 @@
         .nc-meta { display: flex; flex-direction: column; }
         .nc-author { font-weight: 800; font-size: 14px; color: #333; }
         .nc-time { font-size: 11px; color: #777; font-family: 'Courier New', monospace; }
-        .nc-tag-sticker { background: #feca57; color: #333; padding: 3px 8px; font-size: 11px; font-weight: bold; transform: rotate(-2deg); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); cursor: help; }
-        .nc-tag-sticker.has-music::after { content: ' 🎵'; }
+        
+        /* Easter Egg Tag Stili */
+        .nc-tag-sticker { background: #feca57; color: #333; padding: 3px 8px; font-size: 11px; font-weight: bold; transform: rotate(-2deg); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); cursor: default; transition: 0.2s; user-select: none; }
+        .nc-tag-sticker.has-music { cursor: help; animation: borderPulse 3s infinite; }
+        .nc-tag-sticker.has-music:active { transform: scale(0.95); }
+
         .nc-media-wrapper { width: calc(100% + 40px); margin-left: -20px; margin-top: 10px; background: #000; display: flex; justify-content: center; overflow: hidden; max-height: 250px; }
         .nc-media { width: 100%; height: auto; object-fit: cover; }
         .nc-title { font-size: 18px; font-weight: 800; margin: 15px 0 5px 0; font-family: 'Outfit', sans-serif; }
@@ -246,23 +278,10 @@
         .react-btn:active { transform: translateY(1px); }
         .react-btn.selected { background: #ffeaa7; border-color: #fdcb6e; color: #d35400; font-weight: bold; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05); }
         .view-count { position: absolute; bottom: 10px; right: 15px; font-size: 10px; color: #999; display: flex; align-items: center; gap: 4px; font-family: 'Courier New', monospace; font-weight: bold; }
-        .sticker { position: absolute; width: 45px; height: 45px; background: #fff; border: 3px solid var( --ink); border-radius: 10px; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); z-index: 15; }
+        .sticker { position: absolute; width: 45px; height: 45px; background: #fff; border: 3px solid var(--ink); border-radius: 10px; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); z-index: 15; }
         .st-1 { top: 20px; right: -20px; transform: rotate(15deg); color: var(--s-yellow); }
         
-        /* MÜZİK ÇALMA BUTONU (YENİ EKLEME) */
-        .play-music-btn {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: #1DB954; color: white; border: 2px solid #191414;
-            padding: 8px 12px; font-size: 12px; font-weight: bold;
-            border-radius: 20px; cursor: pointer; margin-bottom: 10px;
-            transform: rotate(-1deg);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .play-music-btn:hover { transform: translateY(-1px); box-shadow: 0 3px 0 #191414; }
-        .play-music-btn:active { transform: translateY(0); box-shadow: 0 0 0; }
-        .play-music-btn i { font-size: 14px; }
-
-        .toast-notification { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(50px); background: var(--ink); color: white; padding: 12px 25px; border-radius: 50px; display: flex; align-items: center; gap: 10px; font-weight: bold; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 9999; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .toast-notification { position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%) translateY(50px); background: var(--ink); color: white; padding: 12px 25px; border-radius: 50px; display: flex; align-items: center; gap: 10px; font-weight: bold; opacity: 0; visibility: hidden; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 99999; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
         .toast-notification.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
         #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; justify-content: center; align-items: center; cursor: zoom-out; opacity: 0; transition: opacity 0.3s; }
         #lightbox.active { display: flex; opacity: 1; }
@@ -271,7 +290,7 @@
         
         @media (max-width: 768px) { 
             .nav-btn[data-target="news"], #news { display: none !important; } 
-            .nav-dock-wrapper { bottom: 20px; } 
+            .nav-dock-wrapper { bottom: 20px; height: auto; } 
             .nav-dock { width: 92%; gap: 5px; justify-content: space-around; padding: 10px; align-items: center; } 
             .nav-btn { width: 55px; height: 55px; font-size: 22px; margin: 0; }
             .nav-btn.active { transform: translateY(-5px); }
@@ -287,7 +306,7 @@
             .game-thumb { height: 200px; } 
             .floating-element { display: none; } 
             .page-section { padding: 10px; overflow-y: auto; }
-            #walkman-container { width: 90%; right: 5%; bottom: -300px; }
+            #walkman-container { width: 90%; right: 5%; bottom: -400px; }
         }
     </style>
 </head>
@@ -310,19 +329,25 @@
 
     <!-- TOAST BİLDİRİMİ -->
     <div id="toast" class="toast-notification">
-        <i class="fa-solid fa-check-circle" style="color:var(--s-green)"></i>
-        <span id="toast-msg">Link Kopyalandı!</span>
+        <i class="fa-solid fa-music" style="color:var(--s-green)"></i>
+        <span id="toast-msg">Walkman Açılıyor...</span>
     </div>
 
-    <!-- WALKMAN PLAYER (SPOTIFY) -->
+    <!-- GELİŞTİRİLMİŞ WALKMAN PLAYER (RETRO TASARIM) -->
     <div id="walkman-container">
-        <div class="wm-controls">
-            <span class="wm-title"><i class="fa-brands fa-spotify"></i> Walkman Player</span>
-            <button class="wm-close" onclick="closeWalkman()" title="Kapat">X</button>
+        <div class="wm-header">
+            <div class="wm-logo"><i class="fa-brands fa-spotify"></i> EVO-WALKMAN</div>
+            <button class="wm-close" onclick="closeWalkman()"><i class="fa-solid fa-power-off"></i></button>
         </div>
-        <div class="wm-screen">
-            <!-- AutoPlay ve diğer izinler iframe'e eklendi -->
-            <iframe id="spotify-frame" src="" width="100%" height="100%" frameborder="0" allowtransparency="true" allow="encrypted-media; autoplay; clipboard-write; picture-in-picture"></iframe>
+        <div class="wm-screen-frame">
+            <div class="wm-screen">
+                <iframe id="spotify-frame" src="" width="100%" height="100%" frameborder="0" allowtransparency="true" allow="encrypted-media; autoplay; clipboard-write; picture-in-picture"></iframe>
+            </div>
+        </div>
+        <div class="wm-buttons">
+            <div class="wm-btn-deco"></div>
+            <div class="wm-btn-deco"></div>
+            <div class="wm-btn-deco"></div>
         </div>
     </div>
 
@@ -331,7 +356,7 @@
         <img id="lightbox-img" src="" alt="Full Screen Preview">
     </div>
 
-    <!-- MENÜ (NAV DOCK) - SABİTLENDİ VE DÜZELTİLDİ -->
+    <!-- MENÜ (NAV DOCK) - TAMAMEN DÜZELTİLDİ -->
     <div class="nav-dock-wrapper">
         <div class="nav-dock">
             <div class="dock-tape"></div>
@@ -390,7 +415,7 @@
             </div>
         </div>
 
-        <!-- === HABERLER (YENİ KARTON TASARIMI) === -->
+        <!-- === HABERLER (YENİ KARTON TASARIM) === -->
         <div id="news" class="page-section">
             <div class="news-container">
                 <div class="news-header-modern">
@@ -591,26 +616,23 @@
             if(activeSec) activeSec.classList.add('active');
         }
 
-        // --- SPOTIFY PARSING LOGIC (YENİ) ---
+        // --- SPOTIFY PARSING LOGIC ---
         function getSpotifyEmbedUrl(url) {
             if (!url) return null;
             let cleanUrl = url.trim();
-
-            if (cleanUrl.startsWith('<iframe')) return null; // Zaten embed koduyduysa işlem yapma
+            if (cleanUrl.startsWith('<iframe')) return null;
 
             if (cleanUrl.includes('spotify.com')) {
-                if (cleanUrl.includes('/track/')) {
-                    if (cleanUrl.includes('/embed/')) return cleanUrl; 
-                    return cleanUrl.replace('/track/', '/embed/track/').split('?')[0];
+                // Link embed mi değil mi kontrol et, değilse çevir
+                if (cleanUrl.includes('/track/') && !cleanUrl.includes('/embed/')) {
+                    cleanUrl = cleanUrl.replace('/track/', '/embed/track/').split('?')[0];
+                } else if (cleanUrl.includes('/playlist/') && !cleanUrl.includes('/embed/')) {
+                    cleanUrl = cleanUrl.replace('/playlist/', '/embed/playlist/').split('?')[0];
+                } else if (cleanUrl.includes('/album/') && !cleanUrl.includes('/embed/')) {
+                    cleanUrl = cleanUrl.replace('/album/', '/embed/album/').split('?')[0];
                 }
-                if (cleanUrl.includes('/playlist/')) {
-                    if (cleanUrl.includes('/embed/')) return cleanUrl;
-                    return cleanUrl.replace('/playlist/', '/embed/playlist/').split('?')[0];
-                }
-                if (cleanUrl.includes('/album/')) {
-                     if (cleanUrl.includes('/embed/')) return cleanUrl;
-                     return cleanUrl.replace('/album/', '/embed/album/').split('?')[0];
-                }
+                // Otomatik çalma parametresi (Spotify buna her zaman izin vermez ama deneriz)
+                return cleanUrl + '?utm_source=generator&theme=0&autoplay=1';
             }
             return null;
         }
@@ -619,16 +641,12 @@
             if (!url || url.length < 5) return '';
             let clean = url.trim();
             if (clean.includes('youtube.com') || clean.includes('youtu.be')) {
-                // Youtube Embed
                 const match = clean.match(/(?:v=|\/)([\w-]{11})/);
                 if (match && match[1]) {
                      return `<iframe class="nc-media" src="https://www.youtube.com/embed/${match[1]}" frameborder="0" allowfullscreen></iframe>`;
                 }
             }
-            // Spotify linkleri burada görsel olarak gösterilmeyecek, sadece oynatma butonu olacak.
-            if (clean.includes('spotify.com')) {
-                return ''; 
-            }
+            if (clean.includes('spotify.com')) return ''; // Spotify medyası gizli
             if (clean.match(/\.(mp4|webm|mov)$/i)) {
                 return `<video src="${clean}" class="nc-media" controls></video>`;
             }
@@ -646,10 +664,9 @@
             
             const cached = localStorage.getItem(CACHE_KEY);
             if(cached) {
-                const parsed = JSON.JSON.parse(cached);
+                const parsed = JSON.parse(cached);
                 const age = Date.now() - parsed.timestamp;
                 if(age < CACHE_TIME) {
-                    console.log("Using Cached Data");
                     globalNewsData = parsed.data;
                     renderNewsBatch('all'); 
                     return;
@@ -723,9 +740,7 @@
                 const title = (item.baslik || '').toLowerCase();
                 const content = (item.icerik || '').toLowerCase();
                 const query = searchQuery.toLowerCase();
-                
                 if(query && !title.includes(query) && !content.includes(query)) return false;
-
                 if(filterType === 'all') return true;
                 const tag = (item.etiket || '').toLowerCase();
                 if(filterType === 'update' && (tag.includes('güncelleme') || tag.includes('update'))) return true;
@@ -770,28 +785,21 @@
                 const mediaHtml = getMediaContent(item.gorsel);
                 const timeAgoText = timeAgo(item.tarih);
                 
-                // MÜZİK KONTROLÜ VE BUTONU
-                let musicButtonHtml = '';
+                // --- EASTER EGG LOGIC ---
                 let hasMusic = false;
-                let spotifyEmbedUrl = null; // Spotify linkini burada saklayalım
+                let embedUrl = null;
                 
                 if (item.music && item.music.length > 5) {
-                    spotifyEmbedUrl = getSpotifyEmbedUrl(item.music);
-                    if (spotifyEmbedUrl) {
+                    embedUrl = getSpotifyEmbedUrl(item.music);
+                    if (embedUrl) {
                         hasMusic = true;
-                        musicButtonHtml = `
-                        <div style="margin-top:8px;">
-                            <button class="play-music-btn" onclick="playMusic('${spotifyEmbedUrl}')">
-                                <i class="fa-brands fa-spotify"></i> 🎧 Müzik Mevcut - Dinle
-                            </button>
-                        </div>`;
                     }
                 }
                 
+                // Müzik varsa özel class, çift tıklama eventi ve title eklendi
                 const musicClass = hasMusic ? 'has-music' : '';
-                // Easter egg için çift tıklama fonksiyonu
-                const doubleClickAction = hasMusic ? 
-                    `ondblclick="playMusic('${spotifyEmbedUrl}'); triggerConfetti(this);"` : '';
+                const dblClickAction = hasMusic ? `ondblclick="playMusic('${embedUrl}'); triggerConfetti(this);"` : '';
+                const musicTitle = hasMusic ? 'Double Click for Secret 🎵' : '';
 
                 htmlContent += `
                 <div class="news-card ${exclusiveClass} ${pinnedClass}" id="${uniqueId}">
@@ -813,14 +821,12 @@
                                     <span class="nc-time">${timeAgoText}</span>
                                 </div>
                             </div>
-                             <!-- Etikete çift tıklama özelliği buraya eklendi -->
-                            <span class="nc-tag-sticker ${musicClass}" title="${hasMusic ? 'Çift Tıkla/Tıkla: Müzik Çalar' : ''}" ${doubleClickAction}>${item.etiket || 'Log'}</span>
+                            <!-- TEK DEĞİŞEN KISIM BURASI: ETİKET İŞLEVSELLİĞİ -->
+                            <span class="nc-tag-sticker ${musicClass}" title="${musicTitle}" ${dblClickAction}>${item.etiket || 'Log'}</span>
                         </div>
                         
                         <h3 class="nc-title">${item.baslik}</h3>
                         
-                        ${musicButtonHtml} <!-- Müzik butonu buraya eklendi -->
-
                         ${mediaHtml ? `<div class="nc-media-wrapper">${mediaHtml}</div>` : ''}
                         
                         <div class="nc-content">
@@ -939,22 +945,29 @@
             }
         }
 
-        // --- WALKMAN PLAYER LOGIC (DETAYLI) ---
+        // --- WALKMAN PLAYER LOGIC (EASTER EGG) ---
         function playMusic(embedUrl) {
-            if (!embedUrl) return;
+            if(!embedUrl) return;
             
             const container = document.getElementById('walkman-container');
             const frame = document.getElementById('spotify-frame');
+            const toast = document.getElementById('toast');
             
+            // Linki yükle ve player'ı yukarı kaydır
             frame.src = embedUrl;
             container.classList.add('active');
+
+            // Bildirim göster
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
         }
 
         function closeWalkman() {
             const container = document.getElementById('walkman-container');
             const frame = document.getElementById('spotify-frame');
             container.classList.remove('active');
-            setTimeout(() => { frame.src = ''; }, 500); // Müzik dursun
+            // Hemen kapatıp, 500ms sonra (animasyon bitince) kaynağı sıfırla ki müzik sussun
+            setTimeout(() => { frame.src = ''; }, 500); 
         }
 
         function timeAgo(dateString) {
