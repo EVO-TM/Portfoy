@@ -692,7 +692,7 @@
         let globalNewsData = []; 
         let renderedCount = 0;
         const BATCH_SIZE = 5; // Her seferde kaç haber yüklenecek
-        const CACHE_KEY = 'evo_news_cache_v2'; // Versiyon 2
+        const CACHE_KEY = 'evo_news_cache_v3'; // Cache Versiyon 3
         const CACHE_TIME = 15 * 60 * 1000; // 15 Dakika (Milisaniye)
 
         const langData = {
@@ -947,12 +947,17 @@
                 // Persistence (Kalıcılık)
                 const savedReact = localStorage.getItem('react_' + uniqueId) || '';
 
-                // Görüntülenme (LocalStorage + Rastgele Artış)
-                let viewCount = localStorage.getItem('views_' + uniqueId);
-                if(!viewCount) {
-                    viewCount = Math.floor(Math.random() * 500) + 50;
-                    localStorage.setItem('views_' + uniqueId, viewCount);
+                // GÖRÜNTÜLENME MANTIĞI (Otomatik Artır)
+                // Daha önce bu postu görüntüledik mi?
+                let hasViewed = localStorage.getItem('has_viewed_' + uniqueId);
+                if(!hasViewed) {
+                    // Eğer görüntülemediysek, arka planda view sayısını artır
+                    interactWithSheet(uniqueId, 'view');
+                    localStorage.setItem('has_viewed_' + uniqueId, 'yes');
                 }
+
+                // Ekrana Sheet'ten gelen gerçek sayıyı bas
+                let displayViews = item.views || 0;
 
                 htmlContent += `
                 <div class="news-card ${exclusiveClass}" id="${uniqueId}">
@@ -981,13 +986,13 @@
 
                         ${mediaHtml ? `<div class="nc-media-wrapper">${mediaHtml}</div>` : ''}
 
-                        <div class="view-stat"><i class="fa-regular fa-eye"></i> ${viewCount} Views</div>
+                        <div class="view-stat"><i class="fa-regular fa-eye"></i> ${displayViews} Views</div>
 
                         <div class="nc-footer">
                             <div class="reaction-wrapper">
-                                <button class="react-btn ${savedReact==='fire'?'selected':''}" onclick="setReaction(this, '${uniqueId}', 'fire')">🔥 <span>${Math.floor(Math.random()*15)}</span></button>
-                                <button class="react-btn ${savedReact==='rocket'?'selected':''}" onclick="setReaction(this, '${uniqueId}', 'rocket')">🚀 <span>${Math.floor(Math.random()*10)}</span></button>
-                                <button class="react-btn ${savedReact==='heart'?'selected':''}" onclick="setReaction(this, '${uniqueId}', 'heart')">❤️ <span>${Math.floor(Math.random()*30)}</span></button>
+                                <button class="react-btn ${savedReact==='fire'?'selected':''}" onclick="setReaction(this, '${uniqueId}', 'fire')">🔥 <span>${item.fire || 0}</span></button>
+                                <button class="react-btn ${savedReact==='rocket'?'selected':''}" onclick="setReaction(this, '${uniqueId}', 'rocket')">🚀 <span>${item.rocket || 0}</span></button>
+                                <button class="react-btn ${savedReact==='heart'?'selected':''}" onclick="setReaction(this, '${uniqueId}', 'heart')">❤️ <span>${item.likes || 0}</span></button>
                             </div>
                             <button class="share-btn" onclick="sharePost('${uniqueId}')">
                                 <i class="fa-solid fa-share-nodes"></i> <span>SHARE</span>
@@ -1034,21 +1039,20 @@
             btn.classList.add('selected');
             localStorage.setItem('react_' + id, type);
             
-            // Sayıyı artır (Görsel)
+            // Sayıyı artır (Görsel olarak anında tepki ver)
             const span = btn.querySelector('span');
-            span.innerText = parseInt(span.innerText) + 1;
+            let currentVal = parseInt(span.innerText);
+            span.innerText = currentVal + 1;
 
-            // Sheet'e Göndermeyi Dene (Backend Varsa Çalışır)
+            // Sheet'e Gönder (Veritabanı Kaydı)
             interactWithSheet(id, type);
         }
 
-        // --- BACKEND ENTEGRASYONU İÇİN FONKSİYON ---
+        // --- BACKEND ENTEGRASYONU ---
         function interactWithSheet(id, actionType) {
-            // NOT: Google Apps Script tarafında doPost(e) fonksiyonu ayarlı olmalıdır.
-            // Bu kod, veriyi sunucuya gönderir.
             fetch(SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors', // CORS hatasını engellemek için
+                mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: id, action: actionType })
             }).catch(e => console.log("Backend interaction skipped"));
