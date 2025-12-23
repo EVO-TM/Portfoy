@@ -64,7 +64,7 @@
 
         /* --- WALKMAN PLAYER (SPOTIFY) --- */
         #walkman-container {
-            position: fixed; bottom: -300px; right: 20px; width: 320px; height: 155px; /* Yükseklik arttırıldı */
+            position: fixed; bottom: -300px; right: 20px; width: 320px; height: 155px;
             background: #ff6b6b; /* Evo Kırmızısı */
             border: 4px solid #2d3436; border-radius: 15px;
             z-index: 9999; transition: bottom 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
@@ -82,10 +82,9 @@
         .wm-close:hover { transform: scale(1.1) rotate(90deg); background: #000; }
         
         .wm-screen { flex: 1; background: #000; border-radius: 8px; overflow: hidden; position: relative; border: 3px solid #2d3436; }
-        #spotify-frame { width: 100%; height: 100%; border: none; }
+        #spotify-frame { width: 100%; height: 100%; border: none; } /* İzinler JS'de ayarlanacak */
 
         /* --- NAV DOCK (FIXED) --- */
-        /* Wrapper ortalama ve layout stabilitesi sağlar */
         .nav-dock-wrapper { 
             position: fixed; 
             bottom: 30px; 
@@ -94,7 +93,7 @@
             display: flex; 
             justify-content: center; 
             z-index: 1000; 
-            pointer-events: none; /* Boşluklara tıklanmasın */
+            pointer-events: none;
         }
         
         .nav-dock { 
@@ -104,7 +103,7 @@
             padding: 12px 15px; 
             border-radius: 24px; 
             display: flex; 
-            align-items: flex-end; /* Buton hizalaması */
+            align-items: flex-end;
             gap: 15px; 
             border: 3px solid #2d241e; 
             box-shadow: 6px 6px 0px #b0a082, 10px 10px 15px rgba(0,0,0,0.15); 
@@ -127,7 +126,7 @@
             display: flex; align-items: center; justify-content: center; 
             color: #2d241e; 
             position: relative; 
-            margin-bottom: 0; /* Margin sıfırlandı */
+            margin-bottom: 0;
             transition: all 0.2s ease;
             box-shadow: 0 4px 0 #2d241e; 
         }
@@ -135,10 +134,9 @@
         .nav-btn:hover { transform: translateY(-4px); box-shadow: 0 8px 0 #2d241e; background: #fff; z-index: 10; }
         .nav-btn:hover i { transform: scale(1.15) rotate(5deg); }
         
-        /* Aktif buton stili güncellendi */
         .nav-btn.active { 
             transform: translateY(-8px) scale(1.05); 
-            box-shadow: 0 10px 0 #2d241e; /* Gölge büyüdü */
+            box-shadow: 0 10px 0 #2d241e;
             border-color: #2d241e; 
             background: var(--s-yellow); 
             z-index: 10;
@@ -164,7 +162,7 @@
         .stamp-title { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 48px; color: #2d241e; text-transform: uppercase; line-height: 0.9; margin: 10px 0; opacity: 0.9; text-shadow: 1px 1px 0px rgba(255,255,255,0.4); transform: rotate(-2deg); }
         .box-desc { color: #5d4e42; font-family: 'Courier New', monospace; font-weight: bold; font-size: 16px; margin-bottom: 30px; max-width: 80%; }
         .sticker-btn { background: #ff6b6b; color: white; font-weight: 800; font-size: 18px; padding: 15px 40px; border-radius: 50px 20px 60px 30px; text-decoration: none; border: 3px solid white; box-shadow: 0 8px 0 rgba(0,0,0,0.15); transition: all 0.2s; display: inline-block; transform: rotate(2deg); position: relative; overflow: hidden; }
-        .sticker-btn:hover { transform: rotate(0deg) scale(1.1); background: #ff5656; } /* Slight color change on hover */
+        .sticker-btn:hover { transform: rotate(0deg) scale(1.1); background: #ff5252; }
         
         /* About ve Diğer Kartlar */
         .cardboard-about { background-color: #dcbfa6; background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E"); border: 3px solid #bba38e; border-radius: 20px; width: 100%; max-width: 850px; padding: 50px 40px; display: flex; align-items: center; gap: 50px; position: relative; box-shadow: 10px 10px 0 rgba(0,0,0,0.1), 0 20px 50px rgba(0,0,0,0.1); }
@@ -215,7 +213,7 @@
         .news-scroll-area::-webkit-scrollbar { width: 8px; }
         .news-scroll-area::-webkit-scrollbar-thumb { background: #8b7056; border-radius: 4px; }
         
-        .news-card { background: #f1f/2f6; background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E"); padding: 20px; margin-bottom: 40px; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: rotate(1deg); transition: transform 0.2s; font-family: 'Inter', sans-serif; border: 1px solid #ccc; }
+        .news-card { background: #f1f2f6; background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E"); padding: 20px; margin-bottom: 40px; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: rotate(1deg); transition: transform 0.2s; font-family: 'Inter', sans-serif; border: 1px solid #ccc; }
         .news-card:nth-child(even) { transform: rotate(-1.5deg); }
         .news-card:hover { transform: scale(1.01) rotate(0deg); z-index: 5; }
         
@@ -248,7 +246,7 @@
         .react-btn:active { transform: translateY(1px); }
         .react-btn.selected { background: #ffeaa7; border-color: #fdcb6e; color: #d35400; font-weight: bold; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05); }
         .view-count { position: absolute; bottom: 10px; right: 15px; font-size: 10px; color: #999; display: flex; align-items: center; gap: 4px; font-family: 'Courier New', monospace; font-weight: bold; }
-        .sticker { position: absolute; width: 45px; height: 45px; background: #fff; border: 3px solid var(--ink); border-radius: 10px; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); z-index: 15; }
+        .sticker { position: absolute; width: 45px; height: 45px; background: #fff; border: 3px solid var( --ink); border-radius: 10px; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); z-index: 15; }
         .st-1 { top: 20px; right: -20px; transform: rotate(15deg); color: var(--s-yellow); }
         
         /* MÜZİK ÇALMA BUTONU (YENİ EKLEME) */
@@ -260,14 +258,10 @@
             transform: rotate(-1deg);
             transition: transform 0.2s, box-shadow 0.2s;
         }
-        .play-music-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 0 #191414; }
+        .play-music-btn:hover { transform: translateY(-1px); box-shadow: 0 3px 0 #191414; }
         .play-music-btn:active { transform: translateY(0); box-shadow: 0 0 0; }
         .play-music-btn i { font-size: 14px; }
 
-        /* Müzik ikonu ve ipucu */
-        .nc-tag-sticker.has-music::after { content: ' 🎵'; cursor: help; }
-        .nc-tag-sticker.has-music:hover::after { content: 'Double click to play!'; display: inline-block; position: absolute; background: #111; color: #fff; padding: 3px 6px; border-radius: 4px; font-size: 10px; bottom: 110%; left: 50%; transform: translateX(-50%); white-space: nowrap; }
-        
         .toast-notification { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(50px); background: var(--ink); color: white; padding: 12px 25px; border-radius: 50px; display: flex; align-items: center; gap: 10px; font-weight: bold; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 9999; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .toast-notification.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
         #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; justify-content: center; align-items: center; cursor: zoom-out; opacity: 0; transition: opacity 0.3s; }
@@ -327,7 +321,7 @@
             <button class="wm-close" onclick="closeWalkman()" title="Kapat">X</button>
         </div>
         <div class="wm-screen">
-            <!-- Allow özellikleri Spotify Embed için kritiktir -->
+            <!-- AutoPlay ve diğer izinler iframe'e eklendi -->
             <iframe id="spotify-frame" src="" width="100%" height="100%" frameborder="0" allowtransparency="true" allow="encrypted-media; autoplay; clipboard-write; picture-in-picture"></iframe>
         </div>
     </div>
@@ -588,7 +582,7 @@
             });
         });
         function switchTab(id) {
-            if (window.innerWidth <= 768 && id === 'news') return;  // Mobilede News tabını gizle
+            if (window.innerWidth <= 768 && id === 'news') return;
             navBtns.forEach(b => b.classList.remove('active'));
             const activeBtn = document.querySelector(`.nav-btn[data-target="${id}"]`);
             if(activeBtn) activeBtn.classList.add('active');
@@ -597,31 +591,28 @@
             if(activeSec) activeSec.classList.add('active');
         }
 
-        // --- SPOTIFY PARSING LOGIC (YENİ VE GÜNCEL) ---
+        // --- SPOTIFY PARSING LOGIC (YENİ) ---
         function getSpotifyEmbedUrl(url) {
             if (!url) return null;
             let cleanUrl = url.trim();
 
-            if (cleanUrl.startsWith('<iframe')) return null; // Zaten embed koduyduysa
+            if (cleanUrl.startsWith('<iframe')) return null; // Zaten embed koduyduysa işlem yapma
 
             if (cleanUrl.includes('spotify.com')) {
-                // Track
                 if (cleanUrl.includes('/track/')) {
                     if (cleanUrl.includes('/embed/')) return cleanUrl; 
-                    return cleanUrl.replace('/track/', '/embed/track/').split('?')[0]; // Parametreleri temizle
+                    return cleanUrl.replace('/track/', '/embed/track/').split('?')[0];
                 }
-                // Playlist
                 if (cleanUrl.includes('/playlist/')) {
                     if (cleanUrl.includes('/embed/')) return cleanUrl;
                     return cleanUrl.replace('/playlist/', '/embed/playlist/').split('?')[0];
                 }
-                // Album
                 if (cleanUrl.includes('/album/')) {
                      if (cleanUrl.includes('/embed/')) return cleanUrl;
                      return cleanUrl.replace('/album/', '/embed/album/').split('?')[0];
                 }
             }
-            return null; // Spotify linki değilse veya desteklenmeyen format
+            return null;
         }
 
         function getMediaContent(url) {
@@ -631,31 +622,28 @@
                 // Youtube Embed
                 const match = clean.match(/(?:v=|\/)([\w-]{11})/);
                 if (match && match[1]) {
-                     return `<iframe class="nc-media" src="https://www.youtube.com/embed/${match[1]}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+                     return `<iframe class="nc-media" src="https://www.youtube.com/embed/${match[1]}" frameborder="0" allowfullscreen></iframe>`;
                 }
             }
-            // Spotify Linkleri Medya Alanına Konulmaz, Gizli Oyun İçindir
+            // Spotify linkleri burada görsel olarak gösterilmeyecek, sadece oynatma butonu olacak.
             if (clean.includes('spotify.com')) {
                 return ''; 
             }
             if (clean.match(/\.(mp4|webm|mov)$/i)) {
-                return `<video src="${clean}" class="nc-media" controls poster="placeholder.jpg" onerror="this.parentElement.style.display='none'"></video>`; // Poster eklendi
+                return `<video src="${clean}" class="nc-media" controls></video>`;
             }
             if (clean.includes('drive.google.com')) {
                 const idMatch = clean.match(/\/d\/([a-zA-Z0-9_-]+)/) || clean.match(/id=([a-zA-Z0-9_-]+)/);
                 if (idMatch) clean = `https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
             }
-            // Resim için onerror eklendi
             return `<img src="${clean}" class="nc-media" alt="Medya" onclick="openLightbox('${clean}')" onerror="this.parentElement.style.display='none'">`;
         }
 
         async function loadNewsFromSheet() {
-            // Mobil ekranda bu fonksiyonu çalıştırma
             if (window.innerWidth <= 768) return;
 
             const feed = document.getElementById('news-feed');
             
-            // Cache kontrolü
             const cached = localStorage.getItem(CACHE_KEY);
             if(cached) {
                 const parsed = JSON.JSON.parse(cached);
@@ -668,7 +656,6 @@
                 }
             }
 
-            // Yükleniyor göstergesi
             if(globalNewsData.length === 0) {
                 feed.innerHTML = `
                 <div class="loading-spinner" style="margin-top:50px; text-align:center;">
@@ -677,9 +664,8 @@
                 </div>`;
             }
 
-            const uniqueParam = '&t=' + new Date().getTime(); // Cache busting
+            const uniqueParam = '&t=' + new Date().getTime();
             
-            // Fetch denemeleri (proxy ile)
             try {
                 const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
                 const res = await fetch(proxyUrl);
@@ -691,7 +677,7 @@
                         return;
                     }
                 }
-            } catch(e) { console.warn("Proxy 1 Failed: ", e); }
+            } catch(e) { console.warn("Proxy 1 Failed"); }
 
             try {
                 const proxyUrl2 = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(SCRIPT_URL + "?dummy=1" + uniqueParam);
@@ -701,9 +687,8 @@
                     saveAndRender();
                     return;
                 }
-            } catch(e) { console.warn("Proxy 2 Failed: ", e); }
+            } catch(e) { console.warn("Proxy 2 Failed"); }
 
-            // Hata durumu
             if(globalNewsData.length === 0) showErrorState();
         }
 
@@ -713,9 +698,9 @@
                 data: globalNewsData
             }));
             const feed = document.getElementById('news-feed');
-            feed.innerHTML = ''; // Eski içeriği temizle
-            renderedCount = 0; // Render sayacını sıfırla
-            renderNewsBatch('all'); // İlk parti haberleri göster
+            feed.innerHTML = '';
+            renderedCount = 0;
+            renderNewsBatch('all');
         }
 
         function showErrorState() {
@@ -732,18 +717,15 @@
         function renderNewsBatch(filterType, searchQuery = '') {
             const feed = document.getElementById('news-feed');
             
-            if(renderedCount === 0) feed.innerHTML = ''; // İlk yüklemede temizle
+            if(renderedCount === 0) feed.innerHTML = '';
 
-            // Filtreleme ve Arama
             const filteredData = globalNewsData.filter(item => {
                 const title = (item.baslik || '').toLowerCase();
                 const content = (item.icerik || '').toLowerCase();
                 const query = searchQuery.toLowerCase();
                 
-                // Arama kriteri varsa kontrol et
                 if(query && !title.includes(query) && !content.includes(query)) return false;
 
-                // Filtre tipi kontrolü
                 if(filterType === 'all') return true;
                 const tag = (item.etiket || '').toLowerCase();
                 if(filterType === 'update' && (tag.includes('güncelleme') || tag.includes('update'))) return true;
@@ -752,7 +734,6 @@
                 return false;
             });
 
-            // Sabitlenmiş haberleri başa al
             filteredData.sort((a, b) => {
                 const aPin = (a.pinned && a.pinned.toString().toLowerCase() === 'yes') ? 1 : 0;
                 const bPin = (b.pinned && b.pinned.toString().toLowerCase() === 'yes') ? 1 : 0;
@@ -763,17 +744,17 @@
             const start = renderedCount;
             const end = Math.min(start + BATCH_SIZE, totalToShow);
 
-            if(start >= totalToShow && totalToShow > 0) return; // Tüm haberler yüklendi
-            if(totalToShow === 0) { // Filtre sonucu yoksa
+            if(start >= totalToShow && totalToShow > 0) return; 
+            if(totalToShow === 0) {
                 feed.innerHTML = `<div style="text-align:center; padding:30px; color:#999;">Nothing found...</div>`;
                 return;
             }
 
             let htmlContent = '';
             
-            for(let i = start; i < end; i++) {
+            for(let i=start; i<end; i++) {
                 const item = filteredData[i];
-                if (!item.baslik) continue; // Başlık yoksa atla
+                if(!item.baslik) continue;
 
                 const uniqueId = item.id;
                 
@@ -784,33 +765,33 @@
                 const pinnedClass = isPinned ? 'pinned' : '';
                 
                 const postDate = new Date(item.tarih);
-                const isNew = (new Date() - postDate) < (3 * 24 * 60 * 60 * 1000); // 3 gün içinde
+                const isNew = (new Date() - postDate) < (3 * 24 * 60 * 60 * 1000);
                 
                 const mediaHtml = getMediaContent(item.gorsel);
                 const timeAgoText = timeAgo(item.tarih);
                 
-                // MÜZİK KONTROLÜ VE BUTONU (YENİ)
+                // MÜZİK KONTROLÜ VE BUTONU
                 let musicButtonHtml = '';
                 let hasMusic = false;
-                let spotifyEmbedUrl = null;
+                let spotifyEmbedUrl = null; // Spotify linkini burada saklayalım
                 
                 if (item.music && item.music.length > 5) {
                     spotifyEmbedUrl = getSpotifyEmbedUrl(item.music);
                     if (spotifyEmbedUrl) {
                         hasMusic = true;
-                        // Play butonu yerine, etiket üzerine çift tıklama mekanizması
                         musicButtonHtml = `
-                            <div style="margin-top:8px;">
-                                <button class="play-music-btn" onclick="playMusic('${spotifyEmbedUrl}')">
-                                    <i class="fa-brands fa-spotify"></i> 🎧 Müzik Mevcut - Dinle
-                                </button>
-                            </div>`;
+                        <div style="margin-top:8px;">
+                            <button class="play-music-btn" onclick="playMusic('${spotifyEmbedUrl}')">
+                                <i class="fa-brands fa-spotify"></i> 🎧 Müzik Mevcut - Dinle
+                            </button>
+                        </div>`;
                     }
                 }
                 
                 const musicClass = hasMusic ? 'has-music' : '';
-                // Etikete çift tıklama eylemi eklendi
-                const dblClickAction = hasMusic ? `ondblclick="playMusic('${spotifyEmbedUrl}'); triggerConfetti(this);"` : ''; 
+                // Easter egg için çift tıklama fonksiyonu
+                const doubleClickAction = hasMusic ? 
+                    `ondblclick="playMusic('${spotifyEmbedUrl}'); triggerConfetti(this);"` : '';
 
                 htmlContent += `
                 <div class="news-card ${exclusiveClass} ${pinnedClass}" id="${uniqueId}">
@@ -832,7 +813,8 @@
                                     <span class="nc-time">${timeAgoText}</span>
                                 </div>
                             </div>
-                            <span class="nc-tag-sticker ${musicClass}" title="${hasMusic ? 'Click the \'🎵\' icon or double click here!' : ''}" ${dblClickAction}>${item.etiket || 'Log'}</span>
+                             <!-- Etikete çift tıklama özelliği buraya eklendi -->
+                            <span class="nc-tag-sticker ${musicClass}" title="${hasMusic ? 'Çift Tıkla/Tıkla: Müzik Çalar' : ''}" ${doubleClickAction}>${item.etiket || 'Log'}</span>
                         </div>
                         
                         <h3 class="nc-title">${item.baslik}</h3>
@@ -856,7 +838,6 @@
                 </div>`;
             }
             
-            // Render edilen içeriği DOM'a ekle
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = htmlContent;
             
@@ -864,19 +845,19 @@
                 feed.appendChild(tempDiv.firstChild);
             }
 
-            renderedCount += (end - start); // Render edilen sayıyı güncelle
+            renderedCount += (end - start);
         }
 
-        function checkScroll() { // Sayfa scroll edildiğinde yeni chunk yükle
+        function checkScroll() {
             const feed = document.getElementById('news-feed');
-            if(feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 50) { // Scrollbar sona yaklaştığında
+            if(feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 50) {
                 const activeFilter = document.querySelector('.filter-btn.active').getAttribute('onclick').match(/'([^']+)'/)[1];
                 const searchVal = document.querySelector('.search-input').value;
                 renderNewsBatch(activeFilter, searchVal);
             }
         }
 
-        function filterNews(type, btn) { // Filtreleme işlemi
+        function filterNews(type, btn) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
             
@@ -887,7 +868,7 @@
             renderNewsBatch(type, searchVal);
         }
 
-        function debounceSearch(val) { // Arama çubuğu için debounce
+        function debounceSearch(val) {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
                 const activeFilter = document.querySelector('.filter-btn.active').getAttribute('onclick').match(/'([^']+)'/)[1];
@@ -898,41 +879,41 @@
             }, 300);
         }
 
-        function toggleReaction(btn, id, type) { // Tepki butonları
+        function toggleReaction(btn, id, type) {
             const key = `react_${id}_${type}`;
             const isAlreadyActive = localStorage.getItem(key);
             const span = btn.querySelector('span');
             let currentVal = parseInt(span.innerText);
 
-            if (isAlreadyActive) { // Kalkmışsa
+            if (isAlreadyActive) {
                 localStorage.removeItem(key);
                 btn.classList.remove('selected');
                 span.innerText = Math.max(0, currentVal - 1);
-            } else { // Eklenmişse
+            } else {
                 localStorage.setItem(key, 'true');
                 btn.classList.add('selected');
                 span.innerText = currentVal + 1;
-                triggerConfetti(btn); // Konfeti efekti
-                interactWithSheet(id, type); // Arka plana kaydet
+                triggerConfetti(btn);
+                interactWithSheet(id, type); 
             }
         }
 
-        function interactWithSheet(id, actionType) { // Google Sheets ile etkileşim (gerekirse)
+        function interactWithSheet(id, actionType) {
             fetch(SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors', // CORS'u geç
+                mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: id, action: actionType })
-            }).catch(e => console.log("Backend interaction skipped: ", e));
+            }).catch(e => console.log("Backend interaction skipped"));
         }
 
-        function revealSecret(coverElement) { // Gizli içerik
+        function revealSecret(coverElement) {
             const card = coverElement.parentElement;
             card.classList.remove('exclusive-drop');
             coverElement.style.display = 'none';
         }
 
-        function triggerConfetti(element) { // Konfeti animasyonu
+        function triggerConfetti(element) {
             const rect = element.getBoundingClientRect();
             for(let i=0; i<10; i++) {
                 const dot = document.createElement('div');
@@ -958,64 +939,58 @@
             }
         }
 
-        // --- WALKMAN PLAYER LOGIC (GÜNCELLENDİ VE GENİŞLETİLDİ) ---
-        function playMusic(embedUrl) { // Müzği başlatır
-            if(!embedUrl) {
-                console.error("Invalid embed URL");
-                return;
-            }
+        // --- WALKMAN PLAYER LOGIC (DETAYLI) ---
+        function playMusic(embedUrl) {
+            if (!embedUrl) return;
             
             const container = document.getElementById('walkman-container');
             const frame = document.getElementById('spotify-frame');
             
-            frame.src = embedUrl; // iframe kaynağını ayarla
-            container.classList.add('active'); // Player'ı göster
+            frame.src = embedUrl;
+            container.classList.add('active');
         }
 
-        function closeWalkman() { // Walkman'i kapatır
+        function closeWalkman() {
             const container = document.getElementById('walkman-container');
             const frame = document.getElementById('spotify-frame');
             container.classList.remove('active');
-            setTimeout(() => { frame.src = ''; }, 500); // Animasyon bitince kaynağı sıfırla
+            setTimeout(() => { frame.src = ''; }, 500); // Müzik dursun
         }
 
-        function timeAgo(dateString) { // Zaman farkını hesaplar
+        function timeAgo(dateString) {
             if(!dateString) return '';
             const date = new Date(dateString);
             const now = new Date();
             const seconds = Math.floor((now - date) / 1000);
             
-            let interval = seconds / 31536000; // Yıl
+            let interval = seconds / 31536000;
             if (interval > 1) return Math.floor(interval) + "y";
-            interval = seconds / 2592000; // Ay
+            interval = seconds / 2592000;
             if (interval > 1) return Math.floor(interval) + "mo";
-            interval = seconds / 86400; // Gün
+            interval = seconds / 86400;
             if (interval > 1) return Math.floor(interval) + "d";
-            interval = seconds / 3600; // Saat
+            interval = seconds / 3600;
             if (interval > 1) return Math.floor(interval) + "h";
-            interval = seconds / 60; // Dakika
-            if (interval > 1) return Math.floor(interval) + "m";
-            return "Now"; // Hemen
+            return "Now";
         }
 
-        function openLightbox(url) { // Resim lightbox
+        function openLightbox(url) {
             if(!url) return;
             const lightbox = document.getElementById('lightbox');
             const img = document.getElementById('lightbox-img');
             img.src = url;
             lightbox.classList.add('active');
         }
-        function closeLightbox() { // Lightbox kapatma
+        function closeLightbox() {
             const lightbox = document.getElementById('lightbox');
             lightbox.classList.remove('active');
             setTimeout(() => { document.getElementById('lightbox-img').src = ''; }, 300);
         }
 
-        async function fetchRobloxData() { // Roblox avatar ve kullanıcı adını çekme
+        async function fetchRobloxData() {
             const imgEl = document.getElementById('my-avatar');
             const userEl = document.getElementById('rbx-user');
             try {
-                // Avatar URL çekme
                 const url = `https://thumbnails.roblox.com/v1/users/avatar?userIds=${ROBLOX_ID}&size=420x420&format=Png&isCircular=false`;
                 const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url);
                 const res = await fetch(proxyUrl);
@@ -1023,21 +998,19 @@
                 if (data.data && data.data[0] && data.data[0].imageUrl) {
                     imgEl.src = data.data[0].imageUrl;
                     avatarUrl = data.data[0].imageUrl; 
-                } else { imgEl.src = avatarUrl; } // Hata durumunda varsayılan
+                } else { imgEl.src = avatarUrl; }
 
-                // Kullanıcı adı çekme
                 const userUrl = `https://users.roblox.com/v1/users/${ROBLOX_ID}`;
                 const userProxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(userUrl);
                 const userRes = await fetch(userProxyUrl);
                 const userData = await userRes.json();
                 if (userData.name) { userEl.innerText = "@" + userData.name; }
-            } catch (err) { console.log("Roblox API Hatası:", err); imgEl.src = avatarUrl; } // Hata durumunda varsayılan
+            } catch (err) { console.log("Roblox API Hatası:", err); imgEl.src = avatarUrl; }
         }
 
-        // Kart döndürme efekti için event listener'lar
         const homeCard = document.getElementById('tiltCard');
         document.getElementById('home').addEventListener('mousemove', (e) => {
-            if(window.innerWidth > 768) { // Sadece masaüstü
+            if(window.innerWidth > 768) {
                 const rect = homeCard.getBoundingClientRect();
                 const x = e.clientX - (rect.left + rect.width / 2);
                 const y = e.clientY - (rect.top + rect.height / 2);
@@ -1045,12 +1018,11 @@
             }
         });
         document.getElementById('home').addEventListener('mouseleave', () => {
-            homeCard.style.transform = 'perspective(1000px) rotateY(0) rotateX(0)'; // Varsayılana dön
+            homeCard.style.transform = 'perspective(1000px) rotateY(0) rotateX(0)';
         });
 
-        // Arka plan ikonları
         const bgContainer = document.getElementById('bg-container');
-        if (window.innerWidth > 768) { // Sadece masaüstü
+        if (window.innerWidth > 768) {
             const icons = ['fa-gamepad', 'fa-ghost', 'fa-dice', 'fa-puzzle-piece', 'fa-rocket', 'fa-bolt', 'fa-code', 'fa-dragon'];
             for(let i=0; i<15; i++) {
                 const el = document.createElement('i');
@@ -1063,7 +1035,7 @@
             }
         }
 
-        fetchRobloxData(); // Sayfa yüklenince Roblox verilerini çek
+        fetchRobloxData();
     </script>
 </body>
 </html>
