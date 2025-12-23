@@ -11,26 +11,27 @@
     <meta property="og:image" content="evo_logo.png">
 
     <!-- FONTLAR & İKONLAR -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;700;900&family=Courier+New:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;700;900&family=Courier+New:wght@700&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
         :root {
             /* Kış Teması Renk Paleti */
-            --bg-sky-top: #2c3e50;
-            --bg-sky-bottom: #bdc3c7;
+            --bg-sky-top: #1a2a3a; /* Daha koyu gece mavisi */
+            --bg-sky-bottom: #4a6fa5;
             --ink: #2d3436;
-            --cardboard: #dcbfa6;
-            --accent: #e74c3c; /* Yılbaşı Kırmızısı */
+            --cardboard: #e6dcc6;
+            --accent: #e74c3c;
             --s-yellow: #f1c40f;
-            --s-green: #2ecc71;
+            --s-green: #27ae60;
             --snow: #ffffff;
+            --glow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
         }
 
         /* --- TEMEL AYARLAR --- */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            background: linear-gradient(to bottom, var(--bg-sky-top), var(--bg-sky-bottom));
+            background: radial-gradient(circle at bottom, var(--bg-sky-bottom), var(--bg-sky-top));
             font-family: 'Outfit', sans-serif;
             color: var(--ink);
             margin: 0; padding: 0;
@@ -40,11 +41,46 @@
             position: relative;
         }
 
-        /* --- KIŞ EFEKTLERİ (ARKA PLAN) --- */
-        /* Kar Yağışı */
-        .snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
+        /* --- YENİLENMİŞ YILBAŞI IŞIKLARI (GERÇEKÇİ LEDLER) --- */
+        .christmas-lights-container {
+            position: fixed; top: -10px; left: 0; width: 100%; height: 100px; z-index: 50;
+            pointer-events: none;
+            display: flex; justify-content: space-around;
+            overflow: hidden;
+        }
+        .light-wire {
+            position: absolute; top: -15px; left: -5%; width: 110%; height: 60px;
+            border-bottom: 3px solid #222;
+            border-radius: 50%;
+            z-index: 49;
+        }
+        .light-bulb {
+            position: relative; top: 38px;
+            width: 14px; height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            animation: lightGlow 2s infinite alternate;
+            box-shadow: 0 5px 10px rgba(255,255,255,0.5);
+        }
+        .light-bulb::before { /* Soket */
+            content: ''; position: absolute; top: -6px; left: 2px; width: 10px; height: 8px; background: #333; border-radius: 2px;
+        }
+        /* Renkler */
+        .lb-red { background: #ff3fab; box-shadow: 0 0 20px #ff3fab; animation-delay: 0s; }
+        .lb-green { background: #2ecc71; box-shadow: 0 0 20px #2ecc71; animation-delay: 0.5s; }
+        .lb-blue { background: #3498db; box-shadow: 0 0 20px #3498db; animation-delay: 1s; }
+        .lb-gold { background: #f1c40f; box-shadow: 0 0 20px #f1c40f; animation-delay: 1.5s; }
+
+        @keyframes lightGlow {
+            0% { opacity: 0.4; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1.1); box-shadow: 0 0 30px currentColor; }
+        }
+
+        /* --- YENİLENMİŞ BACKGROUND (GERÇEKÇİ AĞAÇLAR) --- */
+        .snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; overflow: hidden; }
         .snowflake {
-            position: absolute; top: -10px; background: white; border-radius: 50%; opacity: 0.8;
+            position: absolute; top: -10px; background: white; border-radius: 50%; opacity: 0.9;
+            box-shadow: 0 0 5px rgba(255,255,255,0.8);
             animation: fall linear infinite;
         }
         @keyframes fall {
@@ -52,26 +88,73 @@
             100% { transform: translateY(110vh) translateX(20px); opacity: 0.3; }
         }
 
-        /* Ağaçlar (Alt Kısım) */
-        .winter-trees {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 250px;
-            background-repeat: repeat-x;
-            background-position: bottom;
+        /* Katmanlı Ağaçlar */
+        .forest-layer {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            pointer-events: none; z-index: 0;
+        }
+        .layer-back {
+            height: 400px; opacity: 0.4; filter: blur(2px);
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23102a43' fill-opacity='1' d='M0,320L40,280L80,320L120,240L160,320L200,260L240,320L280,220L320,320L360,250L400,320L440,200L480,320L520,270L560,320L600,230L640,320L680,260L720,320L760,210L800,320L840,250L880,320L920,190L960,320L1000,260L1040,320L1080,230L1120,320L1160,270L1200,320L1240,220L1280,320L1320,250L1360,320L1400,280L1440,320L1440,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover; background-repeat: repeat-x;
+        }
+        .layer-mid {
+            height: 300px; opacity: 0.7; bottom: -20px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23243b55' fill-opacity='1' d='M0,320L60,240L120,320L180,200L240,320L300,220L360,320L420,180L480,320L540,230L600,320L660,190L720,320L780,210L840,320L900,170L960,320L1020,230L1080,320L1140,200L1200,320L1260,220L1320,320L1380,250L1440,320L1440,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover; background-repeat: repeat-x;
+        }
+        .layer-front {
+            height: 250px; opacity: 1; bottom: -50px; z-index: 1;
+            /* Daha detaylı ve karlı ağaç görünümü için stilize vektör */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='treeGrad' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' style='stop-color:%23143042;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%230b1e2b;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M50,300 L150,100 L250,300 M150,100 L150,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M150,100 L100,200 L200,200 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M300,300 L400,50 L500,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M400,50 L340,180 L460,180 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M550,300 L650,120 L750,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M800,300 L900,80 L1000,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M900,80 L840,200 L960,200 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M1050,300 L1125,150 L1200,300' fill='url(%23treeGrad)'/%3E%3C/svg%3E");
             background-size: auto 100%;
-            z-index: 0;
-            opacity: 0.8;
-            /* SVG Ağaçlar */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 300' preserveAspectRatio='none'%3E%3Cpath d='M50,300 L100,200 L150,300 Z' fill='%231a252f' opacity='0.6'/%3E%3Cpath d='M120,300 L180,150 L240,300 Z' fill='%231a252f' opacity='0.8'/%3E%3Cpath d='M200,300 L280,180 L360,300 Z' fill='%231a252f' opacity='0.5'/%3E%3Cpath d='M300,300 L350,220 L400,300 Z' fill='%231a252f' opacity='0.7'/%3E%3Cpath d='M450,300 L550,120 L650,300 Z' fill='%231a252f' opacity='0.9'/%3E%3Cpath d='M600,300 L680,200 L760,300 Z' fill='%231a252f' opacity='0.6'/%3E%3Cpath d='M750,300 L850,140 L950,300 Z' fill='%231a252f' opacity='0.8'/%3E%3Cpath d='M900,300 L950,220 L1000,300 Z' fill='%231a252f' opacity='0.5'/%3E%3C/svg%3E");
         }
 
-        /* --- ANİMASYONLAR --- */
+        /* --- SANTA & GIFT ANIMASYONU --- */
+        .santa-wrapper {
+            position: fixed; top: 15%; right: -300px;
+            width: 250px; height: auto;
+            z-index: 5;
+            pointer-events: none;
+            /* JavaScript ile class eklendiğinde animasyon çalışacak */
+        }
+        .santa-sleigh img { width: 100%; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); transform: rotate(-5deg); }
+        
+        .falling-gift {
+            position: fixed; top: 20%; left: 50%;
+            width: 40px; height: 40px;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/4213/4213653.png');
+            background-size: cover;
+            z-index: 4;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes santaFly {
+            0% { right: -300px; transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(20px) rotate(2deg); }
+            50% { transform: translateY(-10px) rotate(-2deg); }
+            75% { transform: translateY(10px) rotate(1deg); }
+            100% { right: 110vw; transform: translateY(0); }
+        }
+        @keyframes dropGift {
+            0% { top: 20%; opacity: 0; transform: scale(0.5) rotate(0deg); }
+            10% { opacity: 1; transform: scale(1); }
+            100% { top: 100%; opacity: 1; transform: rotate(720deg); }
+        }
+
+        .santa-animate { animation: santaFly 8s linear forwards; }
+        .gift-animate { animation: dropGift 3s ease-in forwards; }
+
+        /* --- ANİMASYONLAR (GENEL) --- */
         @keyframes popIn { 0% { transform: scale(0.8) translateY(20px); opacity: 0; } 60% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes blinkLive { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-        @keyframes floatBox { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-10px) rotate(1deg); } }
+        /* Daha yumuşak float */
+        @keyframes softFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
         /* --- UI ELEMENTS --- */
-        .lang-switch { position: fixed; top: 20px; right: 20px; background: white; border: 2px solid var(--ink); border-radius: 50px; padding: 5px; display: flex; gap: 5px; z-index: 1000; box-shadow: 4px 4px 0 rgba(0,0,0,0.1); }
+        .lang-switch { position: fixed; top: 120px; right: 20px; background: rgba(255,255,255,0.9); border: 2px solid var(--ink); border-radius: 50px; padding: 5px; display: flex; gap: 5px; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .lang-btn { border: none; background: none; padding: 5px 12px; font-weight: 800; font-size: 14px; cursor: pointer; border-radius: 20px; transition: 0.2s; color: #999; }
         .lang-btn.active { background: var(--ink); color: white; }
 
@@ -81,12 +164,12 @@
         .loader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
         /* --- CONTENT WRAPPER --- */
-        .stage { width: 100%; max-width: 1000px; height: 80vh; position: relative; display: flex; justify-content: center; align-items: center; z-index: 10; }
+        .stage { width: 100%; max-width: 1000px; height: 80vh; position: relative; display: flex; justify-content: center; align-items: center; z-index: 20; }
         .page-section { position: absolute; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .page-section.active { display: flex; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
         /* =========================================
-           HOME TAB TASARIMI (YENİLENMİŞ & KIŞ TEMALI)
+           HOME TAB TASARIMI (YENİLENMİŞ - SOFT & COZY)
            ========================================= */
         
         .home-scene-wrapper {
@@ -98,141 +181,141 @@
         }
 
         .winter-box {
-            width: 450px;
-            min-height: 550px;
-            background-color: #d6bb9b;
-            /* Karton Dokusu */
-            background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
-            border-radius: 10px;
-            border: 4px solid #8d7056;
+            width: 480px;
+            min-height: 580px;
+            background-color: #eee0d1; /* Daha açık, krem rengi karton */
+            /* Yumuşak Karton Dokusu */
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+            border-radius: 25px; /* Yumuşatılmış köşeler */
+            border: 6px solid #d4c2aa; /* Çerçeve rengi yumuşatıldı */
             position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 30px;
+            padding: 50px 30px;
             box-shadow: 
-                inset 0 0 40px rgba(0,0,0,0.1),
-                10px 15px 30px rgba(0,0,0,0.3);
+                0 20px 50px rgba(0,0,0,0.4),
+                inset 0 0 60px rgba(255,245,230,0.5); /* İçten parıltı */
             transform-style: preserve-3d;
-            animation: floatBox 6s ease-in-out infinite;
+            animation: softFloat 6s ease-in-out infinite;
         }
 
-        /* Kutu Üstü Kar Birikintisi */
+        /* Kutunun Üstündeki Kar Birikintisi (Daha yumuşak) */
         .box-snow-top {
-            position: absolute; top: -12px; left: -5px; right: -5px; height: 30px;
+            position: absolute; top: -18px; left: -8px; right: -8px; height: 50px;
             background: #fff;
-            border-radius: 15px 15px 50% 50%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 20px 20px 40% 40%;
+            box-shadow: 0 4px 15px rgba(255,255,255,0.6);
             z-index: 20;
-        }
-        
-        /* Yılbaşı Bantları (Kırmızı) */
-        .tape-red {
-            position: absolute;
-            background: #e74c3c;
-            opacity: 0.9;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-            z-index: 5;
-            border-left: 2px dashed rgba(255,255,255,0.4);
-            border-right: 2px dashed rgba(255,255,255,0.4);
-        }
-        .tr-1 { width: 140px; height: 40px; top: -15px; left: -40px; transform: rotate(-35deg); }
-        .tr-2 { width: 120px; height: 40px; bottom: 10px; right: -30px; transform: rotate(-40deg); }
-
-        /* Özel 2025 Damgası */
-        .stamp-year {
-            position: absolute; top: 20px; right: 20px;
-            border: 3px solid #c0392b;
-            color: #c0392b;
-            padding: 5px 10px;
-            font-family: 'Courier New', monospace;
-            font-weight: 900;
-            font-size: 20px;
-            transform: rotate(15deg);
-            opacity: 0.8;
-            border-radius: 5px;
-            mask-image: url("data:image/svg+xml,%3Csvg width='100' height='50' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.7'/%3E%3C/svg%3E");
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
         }
 
-        /* Fotoğraf Alanı */
+        /* Fotoğraf Alanı - KÖŞELERİ YUMUŞATILDI */
         .polaroid-frame {
             background: #fff;
-            padding: 12px 12px 45px 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transform: rotate(-3deg);
-            width: 240px;
+            padding: 15px 15px 50px 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-radius: 20px; /* İSTEK: Yumuşatılmış köşe */
+            transform: rotate(-2deg);
+            width: 260px;
             position: relative;
-            margin-top: 20px;
-            transition: transform 0.3s;
+            margin-top: 10px;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .polaroid-frame:hover { transform: rotate(0deg) scale(1.02); }
-        .polaroid-frame img { width: 100%; height: auto; background: #eee; display: block; filter: contrast(1.1); }
+        .polaroid-frame:hover { transform: rotate(0deg) scale(1.05); z-index: 30; }
         
-        /* Maskot Üstüne Noel Baba Şapkası */
-        .polaroid-frame::after {
-            content: '';
-            position: absolute; top: -25px; left: -15px;
-            width: 80px; height: 80px;
-            background-image: url('https://cdn-icons-png.flaticon.com/512/744/744546.png'); /* Santa Hat Icon */
+        .polaroid-frame img { 
+            width: 100%; height: auto; 
+            background: #f4f4f4; 
+            display: block; 
+            border-radius: 12px; /* Resim köşeleri de yumuşatıldı */
+        }
+        
+        /* Şapka (Daha iyi konumlandırıldı) */
+        .santa-hat-sticker {
+            position: absolute; top: -35px; left: -25px;
+            width: 90px; height: 90px;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/744/744546.png'); 
             background-size: contain; background-repeat: no-repeat;
-            transform: rotate(-20deg);
-            z-index: 10;
+            transform: rotate(-25deg);
+            z-index: 35;
+            filter: drop-shadow(2px 5px 5px rgba(0,0,0,0.2));
             pointer-events: none;
-            filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.3));
         }
 
+        /* Polaroid Bantı */
         .polaroid-tape {
-            position: absolute; top: -12px; left: 50%; transform: translateX(-50%) rotate(2deg);
-            width: 70px; height: 25px;
-            background: rgba(241, 196, 15, 0.6);
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(1deg);
+            width: 90px; height: 30px;
+            background: rgba(231, 76, 60, 0.8); /* Kırmızı şeffaf bant */
+            border-left: 2px dashed rgba(255,255,255,0.3);
+            border-right: 2px dashed rgba(255,255,255,0.3);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             backdrop-filter: blur(2px);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            z-index: 40;
         }
 
         .home-title {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 900;
-            font-size: 52px;
-            color: #2d3436;
-            margin: 25px 0 5px 0;
+            font-family: 'Mountains of Christmas', cursive; /* Yılbaşı fontu */
+            font-weight: 700;
+            font-size: 64px;
+            color: #c0392b;
+            margin: 30px 0 0 0;
             line-height: 0.9;
             text-align: center;
-            text-shadow: 2px 2px 0px rgba(255,255,255,0.4);
-            transform: rotate(-1deg);
+            text-shadow: 2px 2px 0px #fff, 4px 4px 0px rgba(0,0,0,0.1);
+            transform: rotate(-2deg);
         }
 
         .home-subtitle {
-            font-family: 'Courier New', monospace;
-            color: #636e72;
-            font-weight: bold;
+            font-family: 'Outfit', sans-serif;
+            color: #7f8c8d;
+            font-weight: 600;
             font-size: 16px;
-            margin-bottom: 30px;
-            background: rgba(255,255,255,0.5);
-            padding: 2px 8px;
+            margin-bottom: 35px;
+            background: #fff;
+            padding: 5px 15px;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             transform: rotate(1deg);
+            margin-top: 10px;
         }
 
-        /* Sticker Buton (Kış Temalı) */
+        /* Ana Buton (Daha soft) */
         .btn-sticker {
-            background: #e74c3c;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
             color: white;
-            font-weight: 800;
+            font-weight: 700;
             font-size: 18px;
-            padding: 15px 45px;
-            border-radius: 50px 15px 50px 25px; /* Düzensiz şekil */
+            padding: 16px 50px;
+            border-radius: 50px; /* Tam yuvarlak */
             text-decoration: none;
-            border: 3px solid white;
-            box-shadow: 0 6px 0 rgba(0,0,0,0.2);
-            transition: all 0.2s;
-            display: inline-flex; align-items: center; gap: 10px;
-            transform: rotate(2deg);
+            border: 4px solid white;
+            box-shadow: 
+                0 10px 20px rgba(231, 76, 60, 0.3),
+                inset 0 2px 5px rgba(255,255,255,0.2);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-flex; align-items: center; gap: 12px;
+            transform: rotate(0deg);
+            position: relative; overflow: hidden;
         }
-        .btn-sticker:hover { transform: rotate(0deg) scale(1.05); background: #c0392b; }
+        .btn-sticker:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 30px rgba(231, 76, 60, 0.4); }
         .btn-sticker i { font-size: 20px; }
+        .btn-sticker::after {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine { 0% { left: -100%; } 100% { left: 200%; } }
 
+        /* Süsler */
+        .deco-sticker { position: absolute; font-size: 24px; filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.1)); z-index: 40; }
+        .ds-1 { top: 15px; right: 20px; transform: rotate(15deg); font-size: 32px; } /* Holy Leaf */
+        .ds-2 { bottom: 20px; left: 20px; transform: rotate(-10deg); color: #f39c12; } /* Star */
 
         /* =========================================
-           DİĞER TABLAR (ORİJİNAL KOD KORUNDU)
+           DİĞER TABLAR (KORUNAN ORİJİNAL STİL)
            ========================================= */
         .cardboard-about { background-color: #dcbfa6; background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E"); border: 3px solid #bba38e; border-radius: 20px; width: 100%; max-width: 850px; padding: 50px 40px; display: flex; align-items: center; gap: 50px; position: relative; box-shadow: 10px 10px 0 rgba(0,0,0,0.1), 0 20px 50px rgba(0,0,0,0.1); }
         .about-tape-top { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(1deg); width: 150px; height: 40px; background: rgba(255,255,255,0.35); border-left: 2px dashed rgba(255,255,255,0.6); border-right: 2px dashed rgba(255,255,255,0.6); backdrop-filter: blur(2px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -399,15 +482,51 @@
             .simple-card { width: 90%; padding: 25px; } 
             .project-card { width: 95%; } 
             #walkman-container { width: 90%; right: 5%; bottom: -400px; }
+            .forest-layer { background-size: cover; }
+            .light-wire { width: 120%; left: -10%; }
+            .christmas-lights-container { height: 80px; }
+            .light-bulb { width: 10px; height: 18px; top: 32px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- YILBAŞI IŞIKLARI -->
+    <div class="christmas-lights-container">
+        <div class="light-wire"></div>
+        <!-- Ampuller JS ile dinamik eklenebilir veya manuel -->
+        <div class="light-bulb lb-red"></div>
+        <div class="light-bulb lb-green"></div>
+        <div class="light-bulb lb-blue"></div>
+        <div class="light-bulb lb-gold"></div>
+        <div class="light-bulb lb-red"></div>
+        <div class="light-bulb lb-green"></div>
+        <div class="light-bulb lb-blue"></div>
+        <div class="light-bulb lb-gold"></div>
+        <div class="light-bulb lb-red"></div>
+        <div class="light-bulb lb-green"></div>
+        <div class="light-bulb lb-blue"></div>
+        <div class="light-bulb lb-gold"></div>
+        <div class="light-bulb lb-red"></div>
+        <div class="light-bulb lb-green"></div>
+    </div>
+
+    <!-- SANTA ANIMATION CONTAINER -->
+    <div id="santa-container" class="santa-wrapper">
+        <div class="santa-sleigh">
+            <img src="https://cdn-icons-png.flaticon.com/512/3799/3799988.png" alt="Santa Claus">
+        </div>
+    </div>
+    <!-- HEDİYE CONTAINER -->
+    <div id="gift-container" class="falling-gift"></div>
+
     <!-- KAR YAĞIŞI EFEKTİ -->
     <div class="snow-container" id="snow-container"></div>
-    <!-- ARKAPLAN AĞAÇLAR -->
-    <div class="winter-trees"></div>
+
+    <!-- ARKAPLAN KATMANLI ORMAN (PARALLAX) -->
+    <div class="forest-layer layer-back"></div>
+    <div class="forest-layer layer-mid"></div>
+    <div class="forest-layer layer-front"></div>
 
     <!-- DİL DEĞİŞTİRME BUTONU -->
     <div class="lang-switch">
@@ -464,29 +583,29 @@
 
     <div class="stage">
         
-        <!-- === HOME (YENİLENMİŞ KIŞ TASARIMI) === -->
+        <!-- === HOME (YENİLENMİŞ SOFT KIŞ TASARIMI) === -->
         <div id="home" class="page-section active">
             <div class="home-scene-wrapper">
                 <div class="winter-box" id="tiltCard">
                     <!-- Kutu Dekorları -->
                     <div class="box-snow-top"></div>
-                    <div class="tape-red tr-1"></div>
-                    <div class="tape-red tr-2"></div>
-                    <div class="stamp-year">2025</div>
+                    <div class="deco-sticker ds-1">🎄</div>
+                    <div class="deco-sticker ds-2"><i class="fa-solid fa-star"></i></div>
                     
-                    <!-- Fotoğraf -->
+                    <!-- Fotoğraf (Yumuşak Köşeli) -->
                     <div class="polaroid-frame">
                         <div class="polaroid-tape"></div>
+                        <div class="santa-hat-sticker"></div>
                         <img src="maskot.png" alt="Mascot" onerror="this.src='https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png'">
                     </div>
 
                     <!-- Metinler -->
-                    <h1 class="home-title">Evo<br>Studios</h1>
+                    <h1 class="home-title">Evo Studios</h1>
                     <p class="home-subtitle" data-t="home_subtitle">Ultimate Roblox Development</p>
 
-                    <!-- Buton -->
+                    <!-- Buton (Soft & Parlak) -->
                     <a href="#" onclick="switchTab('about')" class="btn-sticker">
-                        <i class="fa-solid fa-sleigh"></i>
+                        <i class="fa-regular fa-id-badge"></i>
                         <span data-t="about_me_btn">Hakkımda</span>
                     </a>
                 </div>
@@ -616,6 +735,37 @@
         }
         createSnowflakes();
 
+        // SANTA ANIMASYON MANTIĞI
+        function triggerSanta() {
+            const santa = document.getElementById('santa-container');
+            const gift = document.getElementById('gift-container');
+            
+            // Animasyon classlarını temizle ve yeniden tetikle (Reflow)
+            santa.classList.remove('santa-animate');
+            gift.classList.remove('gift-animate');
+            void santa.offsetWidth; // Trigger reflow
+
+            santa.classList.add('santa-animate');
+            
+            // Santa ekranın ortasına gelince hediye düşsün (yaklaşık 4 saniye sonra)
+            setTimeout(() => {
+                gift.classList.add('gift-animate');
+            }, 3000);
+        }
+
+        // Santa'yı rastgele aralıklarla geçir (10sn - 30sn arası)
+        function scheduleNextSanta() {
+            const delay = Math.random() * 20000 + 15000; // 15-35 saniye arası
+            setTimeout(() => {
+                triggerSanta();
+                scheduleNextSanta();
+            }, delay);
+        }
+        // Sayfa açıldıktan kısa süre sonra ilk geçişi yap
+        setTimeout(triggerSanta, 5000);
+        scheduleNextSanta();
+
+
         const langData = {
             tr: {
                 home_subtitle: "Ultimate Roblox Development",
@@ -701,7 +851,7 @@
             let clean = url.trim();
             if (clean.includes('youtube.com') || clean.includes('youtu.be')) {
                 const match = clean.match(/(?:v=|\/)([\w-]{11})/);
-                if (match && match[1]) return `<iframe class="nc-media" src="https://www.youtube.com/embed/${match[1]}" frameborder="0" allowfullscreen></iframe>`;
+                if (match && match[1]) return `<iframe class="nc-media" src=" frameborder="0" allowfullscreen></iframe>`;
             }
             if (clean.includes('spotify.com')) return ''; 
             if (clean.match(/\.(mp4|webm|mov)$/i)) return `<video src="${clean}" class="nc-media" controls></video>`;
