@@ -287,7 +287,6 @@
 
         /* --- HABERLER (GELİŞMİŞ KARTON TASARIM) --- */
         .news-container {
-            /* Mantar Pano Dokusu */
             background-color: #d1b48c;
             background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h21.5v21.5h-1.5z' fill='%23c2a681' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
             border: 10px solid #5d4e42; border-radius: 12px; 
@@ -299,7 +298,7 @@
         }
         .news-header-modern {
             padding: 15px 20px;
-            background: #fff8e1; /* Eski kağıt rengi */
+            background: #fff8e1; 
             border-bottom: 2px dashed #bba38e;
             z-index: 10;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -314,14 +313,13 @@
         .search-bar-wrap {
             display: flex; background: #fff; border: 1px solid #999; 
             border-radius: 20px; padding: 5px 10px; align-items: center;
-            width: 100%;
+            width: 100%; margin-top: 5px;
         }
         .search-input { 
             border: none; outline: none; background: transparent; 
-            font-family: 'Courier New', monospace; font-weight: bold; width: 100%; 
+            font-family: 'Courier New', monospace; font-weight: bold; width: 100%; font-size: 13px;
         }
 
-        /* Live Status Indicator */
         .live-status-dot {
             width: 12px; height: 12px; background: #bbb; border-radius: 50%; margin-left: 5px;
         }
@@ -346,7 +344,6 @@
         .news-scroll-area::-webkit-scrollbar { width: 8px; }
         .news-scroll-area::-webkit-scrollbar-thumb { background: #8b7056; border-radius: 4px; }
         
-        /* Karton Haber Kartı (Sticky Note Style) */
         .news-card {
             background: #fefefe; 
             padding: 20px; margin-bottom: 40px; position: relative;
@@ -358,7 +355,21 @@
         .news-card:nth-child(even) { transform: rotate(-1.5deg); }
         .news-card:hover { transform: scale(1.01) rotate(0deg); z-index: 5; }
         
-        /* Bant (Tape) */
+        /* PINNED STİLİ */
+        .news-card.pinned {
+            background: #fff9c4; /* Açık Sarı */
+            border: 2px solid #fbc531;
+            transform: rotate(-2deg);
+            z-index: 8;
+        }
+        .pin-badge {
+            position: absolute; top: -15px; left: -15px;
+            background: #e1b12c; color: #2d241e; font-weight: 900;
+            padding: 5px 10px; font-size: 11px; transform: rotate(-15deg);
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.2); border: 2px solid #fff;
+            display: flex; align-items: center; gap: 5px;
+        }
+
         .news-card::before {
             content: ''; position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(2deg);
             width: 120px; height: 35px; background: rgba(255, 255, 255, 0.4);
@@ -373,7 +384,6 @@
             box-shadow: 2px 2px 5px rgba(0,0,0,0.2); border: 2px solid white; z-index: 7;
         }
 
-        /* Exclusive Drop Stili */
         .news-card.exclusive-drop {
             background: repeating-linear-gradient(45deg, #2d3436, #2d3436 10px, #353b48 10px, #353b48 20px);
             color: white; border: 4px solid #d63031; text-align: center;
@@ -409,7 +419,6 @@
         .nc-title { font-size: 18px; font-weight: 800; margin: 15px 0 5px 0; font-family: 'Outfit', sans-serif; }
         .nc-desc { font-size: 14px; color: #444; line-height: 1.5; margin-bottom: 10px; }
 
-        /* Reaksiyon Alanı */
         .reaction-wrapper { 
             display: flex; gap: 10px; margin-top: 15px; padding-top: 10px; 
             border-top: 1px dashed #ccc; overflow-x: auto;
@@ -591,7 +600,7 @@
                         </div>
                         <div class="search-bar-wrap">
                             <i class="fa-solid fa-search" style="color:#999; font-size:12px;"></i>
-                            <input type="text" class="search-input" placeholder="Search..." onkeyup="filterBySearch(this.value)">
+                            <input type="text" class="search-input" placeholder="Search..." onkeyup="debounceSearch(this.value)">
                         </div>
                     </div>
                     <div class="news-filters">
@@ -669,8 +678,9 @@
         let globalNewsData = []; 
         let renderedCount = 0;
         const BATCH_SIZE = 5; 
-        const CACHE_KEY = 'evo_news_cache_v5'; // Cache temizliği için versiyon artırıldı
+        const CACHE_KEY = 'evo_news_cache_v5'; 
         const CACHE_TIME = 15 * 60 * 1000; 
+        let searchTimeout = null;
 
         const langData = {
             tr: {
@@ -742,11 +752,13 @@
                 if (langData[lang][key]) el.innerText = langData[lang][key];
             });
             if(globalNewsData.length > 0 && window.innerWidth > 768) {
+                const activeFilter = document.querySelector('.filter-btn.active').getAttribute('onclick').match(/'([^']+)'/)[1];
+                const searchVal = document.querySelector('.search-input').value;
+                // Dil değişince filtreyi koru ama sayfayı sıfırla
                 const feed = document.getElementById('news-feed');
                 feed.innerHTML = '';
                 renderedCount = 0;
-                const activeFilter = document.querySelector('.filter-btn.active').getAttribute('onclick').match(/'([^']+)'/)[1];
-                renderNewsBatch(activeFilter);
+                renderNewsBatch(activeFilter, searchVal);
             } else {
                 loadNewsFromSheet();
             }
@@ -896,6 +908,7 @@
                 return false;
             });
 
+            // Pinned en üste, Pinned olmayanlar aşağıya
             filteredData.sort((a, b) => {
                 const aPin = (a.pinned && a.pinned.toString().toLowerCase() === 'yes') ? 1 : 0;
                 const bPin = (b.pinned && b.pinned.toString().toLowerCase() === 'yes') ? 1 : 0;
@@ -923,6 +936,8 @@
                 const tagLower = (item.etiket || '').toLowerCase();
                 const isExclusive = tagLower.includes('kupon') || tagLower.includes('drop');
                 const exclusiveClass = isExclusive ? 'exclusive-drop' : '';
+                const isPinned = item.pinned && item.pinned.toString().toLowerCase() === 'yes';
+                const pinnedClass = isPinned ? 'pinned' : '';
                 
                 // 3 Günden yeni mi?
                 const postDate = new Date(item.tarih);
@@ -946,8 +961,9 @@
                 let displayViews = item.views || 0;
 
                 htmlContent += `
-                <div class="news-card ${exclusiveClass}" id="${uniqueId}">
+                <div class="news-card ${exclusiveClass} ${pinnedClass}" id="${uniqueId}">
                     ${isNew ? '<div class="new-badge">NEW!</div>' : ''}
+                    ${isPinned ? '<div class="pin-badge"><i class="fa-solid fa-thumbtack"></i> PINNED</div>' : ''}
                     
                     ${isExclusive ? `
                         <div class="secret-cover" onclick="revealSecret(this)">
@@ -1009,6 +1025,7 @@
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             if(btn) btn.classList.add('active');
             
+            // Client-side filtreleme için listeyi sıfırla ama fetch yapma
             const feed = document.getElementById('news-feed');
             feed.innerHTML = '';
             renderedCount = 0;
@@ -1016,12 +1033,17 @@
             renderNewsBatch(type, searchVal);
         }
 
-        function filterBySearch(val) {
-            const feed = document.getElementById('news-feed');
-            feed.innerHTML = '';
-            renderedCount = 0;
-            const activeFilter = document.querySelector('.filter-btn.active').getAttribute('onclick').match(/'([^']+)'/)[1];
-            renderNewsBatch(activeFilter, val);
+        // Debounce Search (Performans için bekleme)
+        function debounceSearch(val) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const activeFilter = document.querySelector('.filter-btn.active').getAttribute('onclick').match(/'([^']+)'/)[1];
+                
+                const feed = document.getElementById('news-feed');
+                feed.innerHTML = '';
+                renderedCount = 0;
+                renderNewsBatch(activeFilter, val);
+            }, 300);
         }
 
         function toggleReaction(btn, id, type) {
@@ -1035,8 +1057,8 @@
                 localStorage.removeItem(key);
                 btn.classList.remove('selected');
                 span.innerText = Math.max(0, currentVal - 1);
-                // Not: Backend decrement desteklemediği için sunucuya istek atılmaz, 
-                // sadece yerel (visual) olarak geri alınır.
+                // Not: Backend'e eksi gönderme işlemi için Sheet scriptini güncellemek gerekebilir
+                // Şimdilik sadece görsel olarak geri alıyoruz.
             } else {
                 // TIKLAMA (DO)
                 localStorage.setItem(key, 'true');
@@ -1063,7 +1085,6 @@
         }
 
         function triggerConfetti(element) {
-            // Basit CSS animasyon efekti
             const rect = element.getBoundingClientRect();
             for(let i=0; i<10; i++) {
                 const dot = document.createElement('div');
