@@ -22,7 +22,7 @@
             --accent: #6c5ce7; 
             --s-red: #ff6b6b;
             --s-yellow: #feca57;
-            --s-green: #1dd1a1;
+            --s-green: #1dd1a1; /* Spotify Yeşili Uyumlu */
             --s-blue: #48dbfb;
             --s-purple: #9b59b6;
         }
@@ -47,7 +47,6 @@
         @keyframes popIn { 0% { transform: scale(0.8) translateY(20px); opacity: 0; } 60% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
         @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes highlightFlash { 0% { border-color: var(--accent); transform: scale(1); } 50% { border-color: var(--s-red); transform: scale(1.02); } 100% { border-color: var(--accent); transform: scale(1); } }
         @keyframes blinkLive { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
         
         /* --- UI ELEMENTS --- */
@@ -63,30 +62,87 @@
         #bg-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; pointer-events: none; }
         .bg-icon { position: absolute; color: rgba(0,0,0,0.05); animation: floatUp linear infinite; bottom: -50px; }
 
-        /* --- WALKMAN PLAYER (DÜZELTİLDİ) --- */
+        /* --- WALKMAN PLAYER (SPOTIFY) --- */
         #walkman-container {
-            position: fixed; bottom: -250px; right: 20px; width: 300px; height: 140px;
-            background: #e84118; border: 4px solid #2d3436; border-radius: 15px;
-            z-index: 9999; transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            display: flex; flex-direction: column; padding: 10px;
+            position: fixed; bottom: -300px; right: 20px; width: 320px; height: 155px; /* Yükseklik arttırıldı */
+            background: #ff6b6b; /* Evo Kırmızısı */
+            border: 4px solid #2d3436; border-radius: 15px;
+            z-index: 9999; transition: bottom 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            display: flex; flex-direction: column; padding: 12px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.4);
         }
         #walkman-container.active { bottom: 30px; }
-        .wm-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .wm-title { color: white; font-weight: 900; font-style: italic; font-size: 14px; font-family: 'Outfit', sans-serif; text-shadow: 1px 1px 0 rgba(0,0,0,0.2); }
-        .wm-close { background: #2d3436; border: 2px solid white; color: white; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
-        .wm-screen { flex: 1; background: #000; border-radius: 8px; overflow: hidden; position: relative; border: 2px solid #2d3436; }
+        
+        /* Dekoratif Walkman Detayları */
+        #walkman-container::before { content:''; position: absolute; top: 10px; left: 10px; right: 40px; height: 2px; background: rgba(0,0,0,0.1); }
+        
+        .wm-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .wm-title { color: white; font-weight: 900; font-style: italic; font-size: 16px; font-family: 'Outfit', sans-serif; display: flex; align-items: center; gap: 8px; }
+        .wm-close { background: #2d3436; border: 2px solid white; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; transition: transform 0.2s; }
+        .wm-close:hover { transform: scale(1.1) rotate(90deg); background: #000; }
+        
+        .wm-screen { flex: 1; background: #000; border-radius: 8px; overflow: hidden; position: relative; border: 3px solid #2d3436; }
         #spotify-frame { width: 100%; height: 100%; border: none; }
 
-        /* --- NAV DOCK --- */
-        .nav-dock-wrapper { position: fixed; bottom: 30px; display: flex; justify-content: center; z-index: 100; width: 100%; pointer-events: none; }
-        .nav-dock { pointer-events: auto; background-color: #e6dcc6; background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636l-1.414 1.414L38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23d1c4a5' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E"); padding: 12px 15px; border-radius: 18px; display: flex; gap: 15px; border: 3px solid #2d241e; box-shadow: 6px 6px 0px #b0a082, 10px 10px 15px rgba(0,0,0,0.15); transform: translateY(0); transition: transform 0.3s ease; position: relative; }
+        /* --- NAV DOCK (FIXED) --- */
+        /* Wrapper ortalama ve layout stabilitesi sağlar */
+        .nav-dock-wrapper { 
+            position: fixed; 
+            bottom: 30px; 
+            left: 0; 
+            width: 100%; 
+            display: flex; 
+            justify-content: center; 
+            z-index: 1000; 
+            pointer-events: none; /* Boşluklara tıklanmasın */
+        }
+        
+        .nav-dock { 
+            pointer-events: auto; 
+            background-color: #e6dcc6; 
+            background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636l-1.414 1.414L38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23d1c4a5' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E"); 
+            padding: 12px 15px; 
+            border-radius: 24px; 
+            display: flex; 
+            align-items: flex-end; /* Buton hizalaması */
+            gap: 15px; 
+            border: 3px solid #2d241e; 
+            box-shadow: 6px 6px 0px #b0a082, 10px 10px 15px rgba(0,0,0,0.15); 
+            transform: translateY(0); 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            position: relative; 
+        }
+        
         .dock-tape { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-2deg); width: 100px; height: 35px; background: rgba(255, 255, 255, 0.4); border-left: 2px dashed rgba(255,255,255,0.6); border-right: 2px dashed rgba(255,255,255,0.6); box-shadow: 0 2px 4px rgba(0,0,0,0.1); backdrop-filter: blur(2px); pointer-events: none; z-index: 101; }
+        
         .nav-dock:hover { transform: translateY(-5px); }
-        .nav-btn { width: 60px; height: 60px; border-radius: 12px; background: #fffcf5; border: 3px solid #2d241e; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #2d241e; box-shadow: 0 5px 0 #2d241e; transition: all 0.1s ease-in-out; position: relative; margin-bottom: 5px; }
-        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 0 #2d241e; background: #fff; }
+        
+        .nav-btn { 
+            width: 60px; height: 60px; 
+            border-radius: 14px; 
+            background: #fffcf5; 
+            border: 3px solid #2d241e; 
+            font-size: 24px; 
+            cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; 
+            color: #2d241e; 
+            position: relative; 
+            margin-bottom: 0; /* Margin sıfırlandı */
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 0 #2d241e; 
+        }
+        
+        .nav-btn:hover { transform: translateY(-4px); box-shadow: 0 8px 0 #2d241e; background: #fff; z-index: 10; }
         .nav-btn:hover i { transform: scale(1.15) rotate(5deg); }
-        .nav-btn.active { transform: translateY(5px); box-shadow: 0 0 0 #2d241e; border-color: #2d241e; background: var(--s-yellow); }
+        
+        /* Aktif buton stili güncellendi */
+        .nav-btn.active { 
+            transform: translateY(-8px) scale(1.05); 
+            box-shadow: 0 10px 0 #2d241e; /* Gölge büyüdü */
+            border-color: #2d241e; 
+            background: var(--s-yellow); 
+            z-index: 10;
+        }
         .nav-btn.active i { transform: scale(1.1); color: var(--ink); }
 
         /* --- CONTENT --- */
@@ -110,6 +166,7 @@
         .sticker-btn { background: #ff6b6b; color: white; font-weight: 800; font-size: 18px; padding: 15px 40px; border-radius: 50px 20px 60px 30px; text-decoration: none; border: 3px solid white; box-shadow: 0 8px 0 rgba(0,0,0,0.15); transition: all 0.2s; display: inline-block; transform: rotate(2deg); position: relative; overflow: hidden; }
         .sticker-btn:hover { transform: rotate(0deg) scale(1.1); background: #ff5252; }
         
+        /* About ve Diğer Kartlar */
         .cardboard-about { background-color: #dcbfa6; background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E"); border: 3px solid #bba38e; border-radius: 20px; width: 100%; max-width: 850px; padding: 50px 40px; display: flex; align-items: center; gap: 50px; position: relative; box-shadow: 10px 10px 0 rgba(0,0,0,0.1), 0 20px 50px rgba(0,0,0,0.1); }
         .about-tape-top { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(1deg); width: 150px; height: 40px; background: rgba(255,255,255,0.35); border-left: 2px dashed rgba(255,255,255,0.6); border-right: 2px dashed rgba(255,255,255,0.6); backdrop-filter: blur(2px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .cb-text-content { flex: 1; text-align: left; }
@@ -193,13 +250,47 @@
         .view-count { position: absolute; bottom: 10px; right: 15px; font-size: 10px; color: #999; display: flex; align-items: center; gap: 4px; font-family: 'Courier New', monospace; font-weight: bold; }
         .sticker { position: absolute; width: 45px; height: 45px; background: #fff; border: 3px solid var(--ink); border-radius: 10px; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); z-index: 15; }
         .st-1 { top: 20px; right: -20px; transform: rotate(15deg); color: var(--s-yellow); }
+        
+        /* MÜZİK ÇALMA BUTONU (YENİ EKLEME) */
+        .play-music-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: #1DB954; color: white; border: 2px solid #191414;
+            padding: 8px 12px; font-size: 12px; font-weight: bold;
+            border-radius: 20px; cursor: pointer; margin-bottom: 10px;
+            transform: rotate(-1deg);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .play-music-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 0 #191414; }
+        .play-music-btn:active { transform: translateY(0); box-shadow: 0 0 0; }
+        .play-music-btn i { font-size: 14px; }
+
         .toast-notification { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(50px); background: var(--ink); color: white; padding: 12px 25px; border-radius: 50px; display: flex; align-items: center; gap: 10px; font-weight: bold; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 9999; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .toast-notification.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
         #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; justify-content: center; align-items: center; cursor: zoom-out; opacity: 0; transition: opacity 0.3s; }
         #lightbox.active { display: flex; opacity: 1; }
         #lightbox img { max-width: 90%; max-height: 90%; border-radius: 8px; box-shadow: 0 0 50px rgba(255,255,255,0.1); transform: scale(0.9); transition: transform 0.3s; }
         #lightbox.active img { transform: scale(1); }
-        @media (max-width: 768px) { .nav-btn[data-target="news"], #news { display: none !important; } .nav-dock-wrapper { bottom: 20px; } .nav-dock { width: 92%; gap: 5px; justify-content: space-around; padding: 10px; } .nav-btn { width: 55px; height: 55px; font-size: 22px; margin: 0; } .cardboard-box { width: 90%; height: auto; min-height: 500px; padding: 40px 20px; transform: none !important; } .stamp-title { font-size: 40px; } .cardboard-about { flex-direction: column-reverse; padding: 30px 20px; text-align: center; width: 95%; gap: 30px; } .cb-text-content { text-align: center; } .cb-socials { justify-content: center; } .ref-avatar-card { width: 100%; max-width: 240px; transform: rotate(2deg); margin: 0 auto; } .ref-photo-frame { height: 240px; } .simple-card { width: 90%; padding: 25px; } .project-card { width: 95%; } .game-thumb { height: 200px; } .floating-element { display: none; } .page-section { padding: 10px; overflow-y: auto; } }
+        
+        @media (max-width: 768px) { 
+            .nav-btn[data-target="news"], #news { display: none !important; } 
+            .nav-dock-wrapper { bottom: 20px; } 
+            .nav-dock { width: 92%; gap: 5px; justify-content: space-around; padding: 10px; align-items: center; } 
+            .nav-btn { width: 55px; height: 55px; font-size: 22px; margin: 0; }
+            .nav-btn.active { transform: translateY(-5px); }
+            .cardboard-box { width: 90%; height: auto; min-height: 500px; padding: 40px 20px; transform: none !important; } 
+            .stamp-title { font-size: 40px; } 
+            .cardboard-about { flex-direction: column-reverse; padding: 30px 20px; text-align: center; width: 95%; gap: 30px; } 
+            .cb-text-content { text-align: center; } 
+            .cb-socials { justify-content: center; } 
+            .ref-avatar-card { width: 100%; max-width: 240px; transform: rotate(2deg); margin: 0 auto; } 
+            .ref-photo-frame { height: 240px; } 
+            .simple-card { width: 90%; padding: 25px; } 
+            .project-card { width: 95%; } 
+            .game-thumb { height: 200px; } 
+            .floating-element { display: none; } 
+            .page-section { padding: 10px; overflow-y: auto; }
+            #walkman-container { width: 90%; right: 5%; bottom: -300px; }
+        }
     </style>
 </head>
 <body>
@@ -225,14 +316,15 @@
         <span id="toast-msg">Link Kopyalandı!</span>
     </div>
 
-    <!-- WALKMAN PLAYER (Gizli Özellik) -->
+    <!-- WALKMAN PLAYER (SPOTIFY) -->
     <div id="walkman-container">
         <div class="wm-controls">
-            <span class="wm-title">EVO-WALKMAN v1.0</span>
-            <button class="wm-close" onclick="closeWalkman()">X</button>
+            <span class="wm-title"><i class="fa-brands fa-spotify"></i> Walkman Player</span>
+            <button class="wm-close" onclick="closeWalkman()" title="Kapat">X</button>
         </div>
         <div class="wm-screen">
-            <iframe id="spotify-frame" src="" allowtransparency="true" allow="encrypted-media"></iframe>
+            <!-- Allow özellikleri Spotify Embed için kritiktir -->
+            <iframe id="spotify-frame" src="" width="100%" height="100%" frameborder="0" allowtransparency="true" allow="encrypted-media; autoplay; clipboard-write; picture-in-picture"></iframe>
         </div>
     </div>
 
@@ -241,13 +333,12 @@
         <img id="lightbox-img" src="" alt="Full Screen Preview">
     </div>
 
-    <!-- MENÜ (NAV DOCK) - KARTON TEMA -->
+    <!-- MENÜ (NAV DOCK) - SABİTLENDİ VE DÜZELTİLDİ -->
     <div class="nav-dock-wrapper">
         <div class="nav-dock">
             <div class="dock-tape"></div>
             <div class="nav-btn active" data-target="home"><i class="fa-solid fa-house"></i></div>
             <div class="nav-btn" data-target="project"><i class="fa-solid fa-gamepad"></i></div>
-            <!-- News Butonu Mobilde CSS ile gizlenecek -->
             <div class="nav-btn" data-target="news"><i class="fa-solid fa-newspaper"></i></div>
             <div class="nav-btn" data-target="free"><i class="fa-solid fa-gift"></i></div>
             <div class="nav-btn" data-target="about"><i class="fa-solid fa-id-card"></i></div>
@@ -322,7 +413,7 @@
                         <button class="filter-btn" onclick="filterNews('info', this)" data-t="filter_info">News</button>
                     </div>
                 </div>
-                <!-- Lazy Load için Scroll Alanı -->
+                <!-- Haber İçerik Alanı -->
                 <div id="news-feed" class="news-scroll-area" onscroll="checkScroll()">
                     <div class="loading-spinner" style="margin-top:50px;">
                         <div class="spinner" style="border-width:3px; width:30px; height:30px; margin:0 auto; border-color:#8b7056; border-top-color:#fff;"></div>
@@ -502,14 +593,50 @@
             if(activeSec) activeSec.classList.add('active');
         }
 
+        // --- SPOTIFY PARSING LOGIC (YENİ) ---
+        function getSpotifyEmbedUrl(url) {
+            if (!url) return null;
+            let cleanUrl = url.trim();
+
+            // Link zaten iframe/embed kodu ise olduğu gibi döndür
+            if (cleanUrl.startsWith('<iframe')) return null;
+
+            // Normal bir Spotify linki mi?
+            if (cleanUrl.includes('spotify.com')) {
+                // Track
+                if (cleanUrl.includes('/track/')) {
+                    if (cleanUrl.includes('/embed/')) return cleanUrl; 
+                    return cleanUrl.replace('/track/', '/embed/track/').split('?')[0];
+                }
+                // Playlist
+                if (cleanUrl.includes('/playlist/')) {
+                    if (cleanUrl.includes('/embed/')) return cleanUrl;
+                    return cleanUrl.replace('/playlist/', '/embed/playlist/').split('?')[0];
+                }
+                // Album
+                if (cleanUrl.includes('/album/')) {
+                     if (cleanUrl.includes('/embed/')) return cleanUrl;
+                     return cleanUrl.replace('/album/', '/embed/album/').split('?')[0];
+                }
+            }
+            return null;
+        }
+
         function getMediaContent(url) {
             if (!url || url.length < 5) return '';
             let clean = url.trim();
             if (clean.includes('youtube.com') || clean.includes('youtu.be')) {
+                // Youtube Embed
                 const match = clean.match(/(?:v=|\/)([\w-]{11})/);
                 if (match && match[1]) {
-                     return `<iframe class="nc-media" src=" allowfullscreen></iframe>`;
+                     return `<iframe class="nc-media" src="https://www.youtube.com/embed/${match[1]}" frameborder="0" allowfullscreen></iframe>`;
                 }
+            }
+            // Spotify Linki mi?
+            if (clean.includes('spotify.com')) {
+                // Spotify'ı sadece play butonuna saklıyoruz, görsel olarak albüm kapağı çekmek zor.
+                // Burada bir medya göstermiyoruz, butonu aşağıda ekleyeceğiz.
+                return ''; 
             }
             if (clean.match(/\.(mp4|webm|mov)$/i)) {
                 return `<video src="${clean}" class="nc-media" controls></video>`;
@@ -588,14 +715,11 @@
         function showErrorState() {
             const feed = document.getElementById('news-feed');
             feed.innerHTML = `
-                <div class="error-box">
+                <div class="error-box" style="text-align:center; padding:20px;">
                     <i class="fa-solid fa-wifi" style="font-size:40px; opacity:0.5;"></i>
-                    <div>
+                    <div style="margin-top:10px;">
                         <strong>${langData[currentLang].connection_error}</strong>
                     </div>
-                    <button class="retry-btn" onclick="loadNewsFromSheet()">
-                        <i class="fa-solid fa-rotate-right"></i>
-                    </button>
                 </div>`;
         }
 
@@ -655,22 +779,28 @@
                 const mediaHtml = getMediaContent(item.gorsel);
                 const timeAgoText = timeAgo(item.tarih);
                 
-                const isHearted = localStorage.getItem(`react_${uniqueId}_heart`);
-                const isFired = localStorage.getItem(`react_${uniqueId}_fire`);
-                const isRocketed = localStorage.getItem(`react_${uniqueId}_rocket`);
-
-                let hasViewed = localStorage.getItem('has_viewed_' + uniqueId);
-                if(!hasViewed) {
-                    interactWithSheet(uniqueId, 'view');
-                    localStorage.setItem('has_viewed_' + uniqueId, 'yes');
-                }
-
-                let displayViews = item.views || 0;
+                // MÜZİK KONTROLÜ VE BUTONU
+                // Item.music içindeki linki kontrol et
+                let musicButtonHtml = '';
+                let hasMusic = false;
                 
-                // Müzik İkonu Kontrolü
-                const hasMusic = item.music && item.music.length > 5;
+                // Eğer item.music doluysa ve geçerli bir Spotify linki ise
+                if (item.music && item.music.length > 5) {
+                    const embedUrl = getSpotifyEmbedUrl(item.music);
+                    if (embedUrl) {
+                        hasMusic = true;
+                        // Buton ekle
+                        musicButtonHtml = `
+                        <div style="margin-top:8px;">
+                            <button class="play-music-btn" onclick="playMusic('${embedUrl}')">
+                                <i class="fa-brands fa-spotify"></i> 🎧 Müzik Mevcut - Dinle
+                            </button>
+                        </div>`;
+                    }
+                }
+                
                 const musicClass = hasMusic ? 'has-music' : '';
-                const dblClickAction = hasMusic ? `ondblclick="playMusic('${item.music}')"` : '';
+                const dblClickAction = hasMusic ? `ondblclick="playMusic('${getSpotifyEmbedUrl(item.music)}'); triggerConfetti(this);"` : '';
 
                 htmlContent += `
                 <div class="news-card ${exclusiveClass} ${pinnedClass}" id="${uniqueId}">
@@ -692,11 +822,13 @@
                                     <span class="nc-time">${timeAgoText}</span>
                                 </div>
                             </div>
-                            <span class="nc-tag-sticker ${musicClass}" title="${hasMusic ? 'Double Click for Music' : ''}" ${dblClickAction}>${item.etiket || 'Log'}</span>
+                            <span class="nc-tag-sticker ${musicClass}" title="${hasMusic ? 'Müzik ekli' : ''}" ${dblClickAction}>${item.etiket || 'Log'}</span>
                         </div>
                         
                         <h3 class="nc-title">${item.baslik}</h3>
                         
+                        ${musicButtonHtml} <!-- Müzik butonu buraya eklendi -->
+
                         ${mediaHtml ? `<div class="nc-media-wrapper">${mediaHtml}</div>` : ''}
                         
                         <div class="nc-content">
@@ -704,12 +836,12 @@
                         </div>
 
                         <div class="reaction-wrapper">
-                            <button class="react-btn ${isFired?'selected':''}" onclick="toggleReaction(this, '${uniqueId}', 'fire')">🔥 <span>${item.fire || 0}</span></button>
-                            <button class="react-btn ${isRocketed?'selected':''}" onclick="toggleReaction(this, '${uniqueId}', 'rocket')">🚀 <span>${item.rocket || 0}</span></button>
-                            <button class="react-btn ${isHearted?'selected':''}" onclick="toggleReaction(this, '${uniqueId}', 'heart')">❤️ <span>${item.likes || 0}</span></button>
+                            <button class="react-btn" onclick="toggleReaction(this, '${uniqueId}', 'fire')">🔥 <span>${item.fire || 0}</span></button>
+                            <button class="react-btn" onclick="toggleReaction(this, '${uniqueId}', 'rocket')">🚀 <span>${item.rocket || 0}</span></button>
+                            <button class="react-btn" onclick="toggleReaction(this, '${uniqueId}', 'heart')">❤️ <span>${item.likes || 0}</span></button>
                         </div>
 
-                        <div class="view-count"><i class="fa-regular fa-eye"></i> ${displayViews}</div>
+                        <div class="view-count"><i class="fa-regular fa-eye"></i> ${item.views || 0}</div>
                     </div>
                 </div>`;
             }
@@ -815,19 +947,14 @@
             }
         }
 
-        // --- WALKMAN LOGIC ---
-        function playMusic(link) {
+        // --- WALKMAN PLAYER LOGIC (GÜNCELLENDİ) ---
+        function playMusic(embedUrl) {
+            if(!embedUrl) return;
+            
             const container = document.getElementById('walkman-container');
             const frame = document.getElementById('spotify-frame');
             
-            // Linki Embed formatına çevir
-            let embedUrl = link;
-            if (link.includes('open.spotify.com/track')) {
-                embedUrl = link.replace('track/', 'embed/track/');
-            } else if (link.includes('open.spotify.com/playlist')) {
-                embedUrl = link.replace('playlist/', 'embed/playlist/');
-            }
-
+            // Linki yükle ve player'ı yukarı kaydır
             frame.src = embedUrl;
             container.classList.add('active');
         }
@@ -836,7 +963,8 @@
             const container = document.getElementById('walkman-container');
             const frame = document.getElementById('spotify-frame');
             container.classList.remove('active');
-            setTimeout(() => { frame.src = ''; }, 500); // Müziği durdur
+            // Hemen kapatıp, 500ms sonra (animasyon bitince) kaynağı sıfırla ki müzik sussun
+            setTimeout(() => { frame.src = ''; }, 500); 
         }
 
         function timeAgo(dateString) {
