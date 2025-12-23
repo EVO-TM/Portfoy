@@ -285,175 +285,136 @@
         }
         .creator-store-link:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4); }
 
-        /* --- HABERLER (YENİ ARŞİV TASARIMI) --- */
+        /* --- HABERLER (YENİ KARTON TASARIMI) --- */
         .news-container {
-            /* Arşiv Kutusu Dokusu */
-            background-color: #dcbfa6;
-            background-image: 
-                url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23bba38e' fill-opacity='0.1'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/svg%3E");
-            border: 1px solid #c2a68c; 
-            border-radius: 8px; 
-            width: 100%; max-width: 650px; height: 80vh; 
+            /* Mantar Pano / Arka Plan */
+            background-color: #d1b48c;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h21.5v21.5h-1.5z' fill='%23c2a681' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            border: 8px solid #5d4e42; border-radius: 10px; 
+            width: 100%; max-width: 700px; height: 80vh; 
             display: flex; flex-direction: column;
-            box-shadow: 
-                inset 0 0 40px rgba(0,0,0,0.05), /* İç gölge */
-                10px 20px 40px rgba(0,0,0,0.2), /* Dış gölge */
-                0 0 0 5px #f0ebe5, /* Beyaz Çerçeve */
-                0 0 0 6px #ccc; /* Gri Çerçeve */
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.3), 10px 10px 20px rgba(0,0,0,0.2); 
             position: relative; overflow: hidden;
             font-family: 'Courier New', monospace;
         }
-
-        /* Arşiv Kutusu Kapağı (Header) */
         .news-header-modern {
-            padding: 20px 25px;
-            background: #2d241e; /* Koyu header */
-            color: #dcbfa6;
-            border-bottom: 4px solid #1a1a1a;
+            padding: 15px 25px;
+            background: #fdf5e6; /* Eski kağıt rengi */
+            border-bottom: 2px dashed #a69279;
             z-index: 10;
-            display: flex; flex-direction: column; gap: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 5px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column; gap: 10px;
         }
-
         .nh-top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .nh-title { 
-            font-family: 'Courier New', monospace; font-size: 24px; font-weight: 900; 
-            display: flex; align-items: center; gap: 10px; color: #fff; letter-spacing: -1px;
+            font-family: 'Courier New', monospace; font-size: 26px; font-weight: 900; 
+            display: flex; align-items: center; gap: 10px; color: #2d241e;
         }
-        
-        /* Live Indicator */
-        .live-status-badge {
-            display: flex; align-items: center; gap: 6px; 
-            background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 4px; border: 1px solid #444;
+        /* Live Status Indicator */
+        .live-status-dot {
+            width: 12px; height: 12px; background: #e84393; border-radius: 50%;
+            box-shadow: 0 0 8px #e84393; margin-left: 5px; opacity: 0.5;
         }
-        .live-dot { width: 8px; height: 8px; background: #555; border-radius: 50%; }
-        .live-dot.active { background: #00b894; box-shadow: 0 0 8px #00b894; animation: blinkLive 2s infinite; }
-        .live-label { font-size: 10px; font-weight: bold; color: #aaa; letter-spacing: 1px; }
+        .live-status-dot.active {
+            background: #00b894; box-shadow: 0 0 10px #00b894;
+            animation: blinkLive 2s infinite; opacity: 1;
+        }
+        .live-text { font-size: 10px; color: #00b894; font-weight: bold; display: none; margin-left: 5px; }
+        .live-status-dot.active + .live-text { display: inline-block; }
 
         .news-filters {
-            display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none;
+            display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none;
         }
         .filter-btn {
-            background: #3d342e; border: 1px solid #554a44; padding: 6px 14px;
-            font-weight: bold; color: #aaa; cursor: pointer;
-            font-size: 11px; white-space: nowrap; border-radius: 4px;
-            transition: 0.2s; font-family: 'Courier New', monospace; text-transform: uppercase;
+            background: #fff; border: 1px solid #999; padding: 5px 12px;
+            font-weight: bold; color: #555; cursor: pointer;
+            font-size: 12px; white-space: nowrap; transform: rotate(-1deg);
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.1); font-family: 'Courier New', monospace;
         }
-        .filter-btn:hover { background: #4d443e; color: #fff; }
         .filter-btn.active {
-            background: #dcbfa6; color: #2d241e; border-color: #dcbfa6;
+            background: #2d241e; color: #fff; transform: rotate(1deg); border-color: #2d241e;
         }
 
-        .news-scroll-area { 
-            flex: 1; overflow-y: auto; padding: 30px 25px 80px 25px; 
-            scroll-behavior: smooth; 
-            background-color: #f1f2f6; /* Kağıtların durduğu zemin */
-            box-shadow: inset 0 10px 20px rgba(0,0,0,0.1);
-        }
+        .news-scroll-area { flex: 1; overflow-y: auto; padding: 30px 30px 80px 30px; scroll-behavior: smooth; }
         .news-scroll-area::-webkit-scrollbar { width: 8px; }
-        .news-scroll-area::-webkit-scrollbar-thumb { background: #bbb; border-radius: 4px; }
+        .news-scroll-area::-webkit-scrollbar-thumb { background: #8b7056; border-radius: 4px; }
         
-        /* DOSYA KARTI TASARIMI */
+        /* Karton/Kağıt Haber Kartları */
         .news-card {
-            background: #fff; 
-            padding: 0; /* İçeriği wrapper ile yönet */
-            margin-bottom: 35px; position: relative;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.1);
-            border-radius: 2px;
-            transition: transform 0.2s;
+            background: #f1f2f6; /* Hafif kirli beyaz */
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+            padding: 20px;
+            margin-bottom: 40px; position: relative;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+            transform: rotate(1deg); transition: transform 0.2s;
             font-family: 'Inter', sans-serif;
-            border-left: 5px solid #333; /* Dosya rengi */
+            border: 1px solid #ccc;
         }
-        .news-card:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .news-card:nth-child(even) { transform: rotate(-1deg); }
+        .news-card:hover { transform: scale(1.02) rotate(0deg); z-index: 5; }
         
-        /* Kağıt Ataş (Paperclip) Süsü */
+        /* Bant (Tape) Süsü - Üst Ortada */
         .news-card::before {
-            content: ''; position: absolute; top: -10px; right: 20px;
-            width: 15px; height: 35px;
-            border: 4px solid #95a5a6; border-radius: 10px;
-            border-bottom: none; z-index: 5;
-        }
-        .news-card::after {
-            content: ''; position: absolute; top: -10px; right: 26px;
-            width: 4px; height: 25px; background: #fff; z-index: 6;
+            content: ''; position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+            width: 100px; height: 35px; background: rgba(255, 255, 255, 0.4);
+            border-left: 2px dashed rgba(255,255,255,0.6); border-right: 2px dashed rgba(255,255,255,0.6);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); backdrop-filter: blur(2px); z-index: 6;
         }
 
-        /* Exclusive Drop (Gizli Dosya) */
+        /* Exclusive Drop (Gizli Dosya) Stili */
         .news-card.exclusive-drop {
-            background: repeating-linear-gradient(135deg, #2d3436, #2d3436 10px, #353b48 10px, #353b48 20px);
-            color: white; border: none; border-left: 5px solid #d63031;
+            background: repeating-linear-gradient(45deg, #2d3436, #2d3436 10px, #353b48 10px, #353b48 20px);
+            color: white; border: 4px solid #d63031; text-align: center;
         }
-        .news-card.exclusive-drop .nc-main-content { filter: blur(4px); pointer-events: none; opacity: 0.3; }
+        .news-card.exclusive-drop .nc-content-wrapper { filter: blur(5px); pointer-events: none; opacity: 0.3; }
         .secret-cover { 
             position: absolute; top:0; left:0; width: 100%; height: 100%; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 10; cursor: pointer; color: #d63031;
         }
         .secret-stamp { 
-            border: 4px solid #d63031; font-size: 20px; font-weight: 900; 
-            padding: 8px 20px; transform: rotate(-10deg); background: rgba(0,0,0,0.5);
-            font-family: 'Courier New', monospace; letter-spacing: 2px;
+            border: 4px solid #d63031; font-size: 24px; font-weight: 900; 
+            display: inline-block; padding: 10px 20px; transform: rotate(-10deg); 
+            mask-image: url("data:image/svg+xml,%3Csvg width='200' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
+            background: rgba(0,0,0,0.6);
         }
 
-        /* Kart İçeriği */
-        .nc-header { 
-            padding: 15px 20px; border-bottom: 1px solid #eee; 
-            display: flex; justify-content: space-between; align-items: center; 
-        }
+        .nc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
         .nc-user-row { display: flex; gap: 10px; align-items: center; }
-        .nc-avatar { width: 40px; height: 40px; border-radius: 6px; border: 1px solid #ddd; object-fit: contain; background: #000; }
+        .nc-avatar { width: 35px; height: 35px; border-radius: 50%; background: #eee; border: 1px solid #333; object-fit: cover; }
         .nc-meta { display: flex; flex-direction: column; }
-        .nc-author { font-weight: 800; font-size: 14px; color: #2d241e; }
-        .nc-time { font-size: 11px; color: #888; font-family: 'Courier New', monospace; }
+        .nc-author { font-weight: 800; font-size: 14px; color: #333; }
+        .nc-time { font-size: 11px; color: #777; font-family: 'Courier New', monospace; }
         
         .nc-tag-sticker {
-            background: #2d241e; color: #fff; padding: 4px 10px; font-size: 10px;
-            font-weight: bold; text-transform: uppercase; letter-spacing: 1px;
-            border-radius: 2px;
+            background: #feca57; color: #333; padding: 3px 8px; font-size: 11px;
+            font-weight: bold; transform: rotate(2deg); box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
-        .nc-content-wrapper { padding: 0; }
+        .nc-media-wrapper { width: calc(100% + 40px); margin-left: -20px; margin-top: 10px; background: #000; display: flex; justify-content: center; overflow: hidden; max-height: 250px; }
+        .nc-media { width: 100%; height: auto; object-fit: cover; }
         
-        /* Medya Alanı */
-        .nc-media-wrapper { 
-            width: 100%; background: #000; margin: 0;
-            display: flex; justify-content: center; align-items: center; 
-            max-height: 250px; overflow: hidden; border-bottom: 1px solid #eee;
+        .nc-title { font-size: 18px; font-weight: 800; margin: 15px 0 5px 0; font-family: 'Outfit', sans-serif; }
+        .nc-desc { font-size: 14px; color: #444; line-height: 1.5; margin-bottom: 10px; }
+
+        /* Reaksiyon Alanı */
+        .reaction-wrapper { 
+            display: flex; gap: 10px; margin-top: 15px; padding-top: 10px; 
+            border-top: 1px dashed #ccc; overflow-x: auto;
         }
-        .nc-media { width: 100%; height: auto; object-fit: cover; opacity: 0.9; transition: opacity 0.3s; }
-        .nc-media:hover { opacity: 1; }
-
-        .nc-body { padding: 20px; }
-        .nc-title { font-size: 18px; font-weight: 800; margin: 0 0 10px 0; color: #1a1a1a; line-height: 1.3; }
-        .nc-desc { font-size: 14px; color: #555; line-height: 1.6; white-space: pre-wrap; }
-
-        /* Alt Bar (Reaksiyon & Paylaş) */
-        .nc-footer {
-            padding: 10px 20px; background: #f9f9f9; border-top: 1px solid #eee;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
-        .reaction-wrapper { display: flex; gap: 6px; }
         .react-btn {
-            background: #fff; border: 1px solid #ddd; border-radius: 4px;
-            padding: 5px 8px; font-size: 12px; cursor: pointer; 
-            display: flex; align-items: center; gap: 4px; color: #555;
-            transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            background: #f1f2f6; border: 1px solid #dcdde1; border-radius: 20px;
+            padding: 4px 10px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px;
+            transition: 0.2s;
         }
-        .react-btn:hover { background: #f0f0f0; transform: translateY(-1px); }
-        .react-btn.selected { 
-            background: #fff0f0; border-color: #ff6b6b; color: #ff6b6b; font-weight: bold; 
-            box-shadow: 0 2px 5px rgba(255, 107, 107, 0.2);
-        }
+        .react-btn:hover { transform: scale(1.1); background: #fff; }
+        .react-btn.selected { background: #dfe6e9; border-color: #6c5ce7; color: #6c5ce7; font-weight: bold; }
+        .react-btn.disabled { opacity: 0.6; cursor: not-allowed; pointer-events: none; } /* Tıklandıktan sonra */
 
-        .share-btn {
-            background: transparent; border: none; color: #888; font-size: 16px;
-            cursor: pointer; padding: 5px; transition: 0.2s; display: flex; align-items: center; gap:5px;
+        .view-count { 
+            position: absolute; bottom: 10px; right: 15px; font-size: 10px; color: #999; 
+            display: flex; align-items: center; gap: 4px; font-family: 'Courier New', monospace; font-weight: bold;
         }
-        .share-btn span { font-size: 12px; font-weight: bold; }
-        .share-btn:hover { color: var(--accent); transform: scale(1.1); }
-
-        .view-stat { font-size: 10px; color: #aaa; margin-top: 5px; text-align: right; margin-right: 20px; margin-bottom: 5px; font-family: 'Courier New', monospace; }
 
         .sticker { position: absolute; width: 45px; height: 45px; background: #fff; border: 3px solid var(--ink); border-radius: 10px; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); z-index: 15; }
         .st-1 { top: 20px; right: -20px; transform: rotate(15deg); color: var(--s-yellow); }
@@ -604,18 +565,18 @@
             </div>
         </div>
 
-        <!-- === HABERLER (YENİ ARŞİV TASARIMI) === -->
+        <!-- === HABERLER (YENİ KARTON TASARIM) === -->
         <div id="news" class="page-section">
             <div class="news-container">
                 <div class="news-header-modern">
                     <div class="nh-top-row">
                         <div class="nh-title">
-                            <i class="fa-solid fa-box-archive"></i> EVO ARCHIVE
+                            Evo Feed 
+                            <!-- CANLI DURUM GÖSTERGESİ -->
+                            <div class="live-status-dot active" title="Coding in Studio"></div>
+                            <span class="live-text">LIVE</span>
                         </div>
-                        <div class="live-status-badge">
-                            <div class="live-dot active"></div>
-                            <span class="live-label">LIVE</span>
-                        </div>
+                        <div style="font-size:12px; font-weight:bold; color:#a69279; letter-spacing:1px;">DAILY LOG</div>
                     </div>
                     <div class="news-filters">
                         <button class="filter-btn active" onclick="filterNews('all', this)" data-t="filter_all">All</button>
@@ -628,7 +589,7 @@
                 <div id="news-feed" class="news-scroll-area" onscroll="checkScroll()">
                     <div class="loading-spinner" style="margin-top:50px;">
                         <div class="spinner" style="border-width:3px; width:30px; height:30px; margin:0 auto; border-color:#8b7056; border-top-color:#fff;"></div>
-                        <div style="text-align:center; font-size:12px; color:#5d4e42; font-weight:bold; margin-top:10px;" data-t="loading">Accessing Archives...</div>
+                        <div style="text-align:center; font-size:12px; color:#5d4e42; font-weight:bold; margin-top:10px;" data-t="loading">Unpacking Files...</div>
                     </div>
                 </div>
             </div>
@@ -691,9 +652,9 @@
         // CACHING & LAZY LOAD DEĞİŞKENLERİ
         let globalNewsData = []; 
         let renderedCount = 0;
-        const BATCH_SIZE = 5; // Her seferde kaç haber yüklenecek
-        const CACHE_KEY = 'evo_news_cache_v3'; // Cache Versiyon 3
-        const CACHE_TIME = 15 * 60 * 1000; // 15 Dakika (Milisaniye)
+        const BATCH_SIZE = 5; 
+        const CACHE_KEY = 'evo_news_cache_v4'; 
+        const CACHE_TIME = 15 * 60 * 1000; 
 
         const langData = {
             tr: {
@@ -826,7 +787,6 @@
 
             const feed = document.getElementById('news-feed');
             
-            // 1. ÖNCE ÖNBELLEK KONTROLÜ
             const cached = localStorage.getItem(CACHE_KEY);
             if(cached) {
                 const parsed = JSON.parse(cached);
@@ -936,7 +896,6 @@
 
                 const uniqueId = item.id;
                 
-                // Drop Kontrolü
                 const tagLower = (item.etiket || '').toLowerCase();
                 const isExclusive = tagLower.includes('kupon') || tagLower.includes('drop');
                 const exclusiveClass = isExclusive ? 'exclusive-drop' : '';
@@ -944,19 +903,18 @@
                 const mediaHtml = getMediaContent(item.gorsel);
                 const timeAgoText = timeAgo(item.tarih);
                 
-                // Persistence (Kalıcılık)
+                // Kalıcılık ve Tek Tık Kontrolü
                 const savedReact = localStorage.getItem('react_' + uniqueId) || '';
+                const disabledClass = savedReact ? 'disabled' : '';
 
-                // GÖRÜNTÜLENME MANTIĞI (Otomatik Artır)
-                // Daha önce bu postu görüntüledik mi?
+                // OTOMATİK VIEW ARTIRMA (Ekrana gelir gelmez)
+                // Bu kod çalıştığında haber render edilmiş demektir.
                 let hasViewed = localStorage.getItem('has_viewed_' + uniqueId);
                 if(!hasViewed) {
-                    // Eğer görüntülemediysek, arka planda view sayısını artır
                     interactWithSheet(uniqueId, 'view');
                     localStorage.setItem('has_viewed_' + uniqueId, 'yes');
                 }
 
-                // Ekrana Sheet'ten gelen gerçek sayıyı bas
                 let displayViews = item.views || 0;
 
                 htmlContent += `
@@ -967,7 +925,7 @@
                         </div>
                     ` : ''}
 
-                    <div class="nc-main-content">
+                    <div class="nc-content-wrapper">
                         <div class="nc-header">
                             <div class="nc-user-row">
                                 <img src="evo_logo.png" class="nc-avatar"> 
@@ -979,25 +937,21 @@
                             <span class="nc-tag-sticker">${item.etiket || 'Log'}</span>
                         </div>
                         
-                        <div class="nc-body">
-                            <h3 class="nc-title">${item.baslik}</h3>
+                        <h3 class="nc-title">${item.baslik}</h3>
+                        
+                        ${mediaHtml ? `<div class="nc-media-wrapper">${mediaHtml}</div>` : ''}
+                        
+                        <div class="nc-content">
                             <p class="nc-desc">${item.icerik.replace(/\n/g, '<br>')}</p>
                         </div>
 
-                        ${mediaHtml ? `<div class="nc-media-wrapper">${mediaHtml}</div>` : ''}
-
-                        <div class="view-stat"><i class="fa-regular fa-eye"></i> ${displayViews} Views</div>
-
-                        <div class="nc-footer">
-                            <div class="reaction-wrapper">
-                                <button class="react-btn ${savedReact==='fire'?'selected':''}" onclick="setReaction(this, '${uniqueId}', 'fire')">🔥 <span>${item.fire || 0}</span></button>
-                                <button class="react-btn ${savedReact==='rocket'?'selected':''}" onclick="setReaction(this, '${uniqueId}', 'rocket')">🚀 <span>${item.rocket || 0}</span></button>
-                                <button class="react-btn ${savedReact==='heart'?'selected':''}" onclick="setReaction(this, '${uniqueId}', 'heart')">❤️ <span>${item.likes || 0}</span></button>
-                            </div>
-                            <button class="share-btn" onclick="sharePost('${uniqueId}')">
-                                <i class="fa-solid fa-share-nodes"></i> <span>SHARE</span>
-                            </button>
+                        <div class="reaction-wrapper">
+                            <button class="react-btn ${savedReact==='fire'?'selected':''} ${disabledClass}" onclick="setReaction(this, '${uniqueId}', 'fire')">🔥 <span>${item.fire || 0}</span></button>
+                            <button class="react-btn ${savedReact==='rocket'?'selected':''} ${disabledClass}" onclick="setReaction(this, '${uniqueId}', 'rocket')">🚀 <span>${item.rocket || 0}</span></button>
+                            <button class="react-btn ${savedReact==='heart'?'selected':''} ${disabledClass}" onclick="setReaction(this, '${uniqueId}', 'heart')">❤️ <span>${item.likes || 0}</span></button>
                         </div>
+
+                        <div class="view-count"><i class="fa-regular fa-eye"></i> ${displayViews}</div>
                     </div>
                 </div>`;
             }
@@ -1031,24 +985,28 @@
         }
 
         function setReaction(btn, id, type) {
-            // Önceki seçimi temizle
+            // Eğer zaten tıklanmışsa işlem yapma
+            if(localStorage.getItem('react_' + id)) return;
+
+            // Diğer butonları pasif yap
             const parent = btn.parentElement;
-            parent.querySelectorAll('.react-btn').forEach(b => b.classList.remove('selected'));
+            parent.querySelectorAll('.react-btn').forEach(b => {
+                b.classList.add('disabled');
+            });
             
-            // Yeni seçimi kaydet (LocalStorage)
+            // Seçili butonu işaretle
             btn.classList.add('selected');
             localStorage.setItem('react_' + id, type);
             
-            // Sayıyı artır (Görsel olarak anında tepki ver)
+            // Sayıyı artır (Görsel)
             const span = btn.querySelector('span');
             let currentVal = parseInt(span.innerText);
             span.innerText = currentVal + 1;
 
-            // Sheet'e Gönder (Veritabanı Kaydı)
+            // Sheet'e Gönder
             interactWithSheet(id, type);
         }
 
-        // --- BACKEND ENTEGRASYONU ---
         function interactWithSheet(id, actionType) {
             fetch(SCRIPT_URL, {
                 method: 'POST',
@@ -1056,21 +1014,6 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: id, action: actionType })
             }).catch(e => console.log("Backend interaction skipped"));
-        }
-
-        function sharePost(id) {
-            const url = window.location.origin + window.location.pathname + '?post=' + id;
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Evo Studios News',
-                    text: 'Check out this update from Evo Studios!',
-                    url: url
-                }).catch(console.error);
-            } else {
-                navigator.clipboard.writeText(url)
-                    .then(() => { showToast(langData[currentLang].toast_copy); })
-                    .catch(() => { showToast(langData[currentLang].toast_fail); });
-            }
         }
 
         function revealSecret(coverElement) {
@@ -1107,14 +1050,6 @@
             const lightbox = document.getElementById('lightbox');
             lightbox.classList.remove('active');
             setTimeout(() => { document.getElementById('lightbox-img').src = ''; }, 300);
-        }
-
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            const m = document.getElementById('toast-msg');
-            m.innerText = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
         }
 
         async function fetchRobloxData() {
