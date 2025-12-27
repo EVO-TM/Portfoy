@@ -80,20 +80,20 @@
             width: 16px; height: 26px;
             border-radius: 50% 50% 40% 40%;
             background: #ccc;
-            opacity: 0.8;
+            opacity: 0.9;
             box-shadow: 0 5px 10px rgba(0,0,0,0.2);
             transition: all 0.3s;
-            animation: flash 2s infinite alternate;
+            animation: flash 1.5s infinite alternate;
         }
 
         @keyframes swingLight {
-            0% { transform: rotate(2deg); }
-            100% { transform: rotate(-2deg); }
+            0% { transform: rotate(3deg); }
+            100% { transform: rotate(-3deg); }
         }
 
         @keyframes flash {
-            0% { opacity: 0.5; transform: scale(0.95); filter: brightness(0.8); }
-            100% { opacity: 1; transform: scale(1.05); filter: brightness(1.5); box-shadow: 0 0 25px currentColor; }
+            0% { opacity: 0.6; transform: scale(0.95); filter: brightness(0.8); }
+            100% { opacity: 1; transform: scale(1.1); filter: brightness(1.8); box-shadow: 0 0 30px currentColor; }
         }
 
         /* Renk Varyasyonları */
@@ -103,17 +103,24 @@
         .lb-gold .bulb-glass { background-color: #ffa502; color: #ffa502; animation-delay: 1.5s; }
         .lb-purple .bulb-glass { background-color: #8e44ad; color: #8e44ad; animation-delay: 0.2s; }
 
-        /* --- BACKGROUND KATMANLARI (PARALLAX) --- */
-        .snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 30; overflow: hidden; } /* Kar en önde olsun ama tıklanmasın */
+        /* --- BACKGROUND KATMANLARI (PARALLAX & KAR) --- */
+        .snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 30; overflow: hidden; } 
         
         .snowflake {
-            position: absolute; top: -10px; background: white; border-radius: 50%; opacity: 0.9;
-            box-shadow: 0 0 5px rgba(255,255,255,0.8);
-            animation: fall linear infinite;
+            position: absolute; top: -20px; background: white; border-radius: 50%; opacity: 0.9;
+            box-shadow: 0 0 8px rgba(255,255,255,0.9);
+            animation: fall linear infinite, sway 3s ease-in-out infinite alternate;
         }
+        
         @keyframes fall {
-            0% { transform: translateY(-10vh) translateX(0); opacity: 1; }
-            100% { transform: translateY(110vh) translateX(20px); opacity: 0.3; }
+            0% { transform: translateY(-10vh); opacity: 1; }
+            100% { transform: translateY(110vh); opacity: 0.3; }
+        }
+        
+        /* Kar Rüzgar Efekti */
+        @keyframes sway {
+            0% { margin-left: -10px; }
+            100% { margin-left: 10px; }
         }
 
         .forest-layer {
@@ -131,48 +138,64 @@
             background-size: cover; background-repeat: repeat-x;
         }
         .layer-front {
-            height: 250px; opacity: 1; bottom: -50px; z-index: 3; /* Santa'nın önünde olsun diye z-index arttırıldı */
+            height: 250px; opacity: 1; bottom: -50px; z-index: 4; /* Santa'nın arkasında kalsın istiyorsan z-index düşmeli, önünde olsun istiyorsan artmalı. Şu an Santa 2. */
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='treeGrad' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' style='stop-color:%23143042;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%230b1e2b;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M50,300 L150,100 L250,300 M150,100 L150,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M150,100 L100,200 L200,200 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M300,300 L400,50 L500,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M400,50 L340,180 L460,180 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M550,300 L650,120 L750,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M800,300 L900,80 L1000,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M900,80 L840,200 L960,200 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M1050,300 L1125,150 L1200,300' fill='url(%23treeGrad)'/%3E%3C/svg%3E");
             background-size: auto 100%;
         }
 
-        /* --- SANTA & GIFT ANIMASYONU (ARKA PLAN) --- */
+        /* --- SANTA & GIFT ANIMASYONU (DÜZELTİLDİ) --- */
         .santa-wrapper {
-            position: fixed; top: 15%; right: -300px;
-            width: 250px; height: auto;
-            z-index: 2; /* Kartın (20) ve ön ormanın (3) ARKASINDA */
+            position: fixed; top: 12%; right: -350px;
+            width: 280px; height: auto;
+            z-index: 3; /* Ağaçların (4) hemen arkasında, arka planın önünde */
             pointer-events: none;
-            opacity: 0.9;
+            opacity: 1 !important; /* Hayalet sorununu çözmek için full opacity */
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.6)); /* Gölge eklendi */
         }
-        .santa-sleigh img { width: 100%; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); transform: rotate(-5deg); }
+        
+        .santa-sleigh img { 
+            width: 100%; 
+            display: block;
+            transform: rotate(-5deg);
+            /* Sledge Sallanma Efekti */
+            animation: sleighWobble 2s ease-in-out infinite alternate;
+        }
         
         .falling-gift {
             position: fixed; top: 20%; left: 50%;
             width: 60px; height: 60px;
-            /* ÖZEL GIFT GÖRSELİ */
             background-image: url('gift.png');
             background-size: contain;
             background-repeat: no-repeat;
-            z-index: 4; /* Santa'dan önde ama karttan arkada */
+            z-index: 5; /* En önde */
             opacity: 0;
             pointer-events: none;
+            filter: drop-shadow(0 0 10px gold);
+        }
+
+        @keyframes sleighWobble {
+            0% { transform: rotate(-6deg) translateY(0); }
+            100% { transform: rotate(-4deg) translateY(-5px); }
         }
 
         @keyframes santaFly {
-            0% { right: -300px; transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(20px) rotate(2deg); }
-            50% { transform: translateY(-10px) rotate(-2deg); }
-            75% { transform: translateY(10px) rotate(1deg); }
-            100% { right: 110vw; transform: translateY(0); }
+            0% { right: -350px; transform: translateY(0); }
+            20% { transform: translateY(30px); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(20px); }
+            80% { transform: translateY(-10px); }
+            100% { right: 120vw; transform: translateY(0); }
         }
+        
         @keyframes dropGift {
-            0% { top: 20%; opacity: 0; transform: scale(0.5) rotate(0deg); }
-            10% { opacity: 1; transform: scale(1); }
-            100% { top: 100%; opacity: 1; transform: rotate(720deg); }
+            0% { top: 20%; opacity: 0; transform: scale(0.1) rotate(0deg); }
+            10% { opacity: 1; transform: scale(1.2) rotate(45deg); }
+            20% { transform: scale(1) rotate(90deg); }
+            100% { top: 110%; opacity: 1; transform: rotate(1080deg); }
         }
 
-        .santa-animate { animation: santaFly 8s linear forwards; }
-        .gift-animate { animation: dropGift 3s ease-in forwards; }
+        .santa-animate { animation: santaFly 10s linear forwards; }
+        .gift-animate { animation: dropGift 4s ease-in forwards; }
 
         /* --- ANİMASYONLAR (GENEL) --- */
         @keyframes popIn { 0% { transform: scale(0.8) translateY(20px); opacity: 0; } 60% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
@@ -196,7 +219,7 @@
         .page-section.active { display: flex; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
         /* =========================================
-           HOME TAB TASARIMI (GÜNCELLENMİŞ KAR EFEKTİ)
+           HOME TAB TASARIMI
            ========================================= */
         
         .home-scene-wrapper {
@@ -211,7 +234,6 @@
             width: 480px;
             min-height: 580px;
             background-color: #eee0d1; 
-            /* Yumuşak Karton Dokusu */
             background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
             border-radius: 25px; 
             border: 6px solid #d4c2aa;
@@ -227,19 +249,21 @@
             animation: softFloat 6s ease-in-out infinite;
         }
 
-        /* --- YENİLENMİŞ KAR EFEKTİ (ERİYEN GÖRÜNÜM) --- */
+        /* --- DÜZELTİLMİŞ KAR BİRİKİNTİSİ --- */
         .box-snow-top {
-            position: absolute; top: -15px; left: -8px; right: -8px; height: 70px;
+            position: absolute; 
+            top: -2px; /* Daha aşağı çekildi, havada kalmasın diye */
+            left: -8px; 
+            right: -8px; 
+            height: 70px;
             background: #fff;
-            /* SVG ile dalgalı/sarkan kenar */
             mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 30' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 L100,0 L100,10 C90,20 85,10 80,25 C75,10 70,20 60,15 C50,25 40,10 30,20 C20,10 10,25 0,10 Z' fill='black'/%3E%3C/svg%3E");
             -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 30' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 L100,0 L100,10 C90,20 85,10 80,25 C75,10 70,20 60,15 C50,25 40,10 30,20 C20,10 10,25 0,10 Z' fill='black'/%3E%3C/svg%3E");
             mask-size: 100% 100%; -webkit-mask-size: 100% 100%;
             z-index: 20;
-            filter: drop-shadow(0 2px 5px rgba(255,255,255,0.8));
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); /* Gölge belirginleştirildi */
         }
 
-        /* Fotoğraf Alanı */
         .polaroid-frame {
             background: #fff;
             padding: 15px 15px 50px 15px;
@@ -260,9 +284,6 @@
             border-radius: 12px; 
         }
         
-        /* ŞAPKA KALDIRILDI */
-        
-        /* Polaroid Bantı */
         .polaroid-tape {
             position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(1deg);
             width: 90px; height: 30px;
@@ -300,7 +321,6 @@
             margin-top: 10px;
         }
 
-        /* Ana Buton */
         .btn-sticker {
             background: linear-gradient(135deg, #e74c3c, #c0392b);
             color: white;
@@ -328,10 +348,9 @@
         }
         @keyframes shine { 0% { left: -100%; } 100% { left: 200%; } }
 
-        /* Süsler */
         .deco-sticker { position: absolute; font-size: 24px; filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.1)); z-index: 40; }
-        .ds-1 { top: 15px; right: 20px; transform: rotate(15deg); font-size: 32px; } /* Holy Leaf */
-        .ds-2 { bottom: 20px; left: 20px; transform: rotate(-10deg); color: #f39c12; } /* Star */
+        .ds-1 { top: 15px; right: 20px; transform: rotate(15deg); font-size: 32px; }
+        .ds-2 { bottom: 20px; left: 20px; transform: rotate(-10deg); color: #f39c12; }
 
         /* =========================================
            DİĞER TABLAR 
@@ -463,7 +482,7 @@
         .nav-dock { 
             pointer-events: auto; 
             background-color: #e6dcc6; 
-            background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636l-1.414 1.414L38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23d1c4a5' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E"); 
+            background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636l-1.414 1.414L38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23d1c4a5' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E"); 
             padding: 10px 15px; 
             border-radius: 26px; 
             display: flex; 
@@ -525,10 +544,11 @@
         <div class="light-bulb-box lb-blue" style="left: 90%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
     </div>
 
-    <!-- SANTA ANIMATION CONTAINER (ARKA PLANDA GEÇECEK) -->
+    <!-- SANTA ANIMATION CONTAINER (HAYALET SORUNU DÜZELTİLDİ) -->
     <div id="santa-container" class="santa-wrapper">
         <div class="santa-sleigh">
-            <img src="https://cdn-icons-png.flaticon.com/512/3799/3799988.png" alt="Santa Claus">
+            <!-- Net, arka plansız bir Santa Kızak görseli kullanıldı -->
+            <img src="https://i.ibb.co/m8N895D/santa-sleigh-silhouette-christmas-design-vector-23620986-removebg-preview.png" alt="Santa Claus">
         </div>
     </div>
     <!-- HEDİYE CONTAINER -->
@@ -601,7 +621,7 @@
         <div id="home" class="page-section active">
             <div class="home-scene-wrapper">
                 <div class="winter-box" id="tiltCard">
-                    <!-- Kutu Dekorları: YENİLENMİŞ SARKAN KAR -->
+                    <!-- Kutu Dekorları: DÜZELTİLMİŞ KAR HİZALAMASI -->
                     <div class="box-snow-top"></div>
                     <div class="deco-sticker ds-1">🎄</div>
                     <div class="deco-sticker ds-2"><i class="fa-solid fa-star"></i></div>
@@ -776,7 +796,7 @@
             }, delay);
         }
         // Sayfa açıldıktan kısa süre sonra ilk geçişi yap
-        setTimeout(triggerSanta, 5000);
+        setTimeout(triggerSanta, 3000);
         scheduleNextSanta();
 
 
