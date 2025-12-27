@@ -17,7 +17,7 @@
     <style>
         :root {
             /* Kış Teması Renk Paleti */
-            --bg-sky-top: #1a2a3a;
+            --bg-sky-top: #1a2a3a; 
             --bg-sky-bottom: #4a6fa5;
             --ink: #2d3436;
             --cardboard: #e6dcc6;
@@ -25,6 +25,7 @@
             --s-yellow: #f1c40f;
             --s-green: #27ae60;
             --snow: #ffffff;
+            --glow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
         }
 
         /* --- TEMEL AYARLAR --- */
@@ -40,124 +41,71 @@
             position: relative;
         }
 
-        /* =========================================
-           1. YENİLENMİŞ ULTRA CANLI LED IŞIKLAR
-           ========================================= */
+        /* --- YENİLENMİŞ YILBAŞI IŞIKLARI (DAHA ESTETİK) --- */
         .christmas-lights-container {
-            position: fixed; top: -15px; left: 0; width: 100%; height: 80px; z-index: 60;
+            position: fixed; top: 0; left: 0; width: 100%; height: 120px; z-index: 50;
             pointer-events: none;
             display: flex; justify-content: center;
             overflow: visible;
         }
         
-        /* Gerçekçi Kıvrımlı Kablo */
+        /* Kablo (Sarkık Görünüm) */
         .light-wire {
-            position: absolute;
-            top: -35px; left: -5%; width: 110%; height: 70px;
+            position: absolute; top: -40px; left: -5%; width: 110%; height: 100px;
             border-bottom: 4px solid #1a1a1a;
             border-radius: 50%;
-            z-index: 59;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            z-index: 49;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
         }
 
-        .lights-wrapper {
-            display: flex; justify-content: space-around; width: 100%; position: relative; top: 28px;
+        /* Ampul Kutusu */
+        .light-bulb-box {
+            position: absolute;
+            top: 58px; /* Kablo hizası */
+            z-index: 50;
+            display: flex; flex-direction: column; align-items: center;
+            transform-origin: top center;
+            animation: swingLight 3s ease-in-out infinite alternate;
         }
 
-        .light-bulb {
-            position: relative;
-            width: 16px; height: 32px;
+        /* Soket */
+        .bulb-socket {
+            width: 12px; height: 10px; background: #2d3436;
+            border-radius: 2px;
+            margin-bottom: -2px; z-index: 2;
+        }
+
+        /* Işık Kısmı */
+        .bulb-glass {
+            width: 16px; height: 26px;
             border-radius: 50% 50% 40% 40%;
-            background: #fff;
-            z-index: 60;
-            margin: 0 15px;
-            animation-duration: 1.5s;
-            animation-iteration-count: infinite;
-            animation-name: glowFlash;
-            animation-timing-function: ease-in-out;
+            background: #ccc;
+            opacity: 0.8;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            animation: flash 2s infinite alternate;
         }
 
-        /* Soket kısmı */
-        .light-bulb::before {
-            content: ''; position: absolute; top: -6px; left: 2px; width: 12px; height: 8px;
-            background: #222; border-radius: 3px;
+        @keyframes swingLight {
+            0% { transform: rotate(2deg); }
+            100% { transform: rotate(-2deg); }
         }
 
-        /* Işık Renkleri ve Gölgeleri (Neon Etkisi) */
-        .lb-red { background: #ff4d4d; animation-delay: 0.2s; color: #ff0000; }
-        .lb-green { background: #2ecc71; animation-delay: 0.6s; color: #00ff00; }
-        .lb-blue { background: #3498db; animation-delay: 1.0s; color: #00ccff; }
-        .lb-gold { background: #f1c40f; animation-delay: 1.4s; color: #ffaa00; }
-        .lb-pink { background: #ff00ff; animation-delay: 1.8s; color: #ff00cc; }
-
-        @keyframes glowFlash {
-            0%, 100% { 
-                opacity: 0.5; 
-                transform: scale(0.9); 
-                box-shadow: 0 0 5px currentColor; 
-            }
-            50% { 
-                opacity: 1; 
-                transform: scale(1.1); 
-                box-shadow: 0 0 25px currentColor, 0 0 40px currentColor; /* Çift katmanlı glow */
-            }
+        @keyframes flash {
+            0% { opacity: 0.5; transform: scale(0.95); filter: brightness(0.8); }
+            100% { opacity: 1; transform: scale(1.05); filter: brightness(1.5); box-shadow: 0 0 25px currentColor; }
         }
 
-        /* =========================================
-           2. YENİ SANTA & HEDİYE SİSTEMİ (Sağdan Sola)
-           ========================================= */
-        .santa-wrapper {
-            position: fixed; 
-            top: 8%; /* Ekranın üst kısmı */
-            right: -400px; /* Ekranın sağ dışından başlar */
-            width: 280px; height: auto;
-            z-index: 55;
-            pointer-events: none;
-            will-change: transform, right;
-        }
+        /* Renk Varyasyonları */
+        .lb-red .bulb-glass { background-color: #ff4757; color: #ff4757; animation-delay: 0s; }
+        .lb-green .bulb-glass { background-color: #2ed573; color: #2ed573; animation-delay: 0.5s; }
+        .lb-blue .bulb-glass { background-color: #1e90ff; color: #1e90ff; animation-delay: 1s; }
+        .lb-gold .bulb-glass { background-color: #ffa502; color: #ffa502; animation-delay: 1.5s; }
+        .lb-purple .bulb-glass { background-color: #8e44ad; color: #8e44ad; animation-delay: 0.2s; }
+
+        /* --- BACKGROUND KATMANLARI (PARALLAX) --- */
+        .snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 30; overflow: hidden; } /* Kar en önde olsun ama tıklanmasın */
         
-        .santa-wrapper img {
-            width: 100%; 
-            filter: drop-shadow(0 20px 20px rgba(0,0,0,0.5));
-            transform: scaleX(1); /* Yönü sola bakmalı, görsel sola bakıyorsa -1 yap */
-        }
-
-        /* Hediye Kutusu */
-        .falling-gift {
-            position: fixed;
-            top: 15%; /* Santanın geçtiği hiza */
-            left: 45%; /* Ekranın ortalarında düşecek */
-            width: 45px; height: 45px;
-            background-image: url('https://cdn-icons-png.flaticon.com/512/4213/4213653.png');
-            background-size: cover;
-            z-index: 54;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        /* Santa Uçuş Animasyonu (Sağdan Sola) */
-        @keyframes santaFlyRightToLeft {
-            0% { right: -400px; transform: translateY(0) rotate(5deg); }
-            20% { transform: translateY(20px) rotate(0deg); }
-            40% { transform: translateY(-15px) rotate(-2deg); } /* Hediye atma noktasına yakın */
-            60% { transform: translateY(10px) rotate(2deg); }
-            100% { right: 120vw; transform: translateY(0) rotate(0deg); }
-        }
-
-        /* Hediye Düşme Animasyonu */
-        @keyframes dropGift {
-            0% { top: 18%; opacity: 0; transform: scale(0.2) rotate(0deg); }
-            10% { opacity: 1; transform: scale(1); }
-            80% { opacity: 1; }
-            100% { top: 110vh; opacity: 0; transform: rotate(720deg); }
-        }
-
-        .santa-animate { animation: santaFlyRightToLeft 10s linear forwards; }
-        .gift-animate { animation: dropGift 4s ease-in forwards; }
-
-
-        /* --- BACKGROUND (PARALLAX TREES) --- */
-        .snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; overflow: hidden; }
         .snowflake {
             position: absolute; top: -10px; background: white; border-radius: 50%; opacity: 0.9;
             box-shadow: 0 0 5px rgba(255,255,255,0.8);
@@ -168,32 +116,72 @@
             100% { transform: translateY(110vh) translateX(20px); opacity: 0.3; }
         }
 
-        .forest-layer { position: fixed; bottom: 0; left: 0; width: 100%; pointer-events: none; z-index: 0; }
+        .forest-layer {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            pointer-events: none; 
+        }
         .layer-back {
-            height: 400px; opacity: 0.4; filter: blur(2px);
+            height: 400px; opacity: 0.4; filter: blur(2px); z-index: 0;
             background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23102a43' fill-opacity='1' d='M0,320L40,280L80,320L120,240L160,320L200,260L240,320L280,220L320,320L360,250L400,320L440,200L480,320L520,270L560,320L600,230L640,320L680,260L720,320L760,210L800,320L840,250L880,320L920,190L960,320L1000,260L1040,320L1080,230L1120,320L1160,270L1200,320L1240,220L1280,320L1320,250L1360,320L1400,280L1440,320L1440,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
             background-size: cover; background-repeat: repeat-x;
         }
         .layer-mid {
-            height: 300px; opacity: 0.7; bottom: -20px;
+            height: 300px; opacity: 0.7; bottom: -20px; z-index: 1;
             background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23243b55' fill-opacity='1' d='M0,320L60,240L120,320L180,200L240,320L300,220L360,320L420,180L480,320L540,230L600,320L660,190L720,320L780,210L840,320L900,170L960,320L1020,230L1080,320L1140,200L1200,320L1260,220L1320,320L1380,250L1440,320L1440,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
             background-size: cover; background-repeat: repeat-x;
         }
         .layer-front {
-            height: 250px; opacity: 1; bottom: -50px; z-index: 1;
+            height: 250px; opacity: 1; bottom: -50px; z-index: 3; /* Santa'nın önünde olsun diye z-index arttırıldı */
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='treeGrad' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' style='stop-color:%23143042;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%230b1e2b;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M50,300 L150,100 L250,300 M150,100 L150,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M150,100 L100,200 L200,200 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M300,300 L400,50 L500,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M400,50 L340,180 L460,180 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M550,300 L650,120 L750,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M800,300 L900,80 L1000,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M900,80 L840,200 L960,200 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M1050,300 L1125,150 L1200,300' fill='url(%23treeGrad)'/%3E%3C/svg%3E");
             background-size: auto 100%;
         }
 
-        /* --- GENEL ANİMASYONLAR --- */
+        /* --- SANTA & GIFT ANIMASYONU (ARKA PLAN) --- */
+        .santa-wrapper {
+            position: fixed; top: 15%; right: -300px;
+            width: 250px; height: auto;
+            z-index: 2; /* Kartın (20) ve ön ormanın (3) ARKASINDA */
+            pointer-events: none;
+            opacity: 0.9;
+        }
+        .santa-sleigh img { width: 100%; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); transform: rotate(-5deg); }
+        
+        .falling-gift {
+            position: fixed; top: 20%; left: 50%;
+            width: 60px; height: 60px;
+            /* ÖZEL GIFT GÖRSELİ */
+            background-image: url('gift.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 4; /* Santa'dan önde ama karttan arkada */
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes santaFly {
+            0% { right: -300px; transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(20px) rotate(2deg); }
+            50% { transform: translateY(-10px) rotate(-2deg); }
+            75% { transform: translateY(10px) rotate(1deg); }
+            100% { right: 110vw; transform: translateY(0); }
+        }
+        @keyframes dropGift {
+            0% { top: 20%; opacity: 0; transform: scale(0.5) rotate(0deg); }
+            10% { opacity: 1; transform: scale(1); }
+            100% { top: 100%; opacity: 1; transform: rotate(720deg); }
+        }
+
+        .santa-animate { animation: santaFly 8s linear forwards; }
+        .gift-animate { animation: dropGift 3s ease-in forwards; }
+
+        /* --- ANİMASYONLAR (GENEL) --- */
         @keyframes popIn { 0% { transform: scale(0.8) translateY(20px); opacity: 0; } 60% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes blinkLive { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
         @keyframes softFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        @keyframes shine { 0% { left: -100%; } 100% { left: 200%; } }
 
         /* --- UI ELEMENTS --- */
-        .lang-switch { position: fixed; top: 120px; right: 20px; background: rgba(255,255,255,0.9); border: 2px solid var(--ink); border-radius: 50px; padding: 5px; display: flex; gap: 5px; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .lang-switch { position: fixed; top: 140px; right: 20px; background: rgba(255,255,255,0.9); border: 2px solid var(--ink); border-radius: 50px; padding: 5px; display: flex; gap: 5px; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .lang-btn { border: none; background: none; padding: 5px 12px; font-weight: 800; font-size: 14px; cursor: pointer; border-radius: 20px; transition: 0.2s; color: #999; }
         .lang-btn.active { background: var(--ink); color: white; }
 
@@ -207,33 +195,147 @@
         .page-section { position: absolute; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         .page-section.active { display: flex; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
-        /* HOME TASARIMI */
-        .home-scene-wrapper { perspective: 1200px; display: flex; justify-content: center; align-items: center; width: 100%; }
-        .winter-box {
-            width: 480px; min-height: 580px;
-            background-color: #eee0d1; 
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
-            border-radius: 25px; border: 6px solid #d4c2aa;
-            position: relative; display: flex; flex-direction: column; align-items: center; padding: 50px 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4), inset 0 0 60px rgba(255,245,230,0.5);
-            transform-style: preserve-3d; animation: softFloat 6s ease-in-out infinite;
+        /* =========================================
+           HOME TAB TASARIMI (GÜNCELLENMİŞ KAR EFEKTİ)
+           ========================================= */
+        
+        .home-scene-wrapper {
+            perspective: 1200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
         }
-        .box-snow-top { position: absolute; top: -18px; left: -8px; right: -8px; height: 50px; background: #fff; border-radius: 20px 20px 40% 40%; box-shadow: 0 4px 15px rgba(255,255,255,0.6); z-index: 20; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1)); }
-        .polaroid-frame { background: #fff; padding: 15px 15px 50px 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); border-radius: 20px; transform: rotate(-2deg); width: 260px; position: relative; margin-top: 10px; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .polaroid-frame:hover { transform: rotate(0deg) scale(1.05); z-index: 30; }
-        .polaroid-frame img { width: 100%; height: auto; background: #f4f4f4; display: block; border-radius: 12px; }
-        .santa-hat-sticker { position: absolute; top: -35px; left: -25px; width: 90px; height: 90px; background-image: url('https://cdn-icons-png.flaticon.com/512/744/744546.png'); background-size: contain; background-repeat: no-repeat; transform: rotate(-25deg); z-index: 35; filter: drop-shadow(2px 5px 5px rgba(0,0,0,0.2)); pointer-events: none; }
-        .polaroid-tape { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(1deg); width: 90px; height: 30px; background: rgba(231, 76, 60, 0.8); border-left: 2px dashed rgba(255,255,255,0.3); border-right: 2px dashed rgba(255,255,255,0.3); box-shadow: 0 2px 4px rgba(0,0,0,0.1); backdrop-filter: blur(2px); z-index: 40; }
-        .home-title { font-family: 'Mountains of Christmas', cursive; font-weight: 700; font-size: 64px; color: #c0392b; margin: 30px 0 0 0; line-height: 0.9; text-align: center; text-shadow: 2px 2px 0px #fff, 4px 4px 0px rgba(0,0,0,0.1); transform: rotate(-2deg); }
-        .home-subtitle { font-family: 'Outfit', sans-serif; color: #7f8c8d; font-weight: 600; font-size: 16px; margin-bottom: 35px; background: #fff; padding: 5px 15px; border-radius: 50px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transform: rotate(1deg); margin-top: 10px; }
-        .btn-sticker { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; font-weight: 700; font-size: 18px; padding: 16px 50px; border-radius: 50px; text-decoration: none; border: 4px solid white; box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3), inset 0 2px 5px rgba(255,255,255,0.2); transition: all 0.3s; display: inline-flex; align-items: center; gap: 12px; position: relative; overflow: hidden; }
-        .btn-sticker:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 30px rgba(231, 76, 60, 0.4); }
-        .btn-sticker::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent); transform: rotate(45deg); animation: shine 3s infinite; }
-        .deco-sticker { position: absolute; font-size: 24px; filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.1)); z-index: 40; }
-        .ds-1 { top: 15px; right: 20px; transform: rotate(15deg); font-size: 32px; }
-        .ds-2 { bottom: 20px; left: 20px; transform: rotate(-10deg); color: #f39c12; }
 
-        /* OTHER TABS STYLES */
+        .winter-box {
+            width: 480px;
+            min-height: 580px;
+            background-color: #eee0d1; 
+            /* Yumuşak Karton Dokusu */
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+            border-radius: 25px; 
+            border: 6px solid #d4c2aa;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 30px;
+            box-shadow: 
+                0 20px 50px rgba(0,0,0,0.4),
+                inset 0 0 60px rgba(255,245,230,0.5); 
+            transform-style: preserve-3d;
+            animation: softFloat 6s ease-in-out infinite;
+        }
+
+        /* --- YENİLENMİŞ KAR EFEKTİ (ERİYEN GÖRÜNÜM) --- */
+        .box-snow-top {
+            position: absolute; top: -15px; left: -8px; right: -8px; height: 70px;
+            background: #fff;
+            /* SVG ile dalgalı/sarkan kenar */
+            mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 30' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 L100,0 L100,10 C90,20 85,10 80,25 C75,10 70,20 60,15 C50,25 40,10 30,20 C20,10 10,25 0,10 Z' fill='black'/%3E%3C/svg%3E");
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 30' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 L100,0 L100,10 C90,20 85,10 80,25 C75,10 70,20 60,15 C50,25 40,10 30,20 C20,10 10,25 0,10 Z' fill='black'/%3E%3C/svg%3E");
+            mask-size: 100% 100%; -webkit-mask-size: 100% 100%;
+            z-index: 20;
+            filter: drop-shadow(0 2px 5px rgba(255,255,255,0.8));
+        }
+
+        /* Fotoğraf Alanı */
+        .polaroid-frame {
+            background: #fff;
+            padding: 15px 15px 50px 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-radius: 20px; 
+            transform: rotate(-2deg);
+            width: 260px;
+            position: relative;
+            margin-top: 10px;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .polaroid-frame:hover { transform: rotate(0deg) scale(1.05); z-index: 30; }
+        
+        .polaroid-frame img { 
+            width: 100%; height: auto; 
+            background: #f4f4f4; 
+            display: block; 
+            border-radius: 12px; 
+        }
+        
+        /* ŞAPKA KALDIRILDI */
+        
+        /* Polaroid Bantı */
+        .polaroid-tape {
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(1deg);
+            width: 90px; height: 30px;
+            background: rgba(231, 76, 60, 0.8); 
+            border-left: 2px dashed rgba(255,255,255,0.3);
+            border-right: 2px dashed rgba(255,255,255,0.3);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            backdrop-filter: blur(2px);
+            z-index: 40;
+        }
+
+        .home-title {
+            font-family: 'Mountains of Christmas', cursive; 
+            font-weight: 700;
+            font-size: 64px;
+            color: #c0392b;
+            margin: 30px 0 0 0;
+            line-height: 0.9;
+            text-align: center;
+            text-shadow: 2px 2px 0px #fff, 4px 4px 0px rgba(0,0,0,0.1);
+            transform: rotate(-2deg);
+        }
+
+        .home-subtitle {
+            font-family: 'Outfit', sans-serif;
+            color: #7f8c8d;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 35px;
+            background: #fff;
+            padding: 5px 15px;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transform: rotate(1deg);
+            margin-top: 10px;
+        }
+
+        /* Ana Buton */
+        .btn-sticker {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            padding: 16px 50px;
+            border-radius: 50px; 
+            text-decoration: none;
+            border: 4px solid white;
+            box-shadow: 
+                0 10px 20px rgba(231, 76, 60, 0.3),
+                inset 0 2px 5px rgba(255,255,255,0.2);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-flex; align-items: center; gap: 12px;
+            transform: rotate(0deg);
+            position: relative; overflow: hidden;
+        }
+        .btn-sticker:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 30px rgba(231, 76, 60, 0.4); }
+        .btn-sticker i { font-size: 20px; }
+        .btn-sticker::after {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine { 0% { left: -100%; } 100% { left: 200%; } }
+
+        /* Süsler */
+        .deco-sticker { position: absolute; font-size: 24px; filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.1)); z-index: 40; }
+        .ds-1 { top: 15px; right: 20px; transform: rotate(15deg); font-size: 32px; } /* Holy Leaf */
+        .ds-2 { bottom: 20px; left: 20px; transform: rotate(-10deg); color: #f39c12; } /* Star */
+
+        /* =========================================
+           DİĞER TABLAR 
+           ========================================= */
         .cardboard-about { background-color: #dcbfa6; background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E"); border: 3px solid #bba38e; border-radius: 20px; width: 100%; max-width: 850px; padding: 50px 40px; display: flex; align-items: center; gap: 50px; position: relative; box-shadow: 10px 10px 0 rgba(0,0,0,0.1), 0 20px 50px rgba(0,0,0,0.1); }
         .about-tape-top { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(1deg); width: 150px; height: 40px; background: rgba(255,255,255,0.35); border-left: 2px dashed rgba(255,255,255,0.6); border-right: 2px dashed rgba(255,255,255,0.6); backdrop-filter: blur(2px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .cb-text-content { flex: 1; text-align: left; }
@@ -268,7 +370,7 @@
         .creator-store-link { background: linear-gradient(135deg, #0984e3, #6c5ce7); color: white; padding: 20px; width: 100%; margin-top: 20px; border-radius: 15px; text-decoration: none; border: 3px solid var(--ink); display: flex; align-items: center; justify-content: center; gap: 15px; font-size: 20px; font-weight: bold; transition: transform 0.2s, box-shadow 0.2s; }
         .creator-store-link:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4); }
 
-        /* News CSS */
+        /* Haberler CSS */
         .news-container { background-color: #d1b48c; background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h21.5v21.5h-1.5z' fill='%23c2a681' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E"); border: 10px solid #5d4e42; border-radius: 12px; width: 100%; max-width: 700px; height: 80vh; display: flex; flex-direction: column; box-shadow: 5px 5px 20px rgba(0,0,0,0.3); position: relative; overflow: hidden; font-family: 'Courier New', monospace; }
         .news-header-modern { padding: 15px 20px; background: #fff8e1; border-bottom: 2px dashed #bba38e; z-index: 10; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 10px; }
         .nh-top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
@@ -290,6 +392,10 @@
         .pin-badge { position: absolute; top: -15px; left: -15px; background: #e1b12c; color: #2d241e; font-weight: 900; padding: 5px 10px; font-size: 11px; transform: rotate(-15deg); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); border: 2px solid #fff; display: flex; align-items: center; gap: 5px; }
         .news-card::before { content: ''; position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(2deg); width: 120px; height: 35px; background: rgba(255, 255, 255, 0.4); border-left: 2px dashed rgba(255,255,255,0.6); border-right: 2px dashed rgba(255,255,255,0.6); box-shadow: 0 2px 4px rgba(0,0,0,0.1); backdrop-filter: blur(2px); z-index: 6; }
         .new-badge { position: absolute; top: -10px; right: -10px; background: #ff4757; color: white; font-weight: 900; padding: 5px 10px; font-size: 12px; transform: rotate(15deg); box-shadow: 2px 2px 5px rgba(0,0,0,0.2); border: 2px solid white; z-index: 7; }
+        .news-card.exclusive-drop { background: repeating-linear-gradient(45deg, #2d3436, #2d3436 10px, #353b48 10px, #353b48 20px); color: white; border: 4px solid #d63031; text-align: center; }
+        .news-card.exclusive-drop .nc-content-wrapper { filter: blur(5px); pointer-events: none; opacity: 0.3; }
+        .secret-cover { position: absolute; top:0; left:0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; cursor: pointer; color: #d63031; }
+        .secret-stamp { border: 4px solid #d63031; font-size: 24px; font-weight: 900; display: inline-block; padding: 10px 20px; transform: rotate(-10deg); mask-image: url("data:image/svg+xml,%3Csvg width='200' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E"); background: rgba(0,0,0,0.6); }
         .nc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
         .nc-user-row { display: flex; gap: 10px; align-items: center; }
         .nc-avatar { width: 35px; height: 35px; border-radius: 50%; background: #eee; border: 1px solid #333; object-fit: cover; }
@@ -306,14 +412,26 @@
         .reaction-wrapper { display: flex; gap: 10px; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ccc; overflow-x: auto; }
         .react-btn { background: #fff; border: 2px solid #eee; border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.1s; }
         .react-btn:hover { transform: translateY(-2px); border-color: #ccc; }
-        .react-btn.selected { background: #ffeaa7; border-color: #fdcb6e; color: #d35400; font-weight: bold; }
+        .react-btn:active { transform: translateY(1px); }
+        .react-btn.selected { background: #ffeaa7; border-color: #fdcb6e; color: #d35400; font-weight: bold; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05); }
         .view-count { position: absolute; bottom: 10px; right: 15px; font-size: 10px; color: #999; display: flex; align-items: center; gap: 4px; font-family: 'Courier New', monospace; font-weight: bold; }
         
         .sticker { position: absolute; width: 45px; height: 45px; background: #fff; border: 3px solid var(--ink); border-radius: 10px; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); z-index: 15; }
         .st-1 { top: 20px; right: -20px; transform: rotate(15deg); color: var(--s-yellow); }
 
-        /* WALKMAN PLAYER */
-        #walkman-container { position: fixed; bottom: -400px; right: 30px; width: 320px; height: 180px; background: #2d3436; background-image: linear-gradient(135deg, #2d3436 0%, #000000 100%); border: 4px solid #b2bec3; border-radius: 20px 20px 5px 5px; z-index: 9999; transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; padding: 15px; box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 2px 5px rgba(255,255,255,0.1); }
+        /* --- WALKMAN PLAYER --- */
+        #walkman-container {
+            position: fixed; bottom: -400px; right: 30px; 
+            width: 320px; height: 180px; 
+            background: #2d3436; 
+            background-image: linear-gradient(135deg, #2d3436 0%, #000000 100%);
+            border: 4px solid #b2bec3; 
+            border-radius: 20px 20px 5px 5px;
+            z-index: 9999; 
+            transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; flex-direction: column; padding: 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 2px 5px rgba(255,255,255,0.1);
+        }
         #walkman-container.active { bottom: 30px; }
         #walkman-container::before { content: ''; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); width: 60px; height: 4px; background: #636e72; border-radius: 10px; }
         #walkman-container::after { content: ''; position: absolute; top: 15px; right: 15px; width: 8px; height: 8px; background: #ff7675; border-radius: 50%; box-shadow: 0 0 10px #ff7675; animation: blinkLive 1s infinite; }
@@ -328,9 +446,36 @@
         .wm-buttons { display: flex; gap: 8px; margin-top: 10px; justify-content: center; }
         .wm-btn-deco { width: 30px; height: 8px; background: #636e72; border-radius: 4px; box-shadow: 0 2px 2px rgba(0,0,0,0.5); }
 
-        /* NAV DOCK */
-        .nav-dock-wrapper { position: fixed; bottom: 30px; left: 0; width: 100%; display: flex; justify-content: center; z-index: 1000; pointer-events: none; height: 100px; align-items: flex-end; }
-        .nav-dock { pointer-events: auto; background-color: #e6dcc6; background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636l-1.414 1.414L38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23d1c4a5' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E"); padding: 10px 15px; border-radius: 26px; display: flex; align-items: center; gap: 15px; border: 3px solid #2d241e; box-shadow: 0 10px 25px rgba(0,0,0,0.3), 0 5px 0 #b0a082; transition: transform 0.3s ease; position: relative; margin-bottom: 5px; }
+        /* --- NAV DOCK --- */
+        .nav-dock-wrapper { 
+            position: fixed; 
+            bottom: 30px; 
+            left: 0; 
+            width: 100%; 
+            display: flex; 
+            justify-content: center; 
+            z-index: 1000; 
+            pointer-events: none; 
+            height: 100px; 
+            align-items: flex-end;
+        }
+        
+        .nav-dock { 
+            pointer-events: auto; 
+            background-color: #e6dcc6; 
+            background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636l-1.414 1.414L38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23d1c4a5' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E"); 
+            padding: 10px 15px; 
+            border-radius: 26px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            border: 3px solid #2d241e; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3), 0 5px 0 #b0a082; 
+            transition: transform 0.3s ease; 
+            position: relative; 
+            margin-bottom: 5px;
+        }
+        
         .dock-tape { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-2deg); width: 100px; height: 35px; background: rgba(255, 255, 255, 0.4); border-left: 2px dashed rgba(255,255,255,0.6); border-right: 2px dashed rgba(255,255,255,0.6); box-shadow: 0 2px 4px rgba(0,0,0,0.1); backdrop-filter: blur(2px); pointer-events: none; z-index: 101; }
         .nav-dock:hover { transform: translateY(-2px); }
         .nav-btn { width: 55px; height: 55px; border-radius: 14px; background: #fffcf5; border: 3px solid #2d241e; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #2d241e; position: relative; transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 4px 0 #2d241e; }
@@ -357,39 +502,34 @@
             .project-card { width: 95%; } 
             #walkman-container { width: 90%; right: 5%; bottom: -400px; }
             .forest-layer { background-size: cover; }
-            .light-wire { width: 120%; left: -10%; }
-            .christmas-lights-container { height: 80px; }
-            .light-bulb { width: 12px; height: 24px; margin: 0 5px; }
-            .lights-wrapper { top: 32px; }
-            .santa-wrapper { top: 5%; width: 200px; } /* Mobil ayarı */
-            .falling-gift { width: 30px; height: 30px; }
+            .christmas-lights-container { height: 80px; transform: scale(0.7); top: -10px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- GÜÇLENDİRİLMİŞ YILBAŞI IŞIKLARI -->
+    <!-- YENİLENMİŞ YILBAŞI IŞIKLARI (DAHA ESTETİK VE PARLAK) -->
     <div class="christmas-lights-container">
         <div class="light-wire"></div>
-        <div class="lights-wrapper">
-            <div class="light-bulb lb-red"></div>
-            <div class="light-bulb lb-green"></div>
-            <div class="light-bulb lb-blue"></div>
-            <div class="light-bulb lb-gold"></div>
-            <div class="light-bulb lb-pink"></div>
-            <div class="light-bulb lb-red"></div>
-            <div class="light-bulb lb-green"></div>
-            <div class="light-bulb lb-blue"></div>
-            <div class="light-bulb lb-gold"></div>
-            <div class="light-bulb lb-pink"></div>
-            <div class="light-bulb lb-red"></div>
-            <div class="light-bulb lb-green"></div>
-        </div>
+        <!-- Sol Taraf -->
+        <div class="light-bulb-box lb-red" style="left: 10%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
+        <div class="light-bulb-box lb-gold" style="left: 20%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
+        <div class="light-bulb-box lb-green" style="left: 30%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
+        <div class="light-bulb-box lb-blue" style="left: 40%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
+        <!-- Orta -->
+        <div class="light-bulb-box lb-purple" style="left: 50%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
+        <!-- Sağ Taraf -->
+        <div class="light-bulb-box lb-red" style="left: 60%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
+        <div class="light-bulb-box lb-gold" style="left: 70%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
+        <div class="light-bulb-box lb-green" style="left: 80%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
+        <div class="light-bulb-box lb-blue" style="left: 90%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
     </div>
 
-    <!-- SANTA (SAĞDAN SOLA GİDER VE HEDİYE ATAR) -->
+    <!-- SANTA ANIMATION CONTAINER (ARKA PLANDA GEÇECEK) -->
     <div id="santa-container" class="santa-wrapper">
-        <img src="santa.png" alt="Santa Claus">
+        <div class="santa-sleigh">
+            <img src="https://cdn-icons-png.flaticon.com/512/3799/3799988.png" alt="Santa Claus">
+        </div>
     </div>
     <!-- HEDİYE CONTAINER -->
     <div id="gift-container" class="falling-gift"></div>
@@ -457,11 +597,11 @@
 
     <div class="stage">
         
-        <!-- === HOME (YENİLENMİŞ SOFT KIŞ TASARIMI) === -->
+        <!-- === HOME === -->
         <div id="home" class="page-section active">
             <div class="home-scene-wrapper">
                 <div class="winter-box" id="tiltCard">
-                    <!-- Kutu Dekorları -->
+                    <!-- Kutu Dekorları: YENİLENMİŞ SARKAN KAR -->
                     <div class="box-snow-top"></div>
                     <div class="deco-sticker ds-1">🎄</div>
                     <div class="deco-sticker ds-2"><i class="fa-solid fa-star"></i></div>
@@ -469,7 +609,7 @@
                     <!-- Fotoğraf (Yumuşak Köşeli) -->
                     <div class="polaroid-frame">
                         <div class="polaroid-tape"></div>
-                        <div class="santa-hat-sticker"></div>
+                        <!-- ŞAPKA KALDIRILDI -->
                         <img src="maskot.png" alt="Mascot" onerror="this.src='https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png'">
                     </div>
 
@@ -609,35 +749,34 @@
         }
         createSnowflakes();
 
-        // --- GÜNCELLENMİŞ SANTA & HEDİYE LOJİĞİ ---
+        // SANTA ANIMASYON MANTIĞI
         function triggerSanta() {
             const santa = document.getElementById('santa-container');
             const gift = document.getElementById('gift-container');
             
-            // Animasyon classlarını temizle ve reflow yap
+            // Animasyon classlarını temizle ve yeniden tetikle (Reflow)
             santa.classList.remove('santa-animate');
             gift.classList.remove('gift-animate');
-            void santa.offsetWidth; 
+            void santa.offsetWidth; // Trigger reflow
 
-            // Santa başlasın
             santa.classList.add('santa-animate');
             
-            // Santa ekranın ortasına (%40 civarı) geldiğinde hediyeyi at (Yaklaşık 3.5 - 4 saniye)
+            // Santa ekranın ortasına gelince hediye düşsün (yaklaşık 4 saniye sonra)
             setTimeout(() => {
                 gift.classList.add('gift-animate');
-            }, 3500);
+            }, 3000);
         }
 
-        // Santa'yı rastgele aralıklarla geçir (15sn - 30sn arası)
+        // Santa'yı rastgele aralıklarla geçir (10sn - 30sn arası)
         function scheduleNextSanta() {
-            const delay = Math.random() * 15000 + 15000; 
+            const delay = Math.random() * 20000 + 15000; // 15-35 saniye arası
             setTimeout(() => {
                 triggerSanta();
                 scheduleNextSanta();
             }, delay);
         }
-        // Sayfa açıldıktan 3 saniye sonra ilk Santa geçişi
-        setTimeout(triggerSanta, 3000);
+        // Sayfa açıldıktan kısa süre sonra ilk geçişi yap
+        setTimeout(triggerSanta, 5000);
         scheduleNextSanta();
 
 
