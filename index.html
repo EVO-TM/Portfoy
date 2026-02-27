@@ -11,24 +11,21 @@
     <meta property="og:image" content="evo_logo.png">
 
     <!-- FONTLAR & İKONLAR -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=Outfit:wght@400;700;900&family=Courier+New:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;700;900&family=Courier+New:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
         :root {
-            /* Tema Renk Paleti - Karton & Mürekkep Odaklı */
+            /* Tema Renk Paleti */
             --bg-sky-top: #0b1020;
             --bg-sky-bottom: #1b2a6b;
-            --ink: #2d241e; 
-            --kraft-base: #e5d3b3;
-            --kraft-dark: #cba87c;
-            --kraft-light: #f4ecd8;
+            --ink: #1e2430;
+            --cardboard: #efe6d4;
             --accent: #6c5ce7;
-            --s-yellow: #feca57;
-            --s-green: #1dd1a1;
-            --s-red: #ff6b6b;
+            --s-yellow: #f1c40f;
+            --s-green: #00b894;
             --snow: #ffffff;
-            --tape-color: rgba(255, 255, 255, 0.4);
+            --glow: 0 0 14px rgba(108, 92, 231, 0.55), 0 0 30px rgba(0, 184, 148, 0.25);
         }
 
         /* --- TEMEL AYARLAR --- */
@@ -46,249 +43,404 @@
             position: relative;
         }
 
-        /* --- PRELOADER --- */
-        #main-loader {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: var(--bg-sky-top); z-index: 999999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.6s ease, visibility 0.6s ease;
+        /* --- BACKGROUND KATMANLARI (PARALLAX) --- */
+        .forest-layer {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            pointer-events: none; 
         }
-        #main-loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .loader-logo { width: 100px; height: auto; margin-bottom: 20px; animation: softFloat 2s infinite ease-in-out; }
-        .loader-text { color: white; font-family: 'Courier New', monospace; font-size: 18px; font-weight: bold; letter-spacing: 4px; animation: blinkLive 1.5s infinite; }
+        .layer-back {
+            height: 400px; opacity: 0.4; filter: blur(2px); z-index: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%230b1020' fill-opacity='1' d='M0,320L40,280L80,320L120,240L160,320L200,260L240,320L280,220L320,320L360,250L400,320L440,200L480,320L520,270L560,320L600,230L640,320L680,260L720,320L760,210L800,320L840,250L880,320L920,190L960,320L1000,260L1040,320L1080,230L1120,320L1160,270L1200,320L1240,220L1280,320L1320,250L1360,320L1400,280L1440,320L1440,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover; background-repeat: repeat-x;
+        }
+        .layer-mid {
+            height: 300px; opacity: 0.7; bottom: -20px; z-index: 1;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23121a3a' fill-opacity='1' d='M0,320L60,240L120,320L180,200L240,320L300,220L360,320L420,180L480,320L540,230L600,320L660,190L720,320L780,210L840,320L900,170L960,320L1020,230L1080,320L1140,200L1200,320L1260,220L1320,320L1380,250L1440,320L1440,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover; background-repeat: repeat-x;
+        }
+        .layer-front {
+            height: 250px; opacity: 1; bottom: -50px; z-index: 4; /* Santa'nın arkasında kalsın istiyorsan z-index düşmeli, önünde olsun istiyorsan artmalı. Şu an Santa 2. */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='treeGrad' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' style='stop-color:%230b1020;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23121a3a;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M50,300 L150,100 L250,300 M150,100 L150,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M150,100 L100,200 L200,200 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M300,300 L400,50 L500,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M400,50 L340,180 L460,180 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M550,300 L650,120 L750,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M800,300 L900,80 L1000,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M900,80 L840,200 L960,200 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M1050,300 L1125,150 L1200,300' fill='url(%23treeGrad)'/%3E%3C/svg%3E");
+            background-size: auto 100%;
+        }
 
-        /* --- BACKGROUND KATMANLARI --- */
-        .forest-layer { position: fixed; bottom: 0; left: 0; width: 100%; pointer-events: none; }
-        .layer-back { height: 400px; opacity: 0.4; filter: blur(2px); z-index: 0; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%230b1020' fill-opacity='1' d='M0,320L40,280L80,320L120,240L160,320L200,260L240,320L280,220L320,320L360,250L400,320L440,200L480,320L520,270L560,320L600,230L640,320L680,260L720,320L760,210L800,320L840,250L880,320L920,190L960,320L1000,260L1040,320L1080,230L1120,320L1160,270L1200,320L1240,220L1280,320L1320,250L1360,320L1400,280L1440,320L1440,320L0,320Z'%3E%3C/path%3E%3C/svg%3E"); background-size: cover; background-repeat: repeat-x; animation: panBg 60s linear infinite; }
-        .layer-mid { height: 300px; opacity: 0.7; bottom: -20px; z-index: 1; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23121a3a' fill-opacity='1' d='M0,320L60,240L120,320L180,200L240,320L300,220L360,320L420,180L480,320L540,230L600,320L660,190L720,320L780,210L840,320L900,170L960,320L1020,230L1080,320L1140,200L1200,320L1260,220L1320,320L1380,250L1440,320L1440,320L0,320Z'%3E%3C/path%3E%3C/svg%3E"); background-size: cover; background-repeat: repeat-x; animation: panBg 40s linear infinite; }
-        .layer-front { height: 250px; opacity: 1; bottom: -50px; z-index: 4; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='treeGrad' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' style='stop-color:%230b1020;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23121a3a;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M50,300 L150,100 L250,300 M150,100 L150,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M150,100 L100,200 L200,200 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M300,300 L400,50 L500,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M400,50 L340,180 L460,180 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M550,300 L650,120 L750,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M800,300 L900,80 L1000,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M900,80 L840,200 L960,200 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M1050,300 L1125,150 L1200,300' fill='url(%23treeGrad)'/%3E%3C/svg%3E"); background-size: auto 100%; }
-
-        /* --- ANİMASYONLAR --- */
-        @keyframes panBg { 0% { background-position: 0 0; } 100% { background-position: 1440px 0; } }
-        @keyframes popIn { 0% { transform: scale(0.85) translateY(40px) rotate(-2deg); opacity: 0; } 100% { transform: scale(1) translateY(0) rotate(0); opacity: 1; } }
-        @keyframes blinkLive { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-        @keyframes softFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-        @keyframes wiggle { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
-        @keyframes floatSticker { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-120px) rotate(20deg); opacity: 0; } }
-        @keyframes stampPop { 0% { transform: scale(2) rotate(-20deg); opacity: 0; } 50% { transform: scale(0.9) rotate(5deg); opacity: 1; } 100% { transform: scale(1) rotate(-5deg); opacity: 1; } }
+        /* --- ANİMASYONLAR (GENEL) --- */
+        @keyframes popIn { 0% { transform: scale(0.8) translateY(20px); opacity: 0; } 60% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes blinkLive { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        @keyframes softFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
         /* --- UI ELEMENTS --- */
-        .lang-switch { position: fixed; top: 30px; right: 30px; background: var(--kraft-light); border: 3px solid var(--ink); border-radius: 12px; padding: 5px; display: flex; gap: 5px; z-index: 1000; box-shadow: 4px 4px 0 var(--ink); transition: 0.2s; }
-        .lang-switch:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
-        .lang-btn { border: none; background: none; padding: 6px 14px; font-weight: 900; font-family: 'Courier New', monospace; font-size: 14px; cursor: pointer; border-radius: 8px; transition: 0.2s; color: #888; }
+        .lang-switch { position: fixed; top: 140px; right: 20px; background: rgba(255,255,255,0.9); border: 2px solid var(--ink); border-radius: 50px; padding: 5px; display: flex; gap: 5px; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .lang-btn { border: none; background: none; padding: 5px 12px; font-weight: 800; font-size: 14px; cursor: pointer; border-radius: 20px; transition: 0.2s; color: #999; }
         .lang-btn.active { background: var(--ink); color: white; }
 
-        /* --- ORTAK BANT --- */
-        .paper-tape {
-            position: absolute; background: var(--tape-color);
-            border: 2px dashed rgba(255,255,255,0.7); backdrop-filter: blur(4px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 10;
-        }
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #2d3436; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease, visibility 0.5s; }
+        .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.2); border-top-color: var(--s-green); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        .loading-text { color: white; font-weight: bold; letter-spacing: 2px; }
+        .loader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 
         /* --- CONTENT WRAPPER --- */
-        .stage { width: 100%; max-width: 1000px; height: 85vh; position: relative; display: flex; justify-content: center; align-items: center; z-index: 20; }
+        .stage { width: 100%; max-width: 1000px; height: 80vh; position: relative; display: flex; justify-content: center; align-items: center; z-index: 20; }
         .page-section { position: absolute; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .page-section.active { display: flex; animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .page-section.active { display: flex; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
         /* =========================================
-           HOME TAB TASARIMI (KARTON TEMA)
+           HOME TAB TASARIMI
            ========================================= */
-        .home-scene-wrapper { perspective: 1500px; display: flex; justify-content: center; align-items: center; width: 100%; position: relative; }
-        .cardboard-hero {
-            width: 520px; background-color: var(--kraft-light);
-            background-image: radial-gradient(rgba(0,0,0,0.03) 2px, transparent 2px);
-            background-size: 15px 15px; border-radius: 20px; border: 5px solid var(--ink);
-            position: relative; display: flex; flex-direction: column; align-items: center;
-            padding: 60px 30px 50px 30px; box-shadow: 15px 15px 0 var(--ink), 0 30px 60px rgba(0,0,0,0.4);
-            transform-style: preserve-3d; animation: softFloat 6s ease-in-out infinite; z-index: 10;
-        }
-        .cardboard-hero .hero-tape { width: 160px; height: 45px; top: -20px; left: 50%; transform: translateX(-50%) rotate(2deg); }
-        .cardboard-hero .hero-clip { position: absolute; left: -15px; top: 40px; font-size: 40px; color: #7f8fa6; transform: rotate(-15deg); filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.2)); }
         
+        .home-scene-wrapper {
+            perspective: 1200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .winter-box {
+            width: 480px;
+            min-height: 580px;
+            background-color: rgba(255,255,255,0.92); 
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+            border-radius: 25px; 
+            border: 6px solid rgba(30,36,48,0.18);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 30px;
+            box-shadow: 
+                0 20px 50px rgba(0,0,0,0.4),
+                inset 0 0 60px rgba(255,245,230,0.5); 
+            transform-style: preserve-3d;
+            animation: softFloat 6s ease-in-out infinite;
+        }
+
         .polaroid-frame {
-            width: 220px; background: #fff; border: 4px solid var(--ink); padding: 12px 12px 40px 12px;
-            box-shadow: 8px 8px 0 rgba(0,0,0,0.15); position: relative; transform: translateZ(50px) rotate(-3deg);
-            margin-bottom: 25px; transition: 0.4s; display: flex; flex-direction: column; align-items: center;
+            background: #fff;
+            padding: 15px 15px 50px 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-radius: 20px; 
+            transform: rotate(-2deg);
+            width: 260px;
+            position: relative;
+            margin-top: 10px;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .polaroid-frame:hover { transform: translateZ(80px) rotate(0deg) scale(1.05); box-shadow: 12px 12px 0 rgba(0,0,0,0.2); }
-        .polaroid-frame img { width: 100%; height: 200px; object-fit: cover; border: 3px solid var(--ink); background: #f0f0f0; }
-        .hero-badge-sticker { position: absolute; bottom: 5px; right: -20px; background: var(--s-yellow); color: var(--ink); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; border: 4px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); transform: translateZ(20px) rotate(15deg); animation: wiggle 3s infinite ease-in-out; }
-
-        .home-title { font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 64px; color: var(--ink); margin: 0; line-height: 1; text-align: center; letter-spacing: -2px; transform: translateZ(40px); text-shadow: 4px 4px 0 var(--snow), 6px 6px 0 rgba(0,0,0,0.1); }
-        .home-subtitle { font-family: 'Courier New', monospace; color: var(--accent); font-weight: 900; font-size: 18px; margin-top: 15px; margin-bottom: 35px; background: var(--snow); padding: 8px 20px; border-radius: 8px; border: 3px dashed var(--accent); transform: translateZ(35px) rotate(-1deg); box-shadow: 3px 3px 0 rgba(0,0,0,0.1); }
+        .polaroid-frame:hover { transform: rotate(0deg) scale(1.05); z-index: 30; }
         
-        .btn-sticker-explore { background: var(--s-green); color: var(--ink); font-family: 'Inter', sans-serif; font-weight: 900; font-size: 22px; padding: 16px 45px; border-radius: 12px; text-decoration: none; border: 4px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); transition: 0.2s; display: inline-flex; align-items: center; gap: 12px; transform: translateZ(50px); text-transform: uppercase; }
-        .btn-sticker-explore:hover { transform: translateZ(60px) translateY(-5px) scale(1.05); box-shadow: 10px 10px 0 var(--ink); background: #26de81; }
+        .polaroid-frame img { 
+            width: 100%; height: auto; 
+            background: #f4f4f4; 
+            display: block; 
+            border-radius: 12px; 
+        }
+        
+        .polaroid-tape {
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(1deg);
+            width: 90px; height: 30px;
+            background: rgba(231, 76, 60, 0.8); 
+            border-left: 2px dashed rgba(255,255,255,0.3);
+            border-right: 2px dashed rgba(255,255,255,0.3);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            backdrop-filter: blur(2px);
+            z-index: 40;
+        }
 
-        .doodle-sticker { position: absolute; font-size: 36px; z-index: 5; pointer-events: none; filter: drop-shadow(3px 3px 0 var(--ink)); }
-        .ds-1 { top: 10%; left: -15%; animation: floatSticker 7s infinite ease-in; color: var(--s-red); }
-        .ds-2 { bottom: 20%; right: -15%; animation: floatSticker 9s infinite ease-in 2s; color: var(--accent); font-size: 44px; }
-        .ds-3 { top: 30%; right: -10%; animation: floatSticker 8s infinite ease-in 1s; color: var(--s-yellow); }
+        .home-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 62px;
+            color: #ffffff;
+            margin: 30px 0 0 0;
+            line-height: 0.95;
+            text-align: center;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 35px rgba(0,0,0,0.35);
+            transform: rotate(-1deg);
+        }
+
+        .home-subtitle {
+            font-family: 'Outfit', sans-serif;
+            color: #7f8c8d;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 35px;
+            background: #fff;
+            padding: 5px 15px;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transform: rotate(1deg);
+            margin-top: 10px;
+        }
+
+        .btn-sticker {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            padding: 16px 50px;
+            border-radius: 50px; 
+            text-decoration: none;
+            border: 4px solid white;
+            box-shadow: 
+                0 10px 20px rgba(231, 76, 60, 0.3),
+                inset 0 2px 5px rgba(255,255,255,0.2);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-flex; align-items: center; gap: 12px;
+            transform: rotate(0deg);
+            position: relative; overflow: hidden;
+        }
+        .btn-sticker:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 30px rgba(231, 76, 60, 0.4); }
+        .btn-sticker i { font-size: 20px; }
+        .btn-sticker::after {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine { 0% { left: -100%; } 100% { left: 200%; } }
+
+        .deco-sticker { position: absolute; font-size: 24px; filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.1)); z-index: 40; }
+        .ds-1 { top: 15px; right: 20px; transform: rotate(15deg); font-size: 32px; }
+        .ds-2 { bottom: 20px; left: 20px; transform: rotate(-10deg); color: #f39c12; }
 
         /* =========================================
-           YENİ: STUDIO TAB TASARIMI (CORKBOARD / PANO)
+           DİĞER TABLAR 
            ========================================= */
-        .studio-corkboard {
-            width: 100%; max-width: 900px;
-            background-color: var(--kraft-dark);
-            background-image: radial-gradient(rgba(45, 36, 30, 0.15) 2px, transparent 2px);
-            background-size: 20px 20px;
-            border: 8px solid var(--ink); border-radius: 12px;
-            padding: 40px; display: flex; flex-direction: column; align-items: center;
-            box-shadow: 15px 15px 0 rgba(0,0,0,0.2), inset 0 0 40px rgba(0,0,0,0.3);
-            position: relative; overflow-y: auto; max-height: 80vh; scrollbar-width: none;
-        }
-        .cb-main-tape { width: 200px; height: 40px; top: -15px; left: 50%; transform: translateX(-50%) rotate(1deg); }
-        
-        .studio-corkboard-header { text-align: center; margin-bottom: 40px; position: relative; z-index: 2; display:flex; flex-direction:column; align-items:center;}
-        .studio-corkboard-header h2 { font-size: 56px; font-weight: 900; color: var(--snow); text-shadow: 4px 4px 0 var(--ink); margin: 0; letter-spacing: 2px; }
-        .studio-corkboard-header p { background: var(--s-red); color: white; padding: 5px 15px; font-family: 'Courier New', monospace; font-weight: bold; font-size: 18px; border: 3px solid var(--ink); transform: rotate(-3deg); box-shadow: 3px 3px 0 var(--ink); display: inline-block; margin-top: -10px;}
-
-        .sc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; width: 100%; align-items: start; }
-        
-        /* Sticky Notes & Polaroids */
-        .sc-item { position: relative; padding: 20px; border: 3px solid var(--ink); box-shadow: 6px 6px 0 rgba(0,0,0,0.15); transition: 0.2s; }
-        .sc-item:hover { transform: scale(1.05) !important; z-index: 10; box-shadow: 10px 10px 0 rgba(0,0,0,0.25); }
-        .sc-item .sc-pin { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 16px; height: 16px; background: var(--s-red); border-radius: 50%; border: 2px solid var(--ink); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); z-index: 2; }
-        .sc-item .sc-pin::after { content:''; position:absolute; top:3px; left:3px; width:4px; height:4px; background:white; border-radius:50%; }
-        
-        .sc-note { background: var(--s-yellow); font-family: 'Courier New', monospace; transform: rotate(3deg); }
-        .sc-note.blue { background: #74b9ff; transform: rotate(-2deg); }
-        .sc-note.green { background: var(--s-green); transform: rotate(4deg); }
-        .sc-note h3 { margin: 10px 0; font-size: 22px; font-weight: 900; border-bottom: 2px dashed rgba(0,0,0,0.3); padding-bottom: 5px; }
-        .sc-note p { font-size: 15px; font-weight: bold; line-height: 1.4; color: var(--ink); margin:0;}
-
-        .sc-polaroid { background: white; padding: 12px 12px 30px 12px; transform: rotate(-4deg); text-align: center; }
-        .sc-polaroid img { width: 100%; height: 140px; object-fit: contain; border: 3px solid var(--ink); background: var(--kraft-light); margin-bottom: 10px; }
-        .sc-polaroid span { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 18px; color: var(--ink); }
-
-        /* =========================================
-           YENİ: FREE MODELS EKRANI (TAMAMEN BİRLEŞTİRİLDİ)
-           ========================================= */
-        .models-showcase {
-            width: 100%; max-width: 900px;
-            background: var(--kraft-base);
-            border: 6px solid var(--ink); border-radius: 15px;
-            padding: 40px; display: flex; flex-direction: column;
-            box-shadow: 15px 15px 0 rgba(0,0,0,0.15);
-            position: relative; height: 80vh; overflow: hidden;
-        }
-        .ms-header { text-align: center; border-bottom: 4px dashed var(--ink); padding-bottom: 20px; margin-bottom: 20px; }
-        .ms-header h2 { font-size: 42px; font-weight: 900; margin: 0; color: var(--ink); text-transform: uppercase; text-shadow: 2px 2px 0 var(--snow); }
-        .ms-header p { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 16px; margin: 10px 0 0 0; color: #444; }
-        
-        .ms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; overflow-y: auto; padding-right: 10px; padding-bottom: 40px; scrollbar-width: none; }
-        
-        .ms-card { background: var(--snow); border: 4px solid var(--ink); border-radius: 12px; overflow: hidden; box-shadow: 6px 6px 0 var(--ink); transition: 0.2s; display:flex; flex-direction: column; }
-        .ms-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 10px 10px 0 var(--ink); }
-        .ms-thumb { width: 100%; height: 140px; background: var(--kraft-dark); border-bottom: 3px solid var(--ink); display:flex; justify-content:center; align-items:center; font-size: 50px; color: var(--ink); opacity: 0.8;}
-        .ms-info { padding: 15px; flex: 1; display:flex; flex-direction:column; justify-content:space-between; }
-        .ms-info h4 { margin: 0 0 10px 0; font-size: 18px; font-weight: 900; color: var(--ink); }
-        .ms-btn { background: var(--s-green); color: var(--ink); text-align: center; font-weight: 900; font-family: 'Inter', sans-serif; padding: 10px; border-radius: 8px; border: 3px solid var(--ink); text-decoration: none; display: block; box-shadow: 3px 3px 0 var(--ink); transition: 0.1s; text-transform: uppercase; }
-        .ms-btn:hover { background: #26de81; transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
-
-        /* =========================================
-           DİĞER TABLAR (Proje, Haberler, Hakkında)
-           ========================================= */
-        .cardboard-about { background-color: var(--kraft-base); border: 5px solid var(--ink); border-radius: 15px; width: 100%; max-width: 850px; padding: 50px 40px; display: flex; align-items: center; gap: 50px; position: relative; box-shadow: 15px 15px 0 rgba(0,0,0,0.15); background-image: radial-gradient(rgba(0,0,0,0.03) 2px, transparent 2px); background-size: 15px 15px; }
-        .about-tape-top { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(1deg); width: 150px; height: 40px; background: rgba(255,255,255,0.4); border: 2px dashed rgba(255,255,255,0.8); backdrop-filter: blur(2px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); z-index: 5; }
+        .cardboard-about { background-color: #dcbfa6; background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E"); border: 3px solid #bba38e; border-radius: 20px; width: 100%; max-width: 850px; padding: 50px 40px; display: flex; align-items: center; gap: 50px; position: relative; box-shadow: 10px 10px 0 rgba(0,0,0,0.1), 0 20px 50px rgba(0,0,0,0.1); }
+        .about-tape-top { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(1deg); width: 150px; height: 40px; background: rgba(255,255,255,0.35); border-left: 2px dashed rgba(255,255,255,0.6); border-right: 2px dashed rgba(255,255,255,0.6); backdrop-filter: blur(2px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .cb-text-content { flex: 1; text-align: left; }
-        .founder-stamp { border: 4px solid #9b59b6; color: #9b59b6; padding: 5px 15px; font-weight: 900; font-family: 'Courier New', monospace; display: inline-block; transform: rotate(-3deg); margin-bottom: 15px; border-radius: 8px; box-shadow: 2px 2px 0 rgba(155, 89, 182, 0.3); }
-        .cb-title { font-size: 42px; font-weight: 900; margin: 0 0 20px 0; color: var(--ink); line-height: 1.1; text-shadow: 2px 2px 0 var(--snow); }
-        .ink-highlight { background: var(--s-green); color: var(--ink); padding: 0 8px; border-radius: 4px; border: 2px solid var(--ink); display: inline-block; transform: rotate(-1deg); }
-        .cb-bio { font-family: 'Inter', sans-serif; font-weight: 600; color: var(--ink); font-size: 17px; line-height: 1.6; margin-bottom: 25px; }
+        .founder-stamp { border: 3px solid #9b59b6; color: #9b59b6; padding: 5px 15px; font-weight: 900; font-family: 'Courier New', monospace; display: inline-block; transform: rotate(-3deg); margin-bottom: 15px; border-radius: 8px; opacity: 0.8; letter-spacing: 1px; mask-image: url("data:image/svg+xml,%3Csvg width='200' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.6'/%3E%3C/svg%3E"); }
+        .cb-title { font-size: 38px; font-weight: 900; margin: 0 0 20px 0; color: #2d241e; line-height: 1.1; }
+        .ink-highlight { color: #6c5ce7; position: relative; }
+        .ink-highlight::after { content: ''; position: absolute; bottom: 2px; left: 0; width: 100%; height: 8px; background: rgba(108, 92, 231, 0.2); z-index: -1; transform: rotate(-1deg); }
+        .cb-bio { font-family: 'Courier New', monospace; font-weight: bold; color: #5d4e42; font-size: 16px; line-height: 1.6; margin-bottom: 25px; }
         .cb-socials { display: flex; gap: 15px; }
-        .social-sticker { width: 55px; height: 55px; background: var(--snow); border: 3px solid var(--ink); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--ink); text-decoration: none; box-shadow: 4px 4px 0 var(--ink); transition: 0.2s; }
-        .social-sticker:hover { transform: translateY(-5px) rotate(10deg); box-shadow: 6px 6px 0 var(--ink); background: var(--s-yellow); }
+        .social-sticker { width: 50px; height: 50px; background: white; border: 2px solid #2d241e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #2d241e; text-decoration: none; box-shadow: 2px 2px 0 rgba(0,0,0,0.2); transition: 0.2s; }
+        .social-sticker:hover { transform: scale(1.1) rotate(10deg); background: #fffae6; }
+        .cb-avatar-wrapper { position: relative; }
+        .ref-avatar-card { background: white; border: 2px solid #1a1a1a; padding: 10px 10px 20px 10px; width: 260px; box-shadow: 5px 5px 15px rgba(0,0,0,0.2); transform: rotate(3deg); display: flex; flex-direction: column; align-items: center; transition: transform 0.3s ease; }
+        .ref-avatar-card:hover { transform: rotate(0deg) scale(1.02); }
+        .ref-photo-frame { width: 100%; height: 260px; background: #f2f2f2; overflow: hidden; display: flex; justify-content: center; align-items: flex-end; border: 1px solid #eee; }
+        .ref-photo-frame img { width: 100%; height: 100%; object-fit: contain; transform: scale(0.95); }
+        .ref-card-info { margin-top: 15px; text-align: center; font-family: 'Outfit', sans-serif; }
+        .ref-name { font-weight: 900; font-size: 24px; color: #000; letter-spacing: -0.5px; }
+        .ref-handle { color: #999; font-weight: 600; font-size: 14px; margin-top: 2px; }
+        .card-tape { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 80px; height: 30px; background: rgba(254, 202, 87, 0.7); box-shadow: 0 1px 2px rgba(0,0,0,0.1); z-index: 2; }
         
-        .project-card, .news-container { border: 5px solid var(--ink); box-shadow: 12px 12px 0 var(--ink); }
-        .project-card { background: var(--snow); border-radius: 20px; padding: 15px; width: 100%; max-width: 500px; text-align: center; position: relative; }
-        .game-thumb { width: 100%; height: 280px; background: #333; border-radius: 12px; overflow: hidden; border: 3px solid var(--ink); }
+        .project-card { background: #fff; border: 4px solid var(--ink); border-radius: 25px; padding: 10px; width: 100%; max-width: 500px; flex-direction: column; text-align: center; box-shadow: 15px 15px 0 rgba(0,0,0,0.1); position: relative; }
+        .game-thumb { width: 100%; height: 280px; background: #333; border-radius: 18px; overflow: hidden; border: 2px solid #eee; position: relative; }
         .game-thumb img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
         .game-thumb:hover img { transform: scale(1.05); }
         .game-info { padding: 20px; }
-        .game-title { font-size: 36px; font-weight: 900; color: var(--ink); margin: 0; }
-        .play-big-btn { display: block; width: 100%; background: var(--s-green); color: var(--ink); padding: 16px; border-radius: 12px; text-decoration: none; font-weight: 900; font-size: 20px; margin-top: 15px; border: 4px solid var(--ink); box-shadow: 5px 5px 0 var(--ink); transition: 0.1s; text-transform: uppercase; }
-        .play-big-btn:hover { transform: translateY(2px); box-shadow: 3px 3px 0 var(--ink); }
+        .game-title { font-size: 32px; font-weight: 900; margin: 0; color: var(--ink); }
+        .play-big-btn { display: block; width: 100%; background: #00b894; color: white; padding: 15px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 18px; margin-top: 15px; border: 3px solid var(--ink); box-shadow: 0 5px 0 var(--ink); transition: 0.1s; }
+        .play-big-btn:hover { transform: translateY(2px); box-shadow: 0 3px 0 var(--ink); filter: brightness(1.1); }
+        
+        .simple-card { background: #fff; border: 3px solid var(--ink); border-radius: 20px; padding: 40px; width: 100%; max-width: 600px; box-shadow: 10px 10px 0 rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .creator-store-link { background: linear-gradient(135deg, #0984e3, #6c5ce7); color: white; padding: 20px; width: 100%; margin-top: 20px; border-radius: 15px; text-decoration: none; border: 3px solid var(--ink); display: flex; align-items: center; justify-content: center; gap: 15px; font-size: 20px; font-weight: bold; transition: transform 0.2s, box-shadow 0.2s; }
+        .creator-store-link:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4); }
 
-        .news-container { background-color: var(--kraft-dark); border-radius: 15px; width: 100%; max-width: 700px; height: 80vh; display: flex; flex-direction: column; overflow: hidden; }
-        .news-header-modern { padding: 15px 20px; background: var(--kraft-light); border-bottom: 4px dashed var(--ink); z-index: 10; display: flex; flex-direction: column; gap: 10px; }
-        .nh-top-row { display: flex; justify-content: space-between; align-items: center; }
-        .nh-title { font-family: 'Courier New', monospace; font-size: 26px; font-weight: 900; color: var(--ink); background: var(--snow); padding: 2px 10px; border: 2px solid var(--ink); transform: rotate(-2deg); }
-        .search-bar-wrap { display: flex; background: var(--snow); border: 3px solid var(--ink); border-radius: 10px; padding: 5px 10px; align-items: center; width: 100%; margin-top: 5px; box-shadow: 3px 3px 0 rgba(0,0,0,0.1); }
-        .search-input { border: none; outline: none; background: transparent; font-family: 'Courier New', monospace; font-weight: bold; width: 100%; font-size: 14px; }
-        .news-filters { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; margin-top: 10px;}
-        .filter-btn { background: var(--snow); border: 3px solid var(--ink); padding: 6px 14px; font-weight: 800; color: var(--ink); cursor: pointer; font-size: 13px; border-radius: 8px; box-shadow: 3px 3px 0 var(--ink); transition: 0.1s; }
-        .filter-btn.active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); background: var(--ink); color: var(--snow); }
+        /* --- SUBTABS & MODELS --- */
+        .subtab-row { width: 100%; display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+        .subtab-btn { flex: 1; min-width: 220px; background: linear-gradient(135deg, #0984e3, #6c5ce7); color: white; padding: 16px 18px; border-radius: 15px; text-decoration: none; border: 3px solid var(--ink); display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 18px; font-weight: 800; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        .subtab-btn:hover { transform: translateY(-4px); box-shadow: 0 12px 22px rgba(108, 92, 231, 0.25); }
+        .subtab-btn.secondary { background: linear-gradient(135deg, #00b894, #6c5ce7); }
+        .hint-box { width: 100%; margin-top: 16px; padding: 12px 14px; border-radius: 14px; border: 2px dashed rgba(30,36,48,0.25); background: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 10px; color: #3b4454; font-weight: 700; }
+
+        .models-panel { width: 100%; max-width: 900px; background: rgba(255,255,255,0.88); border: 4px solid rgba(30,36,48,0.18); border-radius: 22px; box-shadow: 15px 15px 0 rgba(0,0,0,0.08), 0 25px 60px rgba(0,0,0,0.22); overflow: hidden; }
+        .models-header { padding: 16px 18px; background: linear-gradient(135deg, rgba(108,92,231,0.12), rgba(0,184,148,0.10)); border-bottom: 2px dashed rgba(30,36,48,0.18); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .models-title { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 20px; color: #1e2430; }
+        .models-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+        .mini-btn { background: #fff; border: 2px solid rgba(30,36,48,0.22); border-radius: 14px; padding: 10px 12px; font-weight: 900; cursor: pointer; text-decoration: none; color: #1e2430; display: inline-flex; align-items: center; gap: 8px; box-shadow: 3px 3px 0 rgba(0,0,0,0.08); transition: 0.15s; }
+        .mini-btn:hover { transform: translateY(-2px); box-shadow: 6px 6px 0 rgba(0,0,0,0.10); }
+
+        .models-grid { padding: 18px; display: flex; gap: 16px; flex-wrap: wrap; justify-content: flex-start; max-height: 72vh; overflow: auto; }
+        .models-grid::-webkit-scrollbar { height: 10px; width: 10px; }
+        .models-grid::-webkit-scrollbar-thumb { background: rgba(30,36,48,0.25); border-radius: 10px; }
+
+        .model-card { width: 260px; background: #ffffff; border: 3px solid rgba(30,36,48,0.20); border-radius: 18px; overflow: hidden; box-shadow: 10px 10px 0 rgba(0,0,0,0.08); transition: 0.18s; position: relative; }
+        .model-card:hover { transform: translateY(-4px); box-shadow: 14px 14px 0 rgba(0,0,0,0.10); }
+        .model-thumb { width: 100%; height: 150px; background: #0b1020; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .model-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .model-body { padding: 14px 14px 16px 14px; }
+        .model-name { font-weight: 900; font-size: 18px; color: #1e2430; margin: 0 0 8px 0; line-height: 1.1; }
+        .model-meta { font-family: 'Inter', sans-serif; font-size: 12px; color: #6b7280; margin-bottom: 12px; }
+        .model-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #6c5ce7, #00b894); color: white; text-decoration: none; font-weight: 900; border-radius: 14px; padding: 10px 12px; border: 2px solid rgba(30,36,48,0.15); width: 100%; justify-content: center; }
+        .model-badge { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.9); border: 2px solid rgba(30,36,48,0.18); border-radius: 999px; padding: 6px 10px; font-weight: 900; font-size: 11px; display: inline-flex; align-items: center; gap: 6px; }
+
+        .models-empty { padding: 40px 18px 50px 18px; text-align: center; }
+        .models-empty-emoji { font-size: 54px; }
+        .models-empty-title { font-weight: 900; font-size: 20px; margin-top: 10px; color: #1e2430; }
+        .models-empty-desc { color: #5c6472; font-weight: 700; margin-top: 6px; }
+
+
+        /* Haberler CSS */
+        .news-container { background-color: #d1b48c; background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h21.5v21.5h-1.5z' fill='%23c2a681' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E"); border: 10px solid #5d4e42; border-radius: 12px; width: 100%; max-width: 700px; height: 80vh; display: flex; flex-direction: column; box-shadow: 5px 5px 20px rgba(0,0,0,0.3); position: relative; overflow: hidden; font-family: 'Courier New', monospace; }
+        .news-header-modern { padding: 15px 20px; background: #fff8e1; border-bottom: 2px dashed #bba38e; z-index: 10; box-shadow: 0 2px 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 10px; }
+        .nh-top-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .nh-title { font-family: 'Courier New', monospace; font-size: 26px; font-weight: 900; color: #2d241e; text-shadow: 1px 1px 0 rgba(255,255,255,0.8); }
+        .search-bar-wrap { display: flex; background: #fff; border: 1px solid #999; border-radius: 20px; padding: 5px 10px; align-items: center; width: 100%; margin-top: 5px; }
+        .search-input { border: none; outline: none; background: transparent; font-family: 'Courier New', monospace; font-weight: bold; width: 100%; font-size: 13px; }
+        .live-status-dot { width: 12px; height: 12px; background: #bbb; border-radius: 50%; margin-left: 5px; }
+        .live-status-dot.active { background: #00b894; box-shadow: 0 0 10px #00b894; animation: blinkLive 2s infinite; }
+        .news-filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+        .filter-btn { background: #fdf5e6; border: 2px solid #bba38e; padding: 5px 12px; font-weight: bold; color: #5d4e42; cursor: pointer; font-size: 11px; white-space: nowrap; border-radius: 0; box-shadow: 2px 2px 0 #bba38e; transition: 0.1s; }
+        .filter-btn:active, .filter-btn.active { transform: translate(2px, 2px); box-shadow: none; background: #bba38e; color: white; }
         .news-scroll-area { flex: 1; overflow-y: auto; padding: 25px 30px 80px 30px; scroll-behavior: smooth; }
-        .news-card { background: var(--snow); padding: 20px; margin-bottom: 30px; position: relative; box-shadow: 6px 6px 0 var(--ink); border: 3px solid var(--ink); border-radius: 10px; font-family: 'Inter', sans-serif; transition: 0.2s; transform: rotate(1deg); }
-        .news-card:hover { transform: scale(1.02) rotate(0deg); z-index: 5; }
-        .nc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; border-bottom: 2px dashed #ccc; padding-bottom: 10px; }
+        .news-scroll-area::-webkit-scrollbar { width: 8px; }
+        .news-scroll-area::-webkit-scrollbar-thumb { background: #8b7056; border-radius: 4px; }
+        .news-card { background: #f1f2f6; background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E"); padding: 20px; margin-bottom: 40px; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.15); transform: rotate(1deg); transition: transform 0.2s; font-family: 'Inter', sans-serif; border: 1px solid #ccc; }
+        .news-card:nth-child(even) { transform: rotate(-1.5deg); }
+        .news-card:hover { transform: scale(1.01) rotate(0deg); z-index: 5; }
+        .news-card.pinned { background: #fff9c4; border: 2px solid #fbc531; transform: rotate(-2deg); z-index: 8; }
+        .pin-badge { position: absolute; top: -15px; left: -15px; background: #e1b12c; color: #2d241e; font-weight: 900; padding: 5px 10px; font-size: 11px; transform: rotate(-15deg); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); border: 2px solid #fff; display: flex; align-items: center; gap: 5px; }
+        .news-card::before { content: ''; position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(2deg); width: 120px; height: 35px; background: rgba(255, 255, 255, 0.4); border-left: 2px dashed rgba(255,255,255,0.6); border-right: 2px dashed rgba(255,255,255,0.6); box-shadow: 0 2px 4px rgba(0,0,0,0.1); backdrop-filter: blur(2px); z-index: 6; }
+        .new-badge { position: absolute; top: -10px; right: -10px; background: #ff4757; color: white; font-weight: 900; padding: 5px 10px; font-size: 12px; transform: rotate(15deg); box-shadow: 2px 2px 5px rgba(0,0,0,0.2); border: 2px solid white; z-index: 7; }
+        .news-card.exclusive-drop { background: repeating-linear-gradient(45deg, #2d3436, #2d3436 10px, #353b48 10px, #353b48 20px); color: white; border: 4px solid #d63031; text-align: center; }
+        .news-card.exclusive-drop .nc-content-wrapper { filter: blur(5px); pointer-events: none; opacity: 0.3; }
+        .secret-cover { position: absolute; top:0; left:0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; cursor: pointer; color: #d63031; }
+        .secret-stamp { border: 4px solid #d63031; font-size: 24px; font-weight: 900; display: inline-block; padding: 10px 20px; transform: rotate(-10deg); mask-image: url("data:image/svg+xml,%3Csvg width='200' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E"); background: rgba(0,0,0,0.6); }
+        .nc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
         .nc-user-row { display: flex; gap: 10px; align-items: center; }
-        .nc-avatar { width: 40px; height: 40px; border-radius: 8px; background: #eee; border: 2px solid var(--ink); }
-        .nc-author { font-weight: 900; font-size: 16px; color: var(--ink); }
-        .nc-title { font-size: 20px; font-weight: 900; margin: 15px 0 10px 0; }
-        .nc-desc { font-size: 15px; color: #444; line-height: 1.6; font-weight: 500; }
+        .nc-avatar { width: 35px; height: 35px; border-radius: 50%; background: #eee; border: 1px solid #333; object-fit: cover; }
+        .nc-meta { display: flex; flex-direction: column; }
+        .nc-author { font-weight: 800; font-size: 14px; color: #333; }
+        .nc-time { font-size: 11px; color: #777; font-family: 'Courier New', monospace; }
+        .nc-tag-sticker { background: #feca57; color: #333; padding: 3px 8px; font-size: 11px; font-weight: bold; transform: rotate(-2deg); box-shadow: 2px 2px 0 rgba(0,0,0,0.2); cursor: default; transition: 0.2s; user-select: none; }
+        .nc-tag-sticker.has-music { cursor: help; animation: borderPulse 3s infinite; }
+        .nc-tag-sticker.has-music:active { transform: scale(0.95); }
+        .nc-media-wrapper { width: calc(100% + 40px); margin-left: -20px; margin-top: 10px; background: #000; display: flex; justify-content: center; overflow: hidden; max-height: 250px; }
+        .nc-media { width: 100%; height: auto; object-fit: cover; }
+        .nc-title { font-size: 18px; font-weight: 800; margin: 15px 0 5px 0; font-family: 'Outfit', sans-serif; }
+        .nc-desc { font-size: 14px; color: #444; line-height: 1.5; margin-bottom: 10px; }
+        .reaction-wrapper { display: flex; gap: 10px; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ccc; overflow-x: auto; }
+        .react-btn { background: #fff; border: 2px solid #eee; border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.1s; }
+        .react-btn:hover { transform: translateY(-2px); border-color: #ccc; }
+        .react-btn:active { transform: translateY(1px); }
+        .react-btn.selected { background: #ffeaa7; border-color: #fdcb6e; color: #d35400; font-weight: bold; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.05); }
+        .view-count { position: absolute; bottom: 10px; right: 15px; font-size: 10px; color: #999; display: flex; align-items: center; gap: 4px; font-family: 'Courier New', monospace; font-weight: bold; }
+        
+        .sticker { position: absolute; width: 45px; height: 45px; background: #fff; border: 3px solid var(--ink); border-radius: 10px; font-size: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0 rgba(0,0,0,0.2); z-index: 15; }
+        .st-1 { top: 20px; right: -20px; transform: rotate(15deg); color: var(--s-yellow); }
 
         /* --- WALKMAN PLAYER --- */
-        #walkman-container { position: fixed; bottom: -400px; right: 30px; width: 320px; height: 180px; background: linear-gradient(135deg, #2d3436, #000); border: 4px solid #b2bec3; border-radius: 20px 20px 5px 5px; z-index: 9999; transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; padding: 15px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+        #walkman-container {
+            position: fixed; bottom: -400px; right: 30px; 
+            width: 320px; height: 180px; 
+            background: #2d3436; 
+            background-image: linear-gradient(135deg, #2d3436 0%, #000000 100%);
+            border: 4px solid #b2bec3; 
+            border-radius: 20px 20px 5px 5px;
+            z-index: 9999; 
+            transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; flex-direction: column; padding: 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6), inset 0 2px 5px rgba(255,255,255,0.1);
+        }
         #walkman-container.active { bottom: 30px; }
-        .wm-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color: #b2bec3; font-family: monospace; font-weight: bold; }
-        .wm-close { background: #d63031; border: 2px solid #ff7675; color: white; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; }
-        .wm-screen-frame { flex: 1; background: #1a1a1a; border-radius: 8px; padding: 8px; }
-        #spotify-frame { width: 100%; height: 100%; border: none; background: #000; border-radius: 4px; }
+        #walkman-container::before { content: ''; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); width: 60px; height: 4px; background: #636e72; border-radius: 10px; }
+        #walkman-container::after { content: ''; position: absolute; top: 15px; right: 15px; width: 8px; height: 8px; background: #ff7675; border-radius: 50%; box-shadow: 0 0 10px #ff7675; animation: blinkLive 1s infinite; }
+        .wm-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 5px; }
+        .wm-logo { color: #b2bec3; font-family: 'Courier New', monospace; font-weight: bold; font-size: 14px; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
+        .wm-logo i { color: #1DB954; font-size: 16px; }
+        .wm-close { background: #d63031; border: 2px solid #ff7675; color: white; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: transform 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .wm-close:hover { transform: scale(1.2); background: #ff0000; }
+        .wm-screen-frame { flex: 1; background: #1a1a1a; border-radius: 8px; padding: 8px; box-shadow: inset 0 0 15px rgba(0,0,0,0.8); border: 1px solid #444; position: relative; overflow: hidden; }
+        .wm-screen { width: 100%; height: 100%; border-radius: 4px; overflow: hidden; background: #000; }
+        #spotify-frame { width: 100%; height: 100%; border: none; }
+        .wm-buttons { display: flex; gap: 8px; margin-top: 10px; justify-content: center; }
+        .wm-btn-deco { width: 30px; height: 8px; background: #636e72; border-radius: 4px; box-shadow: 0 2px 2px rgba(0,0,0,0.5); }
 
         /* --- NAV DOCK --- */
-        .nav-dock-wrapper { position: fixed; bottom: 30px; left: 0; width: 100%; display: flex; justify-content: center; z-index: 1000; pointer-events: none; height: 100px; align-items: flex-end; }
-        .nav-dock { pointer-events: auto; background-color: var(--kraft-base); padding: 12px 18px; border-radius: 20px; display: flex; align-items: center; gap: 15px; border: 4px solid var(--ink); box-shadow: 0 10px 25px rgba(0,0,0,0.3), 8px 8px 0 rgba(0,0,0,0.2); position: relative; z-index: 10; background-image: radial-gradient(rgba(0,0,0,0.05) 2px, transparent 2px); background-size: 10px 10px; }
-        .dock-tape { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-2deg); width: 100px; height: 35px; background: rgba(255, 255, 255, 0.5); border: 2px dashed rgba(255,255,255,0.8); box-shadow: 0 2px 4px rgba(0,0,0,0.1); backdrop-filter: blur(2px); pointer-events: none; z-index: -1; }
-        .nav-btn { width: 55px; height: 55px; border-radius: 12px; background: var(--snow); border: 3px solid var(--ink); font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); position: relative; z-index: 5; transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 4px 4px 0 var(--ink); }
-        .nav-btn:hover { transform: translateY(-5px); box-shadow: 6px 6px 0 var(--ink); background: #fdf5e6; }
-        .nav-btn.active { transform: translateY(-8px); box-shadow: 6px 8px 0 var(--ink); background: var(--s-yellow); }
-        .nav-btn.active i { transform: scale(1.15); }
+        .nav-dock-wrapper { 
+            position: fixed; 
+            bottom: 30px; 
+            left: 0; 
+            width: 100%; 
+            display: flex; 
+            justify-content: center; 
+            z-index: 1000; 
+            pointer-events: none; 
+            height: 100px; 
+            align-items: flex-end;
+        }
+        
+        .nav-dock { 
+            pointer-events: auto; 
+            background-color: #e6dcc6; 
+            background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636l-1.414 1.414L38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23d1c4a5' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E"); 
+            padding: 10px 15px; 
+            border-radius: 26px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            border: 3px solid #2d241e; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3), 0 5px 0 #b0a082; 
+            transition: transform 0.3s ease; 
+            position: relative; 
+            margin-bottom: 5px;
+        }
+        
+        .dock-tape { position: absolute; top: -15px; left: 50%; transform: translateX(-50%) rotate(-2deg); width: 100px; height: 35px; background: rgba(255, 255, 255, 0.4); border-left: 2px dashed rgba(255,255,255,0.6); border-right: 2px dashed rgba(255,255,255,0.6); box-shadow: 0 2px 4px rgba(0,0,0,0.1); backdrop-filter: blur(2px); pointer-events: none; z-index: 101; }
+        .nav-dock:hover { transform: translateY(-2px); }
+        .nav-btn { width: 55px; height: 55px; border-radius: 14px; background: #fffcf5; border: 3px solid #2d241e; font-size: 22px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #2d241e; position: relative; transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); box-shadow: 0 4px 0 #2d241e; }
+        .nav-btn:hover { transform: translateY(-5px); box-shadow: 0 9px 0 #2d241e; background: #fff; z-index: 10; }
+        .nav-btn.active { transform: translateY(-8px); box-shadow: 0 10px 0 #2d241e; border-color: #2d241e; background: var(--s-yellow); z-index: 10; }
+        .nav-btn.active i { transform: scale(1.1); color: var(--ink); }
 
-        .toast-notification { position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%) translateY(50px); background: var(--ink); color: white; padding: 12px 25px; border-radius: 10px; border: 3px solid var(--snow); box-shadow: 5px 5px 0 rgba(0,0,0,0.3); display: flex; align-items: center; gap: 10px; font-weight: bold; opacity: 0; visibility: hidden; transition: 0.3s; z-index: 99999; }
+        .toast-notification { position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%) translateY(50px); background: var(--ink); color: white; padding: 12px 25px; border-radius: 50px; display: flex; align-items: center; gap: 10px; font-weight: bold; opacity: 0; visibility: hidden; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 99999; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
         .toast-notification.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+        #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; display: none; justify-content: center; align-items: center; cursor: zoom-out; opacity: 0; transition: opacity 0.3s; }
+        #lightbox.active { display: flex; opacity: 1; }
+        #lightbox img { max-width: 90%; max-height: 90%; border-radius: 8px; box-shadow: 0 0 50px rgba(255,255,255,0.1); transform: scale(0.9); transition: transform 0.3s; }
+        #lightbox.active img { transform: scale(1); }
 
-        /* MOBİL UYUM */
         @media (max-width: 768px) { 
+            .nav-btn[data-target="news"], #news { display: none !important; } 
             .nav-dock-wrapper { bottom: 20px; height: auto; } 
-            .nav-dock { width: 95%; gap: 8px; justify-content: space-around; padding: 10px; border-radius: 15px; } 
-            .nav-btn { width: 45px; height: 45px; font-size: 18px; border-radius: 10px; box-shadow: 3px 3px 0 var(--ink); }
-            .cardboard-hero { width: 90%; padding: 40px 20px; }
-            .home-title { font-size: 48px; }
-            .doodle-sticker { font-size: 28px; }
-            .cardboard-about { flex-direction: column; text-align: center; width: 95%; padding: 25px; } 
-            #walkman-container { width: 90%; right: 5%; }
-            
-            /* Studio ve Free Models Mobil Uyum */
-            .studio-corkboard { padding: 20px; border-width: 5px; }
-            .studio-corkboard-header h2 { font-size: 36px; }
-            .sc-grid { grid-template-columns: 1fr; gap: 20px; }
-            
-            .models-showcase { padding: 20px; border-width: 5px; }
-            .ms-header h2 { font-size: 32px; }
-            .ms-grid { grid-template-columns: 1fr; gap: 15px; }
+            .nav-dock { width: 92%; gap: 5px; justify-content: space-around; padding: 10px; align-items: center; } 
+            .winter-box { width: 90%; height: auto; min-height: 500px; padding: 30px 20px; }
+            .home-title { font-size: 40px; }
+            .cardboard-about { flex-direction: column-reverse; padding: 30px 20px; text-align: center; width: 95%; gap: 30px; } 
+            .ref-avatar-card { width: 100%; max-width: 240px; transform: rotate(2deg); margin: 0 auto; } 
+            .simple-card { width: 90%; padding: 25px; } 
+            .project-card { width: 95%; } 
+            #walkman-container { width: 90%; right: 5%; bottom: -400px; }
+            .forest-layer { background-size: cover; }
+            .christmas-lights-container { height: 80px; transform: scale(0.7); top: -10px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- PRELOADER -->
-    <div id="main-loader">
-        <img src="evo_logo.png" class="loader-logo" alt="Evo Logo" onerror="this.style.display='none'">
-        <div class="loader-text">EVO STUDIOS IS LOADING...</div>
+    <div class="light-bulb-box lb-gold" style="left: 20%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
+        <div class="light-bulb-box lb-green" style="left: 30%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
+        <div class="light-bulb-box lb-blue" style="left: 40%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
+        <!-- Orta -->
+        <div class="light-bulb-box lb-purple" style="left: 50%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
+        <!-- Sağ Taraf -->
+        <div class="light-bulb-box lb-red" style="left: 60%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
+        <div class="light-bulb-box lb-gold" style="left: 70%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
+        <div class="light-bulb-box lb-green" style="left: 80%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
+        <div class="light-bulb-box lb-blue" style="left: 90%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
     </div>
 
-    <!-- ARKAPLAN -->
+    <!-- ARKAPLAN KATMANLI ORMAN (PARALLAX) -->
     <div class="forest-layer layer-back"></div>
     <div class="forest-layer layer-mid"></div>
     <div class="forest-layer layer-front"></div>
 
-    <!-- DİL DEĞİŞTİRME -->
+    <!-- DİL DEĞİŞTİRME BUTONU -->
     <div class="lang-switch">
         <button class="lang-btn active" id="btn-tr" onclick="changeLanguage('tr')">TR</button>
         <button class="lang-btn" id="btn-en" onclick="changeLanguage('en')">EN</button>
+    </div>
+
+    <!-- YÜKLEME EKRANI -->
+    <div id="loader">
+        <div class="spinner"></div>
+        <div class="loading-text">EVO STUDIOS...</div>
     </div>
 
     <!-- TOAST BİLDİRİMİ -->
@@ -300,12 +452,24 @@
     <!-- WALKMAN PLAYER -->
     <div id="walkman-container">
         <div class="wm-header">
-            <span><i class="fa-brands fa-spotify" style="color:#1DB954"></i> EVO-WALKMAN</span>
+            <div class="wm-logo"><i class="fa-brands fa-spotify"></i> EVO-WALKMAN</div>
             <button class="wm-close" onclick="closeWalkman()"><i class="fa-solid fa-power-off"></i></button>
         </div>
         <div class="wm-screen-frame">
-            <iframe id="spotify-frame" src="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+            <div class="wm-screen">
+                <iframe id="spotify-frame" src="" width="100%" height="100%" frameborder="0" allowtransparency="true" allow="encrypted-media; autoplay; clipboard-write; picture-in-picture"></iframe>
+            </div>
         </div>
+        <div class="wm-buttons">
+            <div class="wm-btn-deco"></div>
+            <div class="wm-btn-deco"></div>
+            <div class="wm-btn-deco"></div>
+        </div>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="Full Screen Preview">
     </div>
 
     <!-- ANA MENÜ (NAV DOCK) -->
@@ -313,7 +477,6 @@
         <div class="nav-dock">
             <div class="dock-tape"></div>
             <div class="nav-btn active" data-target="home"><i class="fa-solid fa-house"></i></div>
-            <div class="nav-btn" data-target="studio"><i class="fa-solid fa-building"></i></div>
             <div class="nav-btn" data-target="project"><i class="fa-solid fa-gamepad"></i></div>
             <div class="nav-btn" data-target="news"><i class="fa-solid fa-newspaper"></i></div>
             <div class="nav-btn" data-target="free"><i class="fa-solid fa-gift"></i></div>
@@ -326,67 +489,27 @@
         <!-- === HOME === -->
         <div id="home" class="page-section active">
             <div class="home-scene-wrapper">
-                <div class="cardboard-hero" id="tiltCard">
-                    <div class="paper-tape hero-tape"></div>
-                    <i class="fa-solid fa-paperclip hero-clip"></i>
-                    <i class="fa-solid fa-sparkles doodle-sticker ds-1"></i>
-                    <i class="fa-solid fa-crown doodle-sticker ds-2"></i>
-                    <i class="fa-solid fa-code doodle-sticker ds-3"></i>
-
+                <div class="winter-box" id="tiltCard">
+                    <!-- Kutu Dekorları: DÜZELTİLMİŞ KAR HİZALAMASI -->
+<div class="deco-sticker ds-1">✨</div>
+                    <div class="deco-sticker ds-2"><i class="fa-solid fa-star"></i></div>
+                    
+                    <!-- Fotoğraf (Yumuşak Köşeli) -->
                     <div class="polaroid-frame">
+                        <div class="polaroid-tape"></div>
+                        <!-- ŞAPKA KALDIRILDI -->
                         <img src="maskot.png" alt="Mascot" onerror="this.src='https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png'">
-                        <div class="hero-badge-sticker"><i class="fa-solid fa-bolt"></i></div>
                     </div>
 
-                    <h1 class="home-title">EVO STUDIOS</h1>
-                    <div class="home-subtitle" data-t="home_subtitle">Ultimate Roblox Development</div>
+                    <!-- Metinler -->
+                    <h1 class="home-title">Evo Studios</h1>
+                    <p class="home-subtitle" data-t="home_subtitle">Ultimate Roblox Development</p>
 
-                    <a href="#" onclick="switchTab('studio')" class="btn-sticker-explore">
-                        <i class="fa-solid fa-rocket"></i>
-                        <span data-t="explore_btn">Keşfet</span>
+                    <!-- Buton (Soft & Parlak) -->
+                    <a href="#" onclick="switchTab('about')" class="btn-sticker">
+                        <i class="fa-regular fa-id-badge"></i>
+                        <span data-t="about_me_btn">Hakkımda</span>
                     </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- === YENİ: STUDIO (CORKBOARD / PANO EKRANI) === -->
-        <div id="studio" class="page-section">
-            <div class="studio-corkboard">
-                <div class="paper-tape cb-main-tape"></div>
-                
-                <div class="studio-corkboard-header">
-                    <h2>EVO STUDIOS</h2>
-                    <p data-t="founder_badge">KURUCU: BURAK</p>
-                </div>
-
-                <div class="sc-grid">
-                    <!-- Başlangıç Notu -->
-                    <div class="sc-item sc-note note-yellow">
-                        <div class="sc-pin"></div>
-                        <h3>2023 - Başlangıç</h3>
-                        <p data-t="tl_2023">Sıradan bir fikir düzeyinde temelleri atıldı. Hayal gücünün sınırlarını zorlamak için yola çıkıldı.</p>
-                    </div>
-
-                    <!-- Logo Polaroid -->
-                    <div class="sc-item sc-polaroid">
-                        <div class="sc-pin"></div>
-                        <img src="evo_logo.png" alt="Evo Logo" onerror="this.src='https://via.placeholder.com/150?text=EVO'">
-                        <span>Core Logo</span>
-                    </div>
-
-                    <!-- Günümüz Notu -->
-                    <div class="sc-item sc-note blue">
-                        <div class="sc-pin"></div>
-                        <h3>Günümüz</h3>
-                        <p data-t="tl_now">Artık devasa bir kuruluşa dönüşen Evo Studios, Roblox platformunda büyük projeler geliştiriyor.</p>
-                    </div>
-
-                    <!-- Ekstra Not -->
-                    <div class="sc-item sc-note green">
-                        <div class="sc-pin"></div>
-                        <h3>Vizyon</h3>
-                        <p data-t="tl_vision">Kaliteli sistemler, temiz kod mimarisi ve oyuncuya eşsiz bir deneyim sunmak.</p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -394,12 +517,18 @@
         <!-- === PROJECT === -->
         <div id="project" class="page-section">
             <div class="project-card">
-                <div class="paper-tape" style="width:100px; height:30px; top:-15px; left:50%; transform:translateX(-50%) rotate(-3deg);"></div>
-                <div class="game-thumb"><img data-project="thumb" src="test_place.png" alt="Test Place Game" onerror="this.src='https://via.placeholder.com/500x300/2b303b/ffffff?text=Oyun+Gorseli'"></div>
+                <div class="sticker st-1" style="top:-20px; right:-20px; background:#ff6b6b; color:white;"><i class="fa-solid fa-fire"></i></div>
+                <div class="game-thumb">
+                    <img src="test_place.png" alt="Test Place Game" onerror="this.src='https://via.placeholder.com/500x300/2b303b/ffffff?text=Oyun+Gorseli'">
+                </div>
                 <div class="game-info">
-                    <h2 class="game-title" data-project="title">Test Place</h2>
-                    <p style="color:#555; font-family:'Inter',sans-serif; font-weight:600; margin: 10px 0 20px 0;" data-t="project_desc" data-project="desc">Geliştirmekte olduğumuz yeni mekanikleri ve sistemleri test ettiğimiz özel alan.</p>
-                    <a data-project="link" href="#" target="_blank" class="play-big-btn"><i class="fa-solid fa-play"></i> <span data-t="play_btn">Roblox'ta Oyna</span></a>
+                    <h2 class="game-title">Test Place</h2>
+                    <p style="color:#666; margin: 10px 0 20px 0;" data-t="project_desc">
+                        Geliştirmekte olduğumuz yeni mekanikleri ve sistemleri test ettiğimiz özel alan.
+                    </p>
+                    <a href="https://www.roblox.com/games/OYUN_ID_YAZ" target="_blank" class="play-big-btn">
+                        <i class="fa-solid fa-play"></i> <span data-t="play_btn">Roblox'ta Oyna</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -409,10 +538,10 @@
             <div class="news-container">
                 <div class="news-header-modern">
                     <div class="nh-top-row">
-                        <div class="nh-title">Evo Feed <i class="fa-solid fa-circle" style="color:var(--s-red); font-size:14px; animation: blinkLive 1.5s infinite;"></i></div>
+                        <div class="nh-title">Evo Feed <div class="live-status-dot active"></div></div>
                         <div class="search-bar-wrap">
-                            <i class="fa-solid fa-search" style="color:var(--ink);"></i>
-                            <input type="text" class="search-input" placeholder="Arama..." onkeyup="debounceSearch(this.value)">
+                            <i class="fa-solid fa-search" style="color:#999; font-size:12px;"></i>
+                            <input type="text" class="search-input" placeholder="Search..." onkeyup="debounceSearch(this.value)">
                         </div>
                     </div>
                     <div class="news-filters">
@@ -423,117 +552,226 @@
                     </div>
                 </div>
                 <div id="news-feed" class="news-scroll-area" onscroll="checkScroll()">
-                    <div style="text-align:center; padding:30px; font-weight:bold; font-family:'Courier New',monospace;">Yükleniyor...</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- === YENİ: FREE MODELS (BİRLEŞTİRİLMİŞ TEMİZ EKRAN) === -->
-        <div id="free" class="page-section">
-            <div class="models-showcase">
-                <div class="paper-tape" style="width:140px; height:40px; top:-15px; left:50%; transform:translateX(-50%) rotate(2deg);"></div>
-                
-                <div class="ms-header">
-                    <h2><i class="fa-solid fa-box-open"></i> FREE MODELS</h2>
-                    <p data-t="creations_desc">Roblox projelerin için hazırladığım ücretsiz sistemleri ve modelleri buradan bulabilirsin.</p>
-                </div>
-
-                <div class="ms-grid" id="models-grid">
-                    <div class="muted" id="models-empty" style="text-align:center; padding:20px;">Dashboard üzerinden model ekleyince burada gözükecek.</div>
-</div>
+                    <div class="loading-spinner" style="margin-top:50px; text-align:center;">
+                        <div class="spinner" style="border-width:3px; width:30px; height:30px; margin:0 auto; border-color:#8b7056; border-top-color:#fff;"></div>
                     </div>
-
                 </div>
             </div>
         </div>
 
-        <!-- === ABOUT (BIO DÜZELTİLMİŞ) === -->
+        <!-- === ESERLERIM === -->
+        <div id="free" class="page-section">
+            <div class="simple-card">
+                <div style="font-size: 54px; color: var(--accent); margin-bottom: 18px;"><i class="fa-solid fa-cubes"></i></div>
+                <h2 style="margin:0; font-size:32px;" data-t="my_creations">Benim Eserlerim</h2>
+                <p style="color:#666; margin-top:10px;" data-t="creations_desc">Roblox projelerin için hazırladığım ücretsiz modelleri ve özel assetleri buradan bulabilirsin.</p>
+
+                <div class="subtab-row">
+                    <a href="https://create.roblox.com/store/list/LINKINI_YAZ" target="_blank" class="subtab-btn">
+                        <i class="fa-solid fa-store"></i> <span data-t="store_btn">Creator Store</span>
+                    </a>
+                    <button class="subtab-btn secondary" onclick="switchTab('models')">
+                        <i class="fa-solid fa-gift"></i> <span data-t="free_models_btn">Free Models</span>
+                    </button>
+                </div>
+
+                <div class="hint-box">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span data-t="models_hint">Modelleri ben ekliyorum. Yeni bir model geldiğinde burada otomatik görünür.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- === FREE MODELS LIST === -->
+        <div id="models" class="page-section">
+            <div class="models-panel">
+                <div class="models-header">
+                    <div class="models-title">
+                        <i class="fa-solid fa-gift"></i>
+                        <span data-t="free_models_title">Free Models</span>
+                    </div>
+                    <div class="models-actions">
+                        <button class="mini-btn" onclick="switchTab('free')"><i class="fa-solid fa-arrow-left"></i> <span data-t="back_btn">Geri</span></button>
+                        <a class="mini-btn" href="dashboard.html" target="_blank"><i class="fa-solid fa-lock"></i> Dashboard</a>
+                    </div>
+                </div>
+
+                <div id="models-grid" class="models-grid"></div>
+
+                <div id="models-empty" class="models-empty" style="display:none;">
+                    <div class="models-empty-emoji">📦</div>
+                    <div class="models-empty-title" data-t="no_models">Henüz model eklenmedi.</div>
+                    <div class="models-empty-desc" data-t="no_models_desc">Dashboard'dan eklediğin anda burada listelenir.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- === ABOUT === -->
         <div id="about" class="page-section">
             <div class="cardboard-about">
                 <div class="about-tape-top"></div>
                 <div class="cb-text-content">
-                    <div class="founder-stamp"><i class="fa-solid fa-code"></i> DEVELOPER</div>
-                    <h2 class="cb-title"><span data-t="hello">MERHABA, BEN</span> <br><span class="ink-highlight">BURAK</span></h2>
+                    <div class="founder-stamp"><i class="fa-solid fa-crown"></i> FOUNDER</div>
+                    <h2 class="cb-title"><span data-t="hello">MERHABA, BEN</span> <span class="ink-highlight">BURAK</span></h2>
                     <p class="cb-bio">
-                        <span data-t="bio_1">Roblox platformunda sıradan fikirleri</span> <span style="background:var(--s-yellow); padding:0 4px; border:2px solid var(--ink); border-radius:4px; transform:rotate(-1deg); display:inline-block;" data-t="bio_2">olağanüstü deneyimlere</span> <span data-t="bio_3">dönüştürüyorum.</span><br><br>
+                        <span data-t="bio_1">Roblox platformunda sıradan fikirleri</span> <span style="background:var(--s-yellow);" data-t="bio_2">olağanüstü deneyimlere</span> <span data-t="bio_3">dönüştürüyorum.</span><br><br>
                         <span data-t="bio_4">Profesyonel Scripter & UI Designer olarak,</span> <span data-t="bio_5">Evo Studios çatısı altında hayal gücünün sınırlarını zorluyorum.</span>
                     </p>
                     <div class="cb-socials">
-                        <a href="#" class="social-sticker"><i class="fa-brands fa-discord"></i></a>
-                        <a href="#" class="social-sticker"><i class="fa-brands fa-x-twitter"></i></a>
-                        <a href="#" class="social-sticker"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="https://discord.gg/95hcq9HVfn" target="_blank" class="social-sticker"><i class="fa-brands fa-discord"></i></a>
+                        <a href="https://x.com/EvoStudiosT" target="_blank" class="social-sticker"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="https://www.youtube.com/@EVO_Studio" target="_blank" class="social-sticker"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="https://www.roblox.com/tr/communities/420774781/EVO-STUD-OS#!/about" target="_blank" class="social-sticker"><i class="fa-solid fa-users-rectangle"></i></a>
                     </div>
                 </div>
-                
-                <!-- Düzeltilmiş Ortalı Polaroid Alanı -->
-                <div class="polaroid-frame" style="margin-bottom:0; width:240px; height:auto; min-height:300px; display:flex; flex-direction:column; align-items:center;">
-                    <img id="my-avatar" src="" alt="Avatar" onerror="this.src='https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png'" style="height: 220px; width:100%; object-fit: cover;">
-                    <div style="margin-top: 15px; width: 100%; text-align: center; font-family: 'Outfit', sans-serif;">
-                        <div style="font-weight: 900; font-size: 26px; color: var(--ink); line-height: 1;">EVO</div>
-                        <div style="color: #666; font-weight: 600; font-size: 14px; margin-top: 4px;" id="rbx-user">@SuBuOyundaYTBR</div>
+                <div class="cb-avatar-wrapper">
+                    <div class="card-tape"></div>
+                    <div class="ref-avatar-card">
+                        <div class="ref-photo-frame">
+                            <img id="my-avatar" src="" alt="Avatar" onerror="this.src='https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png'">
+                        </div>
+                        <div class="ref-card-info">
+                            <div class="ref-name">EVO</div>
+                            <div class="ref-handle" id="rbx-user">@SuBuOyundaYTBR</div>
+                        </div>
                     </div>
                 </div>
-                
             </div>
         </div>
 
     </div>
 
     <script>
-        // --- PRELOADER ---
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('main-loader').classList.add('hidden');
-                changeLanguage(currentLang);
-            }, 800);
-        });
-
         const ROBLOX_ID = '1992693538'; 
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxgaVePszb9zvXaxccgPw0yzYo9Ul8CEzGGlVrd92Ha6CtkUbg67aO9dTL5XuxacBZ3/exec';
-
-        // Dashboard entegrasyonu (sunucusuz: localStorage)
-        const MODELS_KEY = "evo_models_data";
-        const FEED_KEY = "evo_feed_data";
-        const PROJECT_KEY = "evo_project_data";
-        const PROFILE_KEY = "evo_prof_data";
-
-        const safeParse = (str, def) => { try { return JSON.parse(str); } catch { return def; } };
-
-        function downloadDataUrl(dataUrl, filename) {
-            const a = document.createElement('a');
-            a.href = dataUrl;
-            a.download = filename || 'download';
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-        }
+        let avatarUrl = "https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png";
         let currentLang = localStorage.getItem('siteLang') || 'tr';
         let globalNewsData = []; 
+        let renderedCount = 0;
+        const BATCH_SIZE = 5; 
+        const CACHE_KEY = 'evo_news_cache_v7'; 
+        const CACHE_TIME = 15 * 60 * 1000; 
+        let searchTimeout = null;
+        // ===== LOCAL STORAGE (MODELS / FEED / PROFILE) =====
+        const MODELS_KEY = 'evo_models_v1';
+        const FEED_LOCAL_KEY = 'evo_feed_v1';
+        const PROFILE_KEY = 'evo_profile_v1';
 
-        // DİL VERİLERİ GÜNCELLENDİ
+        function safeJsonParse(str, fallback) {
+            try { return JSON.parse(str); } catch(e) { return fallback; }
+        }
+
+        function getLocalModels() {
+            const arr = safeJsonParse(localStorage.getItem(MODELS_KEY) || '[]', []);
+            return Array.isArray(arr) ? arr : [];
+        }
+
+        function renderModels() {
+            const grid = document.getElementById('models-grid');
+            const empty = document.getElementById('models-empty');
+            if (!grid || !empty) return;
+
+            const models = getLocalModels();
+            grid.innerHTML = '';
+            if (!models.length) { empty.style.display = 'block'; return; }
+            empty.style.display = 'none';
+
+            models
+                .slice()
+                .sort((a,b) => (b.createdAt||0) - (a.createdAt||0))
+                .forEach((m, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'model-card';
+                    const thumb = (m.thumbUrl && String(m.thumbUrl).trim()) ? m.thumbUrl : 'https://via.placeholder.com/520x300/0b1020/ffffff?text=EVO+MODEL';
+                    const title = (m.title || 'Untitled Model');
+                    const link = (m.link || '#');
+                    const note = (m.note || 'Free Model');
+
+                    card.innerHTML = `
+                        <div class="model-badge"><i class="fa-solid fa-box"></i> #${idx+1}</div>
+                        <div class="model-thumb"><img src="${thumb}" alt="${title}" onerror="this.src='https://via.placeholder.com/520x300/0b1020/ffffff?text=EVO+MODEL'"></div>
+                        <div class="model-body">
+                            <div class="model-name">${escapeHtml(title)}</div>
+                            <div class="model-meta">${escapeHtml(note)}</div>
+                            <a class="model-btn" href="${link}" target="_blank" rel="noopener">
+                                <i class="fa-brands fa-roblox"></i> Roblox Link
+                            </a>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+        }
+
+        function escapeHtml(str) {
+            return String(str ?? '')
+                .replaceAll('&','&amp;')
+                .replaceAll('<','&lt;')
+                .replaceAll('>','&gt;')
+                .replaceAll('"','&quot;')
+                .replaceAll("'",'&#039;');
+        }
+
+        function getLocalFeed() {
+            const arr = safeJsonParse(localStorage.getItem(FEED_LOCAL_KEY) || '[]', []);
+            return Array.isArray(arr) ? arr : [];
+        }
+
+        function mergeLocalFeedIntoGlobal() {
+            const localItems = getLocalFeed().map(p => ({
+                id: p.id || ('local_' + (p.createdAt || Date.now())),
+                baslik: p.title || 'Post',
+                icerik: p.content || '',
+                etiket: p.tag || 'info',
+                medya: p.mediaUrl || '',
+                tarih: p.createdAt ? new Date(p.createdAt).toLocaleString() : '',
+                yazar: p.author || 'Evo Studios',
+                avatar: p.avatarUrl || 'evo_logo.png',
+                pinned: p.pinned ? 'yes' : 'no'
+            }));
+            // localItems'ı en başa koy (pinned önceliği ayrıca sort ile korunuyor)
+            globalNewsData = localItems.concat(globalNewsData || []);
+        }
+
+        function applyProfileOverrides() {
+            const p = safeJsonParse(localStorage.getItem(PROFILE_KEY) || 'null', null);
+            if (!p) return;
+
+            // About card
+            const nameEl = document.querySelector('.ref-name');
+            const handleEl = document.getElementById('rbx-user');
+            const avatarEl = document.getElementById('my-avatar');
+
+            if (nameEl && p.displayName) nameEl.textContent = p.displayName;
+            if (handleEl && p.handle) handleEl.textContent = p.handle.startsWith('@') ? p.handle : ('@' + p.handle);
+            if (avatarEl && p.avatarUrl) avatarEl.src = p.avatarUrl;
+        }
         const langData = {
             tr: {
                 home_subtitle: "Ultimate Roblox Development",
-                explore_btn: "Keşfet", founder_badge: "KURUCU: BURAK",
-                tl_2023: "Sıradan bir fikir düzeyinde temelleri atıldı. Hayal gücünün sınırlarını zorlamak için yola çıkıldı.",
-                tl_now: "Artık devasa bir kuruluşa dönüşen Evo Studios, Roblox platformunda büyük projeler geliştiriyor.",
-                tl_vision: "Kaliteli sistemler, temiz kod mimarisi ve oyuncuya eşsiz bir deneyim sunmak.",
-                project_desc: "Geliştirmekte olduğumuz yeni mekanikleri ve sistemleri test ettiğimiz özel alan.", play_btn: "Roblox'ta Oyna",
+                about_me_btn: "Hakkımda",
+                project_desc: "Geliştirmekte olduğumuz yeni mekanikleri ve sistemleri test ettiğimiz özel alan.",
+                play_btn: "Roblox'ta Oyna",
                 filter_all: "Tümü", filter_update: "Güncelleme", filter_leak: "Sızıntı", filter_info: "Duyuru",
-                creations_desc: "Roblox projelerin için hazırladığım ücretsiz sistemleri ve modelleri buradan bulabilirsin.",
-                hello: "MERHABA, BEN", bio_1: "Roblox platformunda sıradan fikirleri", bio_2: "olağanüstü deneyimlere", bio_3: "dönüştürüyorum.",
-                bio_4: "Profesyonel Scripter & UI Designer olarak,", bio_5: "Evo Studios çatısı altında hayal gücünün sınırlarını zorluyorum."
+                my_creations: "Benim Eserlerim", creations_desc: "Roblox projelerin için hazırladığım ücretsiz modelleri ve özel assetleri buradan bulabilirsin.",
+                store_btn: "Creator Store", hello: "MERHABA, BEN",
+                bio_1: "Roblox platformunda sıradan fikirleri", bio_2: "olağanüstü deneyimlere", bio_3: "dönüştürüyorum.",
+                bio_4: "Profesyonel Scripter & UI Designer olarak,", bio_5: "Evo Studios çatısı altında hayal gücünün sınırlarını zorluyorum.",
+                free_models_btn: "Free Models",
+                free_models_title: "Free Models",
+                back_btn: "Geri",
+                models_hint: "Modelleri ben ekliyorum. Yeni bir model geldiğinde burada otomatik görünür.",
+                no_models: "Henüz model eklenmedi.",
+                no_models_desc: "Dashboard'dan eklediğin anda burada listelenir."
             },
             en: {
                 home_subtitle: "Ultimate Roblox Development",
-                explore_btn: "Explore", founder_badge: "FOUNDER: BURAK",
-                tl_2023: "Founded purely as an idea. Set out to push the boundaries of imagination.",
-                tl_now: "Now transformed into a massive entity, Evo Studios develops huge projects on the Roblox platform.",
-                tl_vision: "Quality systems, clean code architecture, and providing a unique experience to the player.",
-                project_desc: "A special area where we test new mechanics and systems we are developing.", play_btn: "Play on Roblox",
+                about_me_btn: "About Me",
+                project_desc: "A special area where we test new mechanics and systems we are developing.",
+                play_btn: "Play on Roblox",
                 filter_all: "All", filter_update: "Update", filter_leak: "Leak", filter_info: "News",
-                creations_desc: "You can find free systems and models I created for your Roblox projects here.",
-                hello: "HELLO, I'M", bio_1: "I turn ordinary ideas into", bio_2: "extraordinary experiences", bio_3: "on the Roblox platform.",
+                my_creations: "My Creations", creations_desc: "Free models and custom assets for your Roblox projects.",
+                store_btn: "Creator Store", hello: "HELLO, I'M",
+                bio_1: "I turn ordinary ideas into", bio_2: "extraordinary experiences", bio_3: "on the Roblox platform.",
                 bio_4: "As a professional Scripter & UI Designer,", bio_5: "I push the limits of imagination under Evo Studios."
             }
         };
@@ -543,351 +781,312 @@
             localStorage.setItem('siteLang', lang);
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + lang).classList.add('active');
-            document.querySelectorAll('[data-t]').forEach(el => {
+            const elements = document.querySelectorAll('[data-t]');
+            elements.forEach(el => {
                 const key = el.getAttribute('data-t');
-                if (langData[lang][key]) el.innerHTML = langData[lang][key];
+                if (langData[lang][key]) el.innerText = langData[lang][key];
             });
-            renderModelsFromDashboard();
-            applyProjectToUI();
-            applyProfileToUI();
-            loadNewsMerged();
+            if(globalNewsData.length > 0 && window.innerWidth > 768) {
+                const activeFilter = document.querySelector('.filter-btn.active').getAttribute('onclick').match(/'([^']+)'/)[1];
+                const searchVal = document.querySelector('.search-input').value;
+                const feed = document.getElementById('news-feed');
+                feed.innerHTML = ''; renderedCount = 0;
+                renderNewsBatch(activeFilter, searchVal);
+            } else { loadNewsFromSheet(); }
         }
 
-        // --- TAB SİSTEMİ ---
+        function removeLoader() {
+            const loader = document.getElementById('loader');
+            if (loader) loader.classList.add('loader-hidden');
+        }
+        window.addEventListener('load', () => { changeLanguage(currentLang); removeLoader(); });
+        setTimeout(removeLoader, 2500); 
+
         const navBtns = document.querySelectorAll('.nav-btn');
         const sections = document.querySelectorAll('.page-section');
         navBtns.forEach(btn => {
-            btn.addEventListener('click', () => { 
-                btn.style.transform = "scale(0.85) translateY(5px)";
-                setTimeout(() => btn.style.transform = "", 150);
-                switchTab(btn.getAttribute('data-target')); 
-            });
+            btn.addEventListener('click', () => { switchTab(btn.getAttribute('data-target')); });
         });
-
         function switchTab(id) {
+            if (window.innerWidth <= 768 && id === 'news') return;
             navBtns.forEach(b => b.classList.remove('active'));
             const activeBtn = document.querySelector(`.nav-btn[data-target="${id}"]`);
             if(activeBtn) activeBtn.classList.add('active');
             sections.forEach(s => s.classList.remove('active'));
             const activeSec = document.getElementById(id);
             if(activeSec) activeSec.classList.add('active');
+
+            // Dynamic pages
+            if (id === 'models') renderModels();
         }
 
-        // --- HOME 3D KART EFEKTİ ---
-        const homeCard = document.getElementById('tiltCard');
-        document.getElementById('home').addEventListener('mousemove', (e) => {
-            if(window.innerWidth > 768) {
-                const rect = homeCard.getBoundingClientRect();
-                const x = e.clientX - (rect.left + rect.width / 2);
-                const y = e.clientY - (rect.top + rect.height / 2);
-                homeCard.style.transform = `perspective(1000px) rotateY(${x/40}deg) rotateX(${-y/40}deg)`;
-            }
-        });
-        document.getElementById('home').addEventListener('mouseleave', () => {
-            homeCard.style.transform = 'perspective(1000px) rotateY(0) rotateX(0)';
-        });
-
-        // --- SPOTIFY WALKMAN ---
+        // --- SPOTIFY PARSING ---
         function getSpotifyEmbedUrl(url) {
             if (!url) return null;
             let cleanUrl = url.trim();
+            if (cleanUrl.startsWith('<iframe')) return null;
             if (cleanUrl.includes('spotify.com')) {
-                if (cleanUrl.includes('/track/')) cleanUrl = cleanUrl.replace('/track/', '/embed/track/').split('?')[0];
+                if (cleanUrl.includes('/track/') && !cleanUrl.includes('/embed/')) cleanUrl = cleanUrl.replace('/track/', '/embed/track/').split('?')[0];
+                else if (cleanUrl.includes('/playlist/') && !cleanUrl.includes('/embed/')) cleanUrl = cleanUrl.replace('/playlist/', '/embed/playlist/').split('?')[0];
+                else if (cleanUrl.includes('/album/') && !cleanUrl.includes('/embed/')) cleanUrl = cleanUrl.replace('/album/', '/embed/album/').split('?')[0];
                 return cleanUrl + '?utm_source=generator&theme=0&autoplay=1';
             }
             return null;
         }
 
-        function playMusic(embedUrl) {
-            if(!embedUrl) return;
-            document.getElementById('spotify-frame').src = embedUrl;
-            document.getElementById('walkman-container').classList.add('active');
-            document.getElementById('toast').classList.add('show');
-            setTimeout(() => document.getElementById('toast').classList.remove('show'), 2000);
-        }
-        function closeWalkman() {
-            document.getElementById('walkman-container').classList.remove('active');
-            setTimeout(() => { document.getElementById('spotify-frame').src = ''; }, 500); 
+        function getMediaContent(url) {
+            if (!url || url.length < 5) return '';
+            let clean = url.trim();
+            if (clean.includes('youtube.com') || clean.includes('youtu.be')) {
+                const match = clean.match(/(?:v=|\/)([\w-]{11})/);
+                if (match && match[1]) return `<iframe class="nc-media" src=" frameborder="0" allowfullscreen></iframe>`;
+            }
+            if (clean.includes('spotify.com')) return ''; 
+            if (clean.match(/\.(mp4|webm|mov)$/i)) return `<video src="${clean}" class="nc-media" controls></video>`;
+            return `<img src="${clean}" class="nc-media" alt="Medya" onclick="openLightbox('${clean}')" onerror="this.parentElement.style.display='none'">`;
         }
 
-        // --- HABERLER ---
         async function loadNewsFromSheet() {
+            if (window.innerWidth <= 768) return;
             const feed = document.getElementById('news-feed');
-            try {
-                const res = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(SCRIPT_URL + "?dummy=1"));
-                const json = await res.json();
-                if(json.contents) {
-                    globalNewsData = JSON.parse(json.contents).reverse();
-                    feed.innerHTML = ''; 
+            const cached = localStorage.getItem(CACHE_KEY);
+            if(cached) {
+                const parsed = JSON.parse(cached);
+                if(Date.now() - parsed.timestamp < CACHE_TIME) {
+                    globalNewsData = parsed.data;
+                    mergeLocalFeedIntoGlobal();
                     renderNewsBatch('all');
+                    return;
                 }
-            } catch(e) { feed.innerHTML = "Hata oluştu."; }
+            }
+            if(globalNewsData.length === 0) {
+                feed.innerHTML = `<div class="loading-spinner" style="margin-top:50px; text-align:center;"><div class="spinner" style="border-width:3px; width:30px; height:30px; margin:0 auto; border-color:#8b7056; border-top-color:#fff;"></div></div>`;
+            }
+            try {
+                const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(SCRIPT_URL + "?dummy=1&t=" + new Date().getTime());
+                const res = await fetch(proxyUrl);
+                if(res.ok) {
+                    const json = await res.json();
+                    if(json.contents) {
+                        globalNewsData = JSON.parse(json.contents).reverse();
+                        mergeLocalFeedIntoGlobal();
+                        saveAndRender();
+                        return;
+                    }
+                }
+            } catch(e) {}
+            // Fallback Proxy
+            try {
+                const proxyUrl2 = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(SCRIPT_URL + "?dummy=1&t=" + new Date().getTime());
+                const res2 = await fetch(proxyUrl2);
+                if(res2.ok) {
+                    globalNewsData = (await res2.json()).reverse();
+                    mergeLocalFeedIntoGlobal();
+                    saveAndRender();
+                    return;
+                }
+            } catch(e) {}
+            if(globalNewsData.length === 0) feed.innerHTML = `<div style="text-align:center; padding:20px;">Bağlantı Hatası</div>`;
         }
 
-        function renderNewsBatch(filterType) {
+        function saveAndRender() {
+            localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: Date.now(), data: globalNewsData }));
+            const feed = document.getElementById('news-feed'); feed.innerHTML = ''; renderedCount = 0;
+            renderNewsBatch('all');
+        }
+
+        function renderNewsBatch(filterType, searchQuery = '') {
             const feed = document.getElementById('news-feed');
-            if(globalNewsData.length === 0) return;
+            if(renderedCount === 0) feed.innerHTML = '';
             
+            const filteredData = globalNewsData.filter(item => {
+                const title = (item.baslik || '').toLowerCase();
+                const content = (item.icerik || '').toLowerCase();
+                const query = searchQuery.toLowerCase();
+                if(query && !title.includes(query) && !content.includes(query)) return false;
+                if(filterType === 'all') return true;
+                const tag = (item.etiket || '').toLowerCase();
+                if(filterType === 'update' && (tag.includes('güncelleme') || tag.includes('update'))) return true;
+                if(filterType === 'leak' && (tag.includes('sızıntı') || tag.includes('leak'))) return true;
+                if(filterType === 'info' && (tag.includes('duyuru') || tag.includes('info'))) return true;
+                return false;
+            });
+
+            filteredData.sort((a, b) => {
+                const aPin = (a.pinned && a.pinned.toString().toLowerCase() === 'yes') ? 1 : 0;
+                const bPin = (b.pinned && b.pinned.toString().toLowerCase() === 'yes') ? 1 : 0;
+                return bPin - aPin; 
+            });
+
+            const end = Math.min(renderedCount + BATCH_SIZE, filteredData.length);
+            if(renderedCount >= filteredData.length && filteredData.length > 0) return;
+            if(filteredData.length === 0) { feed.innerHTML = `<div style="text-align:center; padding:30px; color:#999;">Nothing found...</div>`; return; }
+
             let htmlContent = '';
-            for(let i = 0; i < Math.min(5, globalNewsData.length); i++) {
-                const item = globalNewsData[i];
+            for(let i=renderedCount; i<end; i++) {
+                const item = filteredData[i];
                 if(!item.baslik) continue;
+                const uniqueId = item.id;
+                const isPinned = item.pinned && item.pinned.toString().toLowerCase() === 'yes';
+                const pinnedClass = isPinned ? 'pinned' : '';
+                const mediaHtml = getMediaContent(item.gorsel);
                 
-                let embedUrl = getSpotifyEmbedUrl(item.music || '');
-                let musicAction = embedUrl ? `ondblclick="playMusic('${embedUrl}')"` : '';
-                let musicStyle = embedUrl ? 'border:2px solid var(--s-green); cursor:pointer;' : 'border: 2px solid var(--ink);';
+                let hasMusic = false; let embedUrl = null;
+                if (item.music && item.music.length > 5) {
+                    embedUrl = getSpotifyEmbedUrl(item.music);
+                    if (embedUrl) hasMusic = true;
+                }
+                const musicClass = hasMusic ? 'has-music' : '';
+                const dblClickAction = hasMusic ? `ondblclick="playMusic('${embedUrl}'); triggerConfetti(this);"` : '';
 
                 htmlContent += `
-                <div class="news-card">
-                    <div class="nc-header">
-                        <div class="nc-user-row">
-                            <img src="evo_logo.png" class="nc-avatar"> 
-                            <div class="nc-meta"><span class="nc-author">Evo Studios</span></div>
+                <div class="news-card ${pinnedClass}" id="${uniqueId}">
+                    ${isPinned ? '<div class="pin-badge"><i class="fa-solid fa-thumbtack"></i> PINNED</div>' : ''}
+                    <div class="nc-content-wrapper">
+                        <div class="nc-header">
+                            <div class="nc-user-row">
+                                <img src="evo_logo.png" class="nc-avatar"> 
+                                <div class="nc-meta"><span class="nc-author">Evo Studios</span><span class="nc-time">Just Now</span></div>
+                            </div>
+                            <span class="nc-tag-sticker ${musicClass}" ${dblClickAction}>${item.etiket || 'Log'}</span>
                         </div>
-                        <span style="background:var(--s-yellow); color:var(--ink); padding:4px 10px; border-radius:6px; font-size:12px; font-weight:900; box-shadow: 2px 2px 0 var(--ink); transform:rotate(2deg); ${musicStyle}" ${musicAction}>${item.etiket || 'Log'}</span>
+                        <h3 class="nc-title">${item.baslik}</h3>
+                        ${mediaHtml ? `<div class="nc-media-wrapper">${mediaHtml}</div>` : ''}
+                        <div class="nc-content"><p class="nc-desc">${item.icerik.replace(/\n/g, '<br>')}</p></div>
+                        <div class="reaction-wrapper">
+                            <button class="react-btn" onclick="toggleReaction(this, '${uniqueId}', 'fire')">🔥 <span>${item.fire || 0}</span></button>
+                            <button class="react-btn" onclick="toggleReaction(this, '${uniqueId}', 'rocket')">🚀 <span>${item.rocket || 0}</span></button>
+                            <button class="react-btn" onclick="toggleReaction(this, '${uniqueId}', 'heart')">❤️ <span>${item.likes || 0}</span></button>
+                        </div>
+                        <div class="view-count"><i class="fa-regular fa-eye"></i> ${item.views || 0}</div>
                     </div>
-                    <h3 class="nc-title">${item.baslik}</h3>
-                    ${item.gorsel ? `<img src="${item.gorsel}" style="width:100%; border-radius:8px; border:3px solid var(--ink); margin-bottom:12px;">` : ''}
-                    <div class="nc-content"><p class="nc-desc">${item.icerik}</p></div>
                 </div>`;
             }
-            feed.innerHTML = htmlContent;
+            const tempDiv = document.createElement('div'); tempDiv.innerHTML = htmlContent;
+            while (tempDiv.firstChild) feed.appendChild(tempDiv.firstChild);
+            renderedCount = end;
         }
 
-        // --- ROBLOX API ---
+        function checkScroll() {
+            const feed = document.getElementById('news-feed');
+            if(feed.scrollTop + feed.clientHeight >= feed.scrollHeight - 50) {
+                const activeFilter = document.querySelector('.filter-btn.active').getAttribute('onclick').match(/'([^']+)'/)[1];
+                const searchVal = document.querySelector('.search-input').value;
+                renderNewsBatch(activeFilter, searchVal);
+            }
+        }
+        function filterNews(type, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            const feed = document.getElementById('news-feed'); feed.innerHTML = ''; renderedCount = 0;
+            const searchVal = document.querySelector('.search-input').value;
+            renderNewsBatch(type, searchVal);
+        }
+        function debounceSearch(val) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const activeFilter = document.querySelector('.filter-btn.active').getAttribute('onclick').match(/'([^']+)'/)[1];
+                const feed = document.getElementById('news-feed'); feed.innerHTML = ''; renderedCount = 0;
+                renderNewsBatch(activeFilter, val);
+            }, 300);
+        }
+
+        function playMusic(embedUrl) {
+            if(!embedUrl) return;
+            const container = document.getElementById('walkman-container');
+            const frame = document.getElementById('spotify-frame');
+            const toast = document.getElementById('toast');
+            frame.src = embedUrl;
+            container.classList.add('active');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+        function closeWalkman() {
+            const container = document.getElementById('walkman-container');
+            const frame = document.getElementById('spotify-frame');
+            container.classList.remove('active');
+            setTimeout(() => { frame.src = ''; }, 500); 
+        }
+
+        function openLightbox(url) {
+            if(!url) return;
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = url; lightbox.classList.add('active');
+        }
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            setTimeout(() => { document.getElementById('lightbox-img').src = ''; }, 300);
+        }
+
         async function fetchRobloxData() {
+            const imgEl = document.getElementById('my-avatar');
+            const userEl = document.getElementById('rbx-user');
             try {
                 const url = `https://thumbnails.roblox.com/v1/users/avatar?userIds=${ROBLOX_ID}&size=420x420&format=Png&isCircular=false`;
                 const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url);
                 const res = await fetch(proxyUrl);
                 const data = await res.json();
                 if (data.data && data.data[0] && data.data[0].imageUrl) {
-                    document.getElementById('my-avatar').src = data.data[0].imageUrl;
+                    imgEl.src = data.data[0].imageUrl;
+                    avatarUrl = data.data[0].imageUrl; 
                 }
-            } catch (err) {}
+                const userUrl = `https://users.roblox.com/v1/users/${ROBLOX_ID}`;
+                const userProxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(userUrl);
+                const userRes = await fetch(userProxyUrl);
+                const userData = await userRes.json();
+                if (userData.name) { userEl.innerText = "@" + userData.name; }
+            } catch (err) { console.log(err); }
         }
-        fetchRobloxData();
-    
-        // ===============================
-        // Dashboard -> Site Render
-        // ===============================
 
-        function getModels() { return safeParse(localStorage.getItem(MODELS_KEY), []); }
-        function getFeed() { return safeParse(localStorage.getItem(FEED_KEY), []); }
-        function getProject() { return safeParse(localStorage.getItem(PROJECT_KEY), null) || {}; }
-        function getProfile() { return safeParse(localStorage.getItem(PROFILE_KEY), null) || {}; }
-
-        function renderModelsFromDashboard() {
-            const grid = document.getElementById('models-grid');
-            if (!grid) return;
-
-            const models = getModels().slice().sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
-            grid.innerHTML = "";
-
-            if (!models.length) {
-                grid.innerHTML = '<div class="muted" id="models-empty" style="text-align:center; padding:20px;">Dashboard üzerinden model ekleyince burada gözükecek.</div>';
-                return;
+        const homeCard = document.getElementById('tiltCard');
+        document.getElementById('home').addEventListener('mousemove', (e) => {
+            if(window.innerWidth > 768) {
+                const rect = homeCard.getBoundingClientRect();
+                const x = e.clientX - (rect.left + rect.width / 2);
+                const y = e.clientY - (rect.top + rect.height / 2);
+                homeCard.style.transform = `perspective(1000px) rotateY(${x/60}deg) rotateX(${-y/60}deg)`;
             }
-
-            models.forEach(m => {
-                const thumb = m.thumbDataUrl || m.thumbUrl || "";
-                const icon = thumb ? '' : '<i class="fa-solid fa-cube"></i>';
-
-                const btnHtml = m.fileData
-                    ? `<a href="javascript:void(0)" class="ms-btn" onclick="downloadDataUrl('${m.fileData}','${(m.fileName||'model.rbxm').replace(/'/g,'')}')"><i class="fa-solid fa-download"></i> İndir</a>`
-                    : `<a href="${m.link || '#'}" target="_blank" class="ms-btn"><i class="fa-solid fa-link"></i> Roblox'ta Aç</a>`;
-
-                grid.innerHTML += `
-                    <div class="ms-card">
-                        <div class="ms-thumb">${thumb ? `<img src="${thumb}" style="width:100%; height:100%; object-fit:cover;">` : icon}</div>
-                        <div class="ms-info">
-                            <h4>${(m.title || 'Model').replace(/</g,'&lt;')}</h4>
-                            ${btnHtml}
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        function buildLocalFeedCards() {
-            const arr = getFeed().slice().sort((a,b) => {
-                if(!!a.pinned !== !!b.pinned) return a.pinned ? -1 : 1;
-                return (b.createdAt||0) - (a.createdAt||0);
-            });
-
-            if (!arr.length) return "";
-
-            const tagMap = { info: "📢 Genel", update: "🚀 Güncelleme", leak: "👀 Leak" };
-
-            return arr.map(item => {
-                const tag = tagMap[item.tag] || "📢";
-                const img = item.mediaDataUrl || item.mediaUrl || "";
-                return `
-                    <div class="news-card" style="${item.pinned ? 'border:3px solid var(--s-yellow);' : ''}">
-                        <div class="nc-header">
-                            <div class="nc-user-row">
-                                <img src="evo_logo.png" class="nc-avatar">
-                                <div class="nc-meta"><span class="nc-author">Evo Studios</span></div>
-                            </div>
-                            <span style="background:var(--s-yellow); color:var(--ink); padding:4px 10px; border-radius:6px; font-size:12px; font-weight:900; box-shadow: 2px 2px 0 var(--ink); transform:rotate(2deg); border: 2px solid var(--ink);">
-                                ${tag}${item.pinned ? " • PIN" : ""}
-                            </span>
-                        </div>
-                        <h3 class="nc-title">${(item.title||'').replace(/</g,'&lt;')}</h3>
-                        ${img ? `<img src="${img}" style="width:100%; border-radius:8px; border:3px solid var(--ink); margin-bottom:12px;">` : ''}
-                        <div class="nc-content"><p class="nc-desc">${(item.content||'').replace(/</g,'&lt;')}</p></div>
-                    </div>
-                `;
-            }).join("");
-        }
-
-        async function loadNewsMerged() {
-            // Local feed önce
-            const feedEl = document.getElementById('news-feed');
-            if (feedEl) {
-                feedEl.innerHTML = buildLocalFeedCards() || '<div class="muted" style="text-align:center; padding:20px;">Henüz duyuru yok. (Dashboarddan ekle)</div>';
-            }
-            // Sonra sheet news üstüne ekle (varsa)
-            try {
-                await loadNewsFromSheet();
-                // loadNewsFromSheet kendi içeriği set ediyor olabilir; bu durumda local feed'i tekrar üstte birleştiriyoruz.
-                const sheetHtml = feedEl ? feedEl.innerHTML : "";
-                const localHtml = buildLocalFeedCards();
-                if (feedEl) feedEl.innerHTML = (localHtml || "") + sheetHtml;
-            } catch(e) { /* ignore */ }
-        }
-
-        function applyProjectToUI() {
-            const g = getProject();
-            if(!g || (!g.title && !g.link && !g.thumbUrl && !g.thumbDataUrl && !g.desc)) return;
-
-            // Sayfada proje kartı varsa basit güncelleme: data attribute ararız
-            const titleEl = document.querySelector('[data-project="title"]');
-            const linkEl = document.querySelector('[data-project="link"]');
-            const imgEl  = document.querySelector('[data-project="thumb"]');
-            const descEl = document.querySelector('[data-project="desc"]');
-
-            if (titleEl && g.title) titleEl.textContent = g.title;
-            if (linkEl && g.link) linkEl.href = g.link;
-            if (imgEl && (g.thumbDataUrl || g.thumbUrl)) imgEl.src = g.thumbDataUrl || g.thumbUrl;
-            if (descEl && g.desc) descEl.textContent = g.desc;
-        }
-
-        function applyProfileToUI() {
-            const p = getProfile();
-            if(!p) return;
-            const nameEl = document.querySelector('[data-profile="name"]');
-            const handleEl = document.querySelector('[data-profile="handle"]');
-            const avatarEl = document.querySelector('[data-profile="avatar"]');
-            if (nameEl && p.displayName) nameEl.textContent = p.displayName;
-            if (handleEl && p.handle) handleEl.textContent = p.handle;
-            if (avatarEl && p.avatarUrl) avatarEl.src = p.avatarUrl;
-        }
-
-        // İlk yükleme
-        window.addEventListener('load', () => {
-            renderModelsFromDashboard();
-            applyProjectToUI();
-            applyProfileToUI();
-            // Haberleri birleşik çek
-            loadNewsMerged();
+        });
+        document.getElementById('home').addEventListener('mouseleave', () => {
+            homeCard.style.transform = 'perspective(1000px) rotateY(0) rotateX(0)';
         });
 
-</script>
-<script src="evo-sync-config.js"></script>
-<script src="evo-sync.js"></script>
-<script>
-/* ===== EvoSync (Site) ===== */
-(function(){
-  try {
-    EvoSync.hookLocalStorage([MODELS_KEY, FEED_KEY, PROJECT_KEY, PROFILE_KEY]);
-
-    function applyProfile(){
-      const p = getProfile ? getProfile() : (safeParse(localStorage.getItem(PROFILE_KEY), {}) || {});
-      const handle = (p.handle || "").trim();
-      const displayName = (p.displayName || "").trim();
-      const avatarUrl = (p.avatarUrl || "").trim();
-
-      const userEl = document.getElementById("rbx-user");
-      if(userEl && (handle || displayName)) {
-        userEl.textContent = handle ? (handle.startsWith("@") ? handle : "@"+handle) : displayName;
-      }
-      // Avatar: dashboard avatarUrl overrides Roblox thumb
-      const av = document.getElementById("my-avatar");
-      if(av && avatarUrl) av.src = avatarUrl;
-    }
-
-    function applyProject(){
-      const g = getProject ? getProject() : (safeParse(localStorage.getItem(PROJECT_KEY), {}) || {});
-      document.querySelectorAll("[data-project]").forEach(el => {
-        const k = el.getAttribute("data-project");
-        if(k === "title") el.textContent = g.title || el.textContent;
-        if(k === "desc") el.textContent = g.desc || el.textContent;
-        if(k === "link" && el.tagName.toLowerCase() === "a") el.href = g.link || el.href;
-        if(k === "thumb") {
-          const img = el.tagName.toLowerCase() === "img" ? el : el.querySelector("img");
-          if(img) img.src = g.thumbDataUrl || g.thumbUrl || img.src;
+        // Reaction Toggle
+        function toggleReaction(btn, id, type) {
+            const key = `react_${id}_${type}`;
+            const isAlreadyActive = localStorage.getItem(key);
+            const span = btn.querySelector('span');
+            let currentVal = parseInt(span.innerText);
+            if (isAlreadyActive) {
+                localStorage.removeItem(key); btn.classList.remove('selected');
+                span.innerText = Math.max(0, currentVal - 1);
+            } else {
+                localStorage.setItem(key, 'true'); btn.classList.add('selected');
+                span.innerText = currentVal + 1;
+                triggerConfetti(btn);
+                fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: id, action: type }) });
+            }
         }
-      });
+        function triggerConfetti(element) {
+            const rect = element.getBoundingClientRect();
+            for(let i=0; i<10; i++) {
+                const dot = document.createElement('div');
+                dot.style.position = 'fixed'; dot.style.left = rect.left + rect.width/2 + 'px'; dot.style.top = rect.top + 'px';
+                dot.style.width = '6px'; dot.style.height = '6px';
+                dot.style.backgroundColor = ['#ff6b6b', '#feca57', '#1dd1a1'][Math.floor(Math.random()*3)];
+                dot.style.borderRadius = '50%'; dot.style.zIndex = 9999; dot.style.pointerEvents = 'none';
+                document.body.appendChild(dot);
+                const angle = Math.random() * Math.PI * 2;
+                const tx = Math.cos(angle) * 50; const ty = Math.sin(angle) * 50 - 50;
+                dot.animate([ { transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 } ], { duration: 600, easing: 'ease-out' }).onfinish = () => dot.remove();
+            }
+        }
 
-      // also update project card image if present
-      const img = document.querySelector("[data-project='thumb']");
-      if(img && img.tagName.toLowerCase() === "img") {
-        img.src = g.thumbDataUrl || g.thumbUrl || img.src;
-      }
-    }
-
-    function mergeLocalFeedIntoGlobal(){
-      const local = (getFeed ? getFeed() : (safeParse(localStorage.getItem(FEED_KEY), []) || [])).slice()
-        .sort((a,b) => {
-          if(!!a.pinned !== !!b.pinned) return a.pinned ? -1 : 1;
-          return (b.createdAt||0) - (a.createdAt||0);
-        })
-        .map(f => ({
-          baslik: f.title || "Duyuru",
-          icerik: f.content || "",
-          etiket: (f.tag || "info"),
-          gorsel: f.mediaDataUrl || f.mediaUrl || "",
-          music: "",
-          _local: true,
-          _pinned: !!f.pinned,
-          _ts: f.createdAt || Date.now()
-        }));
-
-      // Local items go first
-      globalNewsData = local.concat(globalNewsData || []);
-      try { renderNewsBatch("all"); } catch(_){}
-    }
-
-    function refreshUI(){
-      try { renderModelsFromDashboard(); } catch(_){}
-      try { applyProfile(); } catch(_){}
-      try { applyProject(); } catch(_){}
-      // If sheet already loaded, re-merge local on top
-      try { mergeLocalFeedIntoGlobal(); } catch(_){}
-    }
-
-    // Patch: when sheet loads, always merge local feed on top
-    const __origLoad = window.loadNewsFromSheet;
-    if(typeof __origLoad === "function") {
-      window.loadNewsFromSheet = async function(){
-        await __origLoad();
-        mergeLocalFeedIntoGlobal();
-      }
-    }
-
-    // Start pulling remote changes and re-render
-    EvoSync.startAutoPull([MODELS_KEY, FEED_KEY, PROJECT_KEY, PROFILE_KEY], {
-      intervalMs: 4000,
-      onPulled: refreshUI
-    });
-
-    // First paint from current storage
-    refreshUI();
-  } catch(e) {
-    console.warn("EvoSync disabled:", e);
-  }
-})();
-</script>
+        applyProfileOverrides();
+        fetchRobloxData();
+        renderModels();
+    </script>
 </body>
 </html>
