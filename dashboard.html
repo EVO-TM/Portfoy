@@ -7,6 +7,7 @@
   <link rel="icon" type="image/png" href="evo_logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     :root{
@@ -178,10 +179,10 @@
         <div class="login-card">
           <div class="lock"><i class="fa-solid fa-lock"></i></div>
           <h1 style="margin:0 0 6px 0; font-size:22px;">Admin Girişi</h1>
-          <div class="muted">Bu sayfa sadece sana özel. Kullanıcı adı + şifre olmadan açılmaz.</div>
+          <div class="muted">Bu sayfa sadece sana özel. Admin e-mail + şifre olmadan açılmaz.</div>
 
           <label style="text-align:left; margin-top:14px;">Kullanıcı Adı</label>
-          <input id="userInput" placeholder="admin kullanıcı adı" autocomplete="username"/>
+          <input id="emailInput" placeholder="admin kullanıcı adı" autocomplete="username"/>
 
           <label style="text-align:left; margin-top:10px;">Şifre</label>
           <input id="passInput" type="password" placeholder="Dashboard şifresi" autocomplete="current-password"/>
@@ -340,7 +341,37 @@ const ADMIN_USER = "evo"; // <-- bunu değiştir (küçük harf önerilir)
 //   await sha256("SENIN_YENI_SIFREN")
 const ADMIN_PASS_SHA256 = "80c6a995b0e35edfb8dced32237febd1dcca81e5ec91c649ec5215a652fcd89b"; // EVO_ADMIN_123
 
-  const AUTH_KEY = "evo_dash_auth_v1";
+  
+  // ===== SUPABASE (ÖNERİLEN: gerçek güvenlik + cihazlar arası senkron) =====
+  // Settings -> API: URL + anon key
+  const SUPABASE_URL = "https://ixvovmragysxwbcspixo.supabase.co";      // <-- buraya
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4dm92bXJhZ3lzeHdiY3NwaXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxNzg3NDMsImV4cCI6MjA4Nzc1NDc0M30.mIMKSz5Jaxxm355NfMWYwP76GFlEQMaifkuyeNSIkPs"; // <-- buraya
+  const ADMIN_EMAIL = "burakhusta@gmail.com";       // <-- sadece senin admin mailin (Supabase Auth'ta kayıtlı)
+  const USE_SUPABASE = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+
+  const sb = USE_SUPABASE ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+  function bytesToHuman(bytes){
+    const b = Number(bytes||0);
+    if(!b) return "";
+    const units = ["B","KB","MB","GB"];
+    let i=0, v=b;
+    while(v>=1024 && i<units.length-1){ v/=1024; i++; }
+    return (v>=10 || i===0 ? v.toFixed(0) : v.toFixed(1)) + " " + units[i];
+  }
+
+  async function uploadToBucket(bucket, file, folder){
+    if(!sb) throw new Error("Supabase kapalı");
+    const ext = (file.name.split(".").pop() || "bin").toLowerCase();
+    const safeBase = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0,60);
+    const path = `${folder}/${Date.now()}_${Math.random().toString(16).slice(2)}_${safeBase}`;
+    const { error } = await sb.storage.from(bucket).upload(path, file, { upsert:false, contentType:file.type || undefined });
+    if(error) throw error;
+    const { data } = sb.storage.from(bucket).getPublicUrl(path);
+    return { publicUrl: data.publicUrl, path };
+  }
+
+const AUTH_KEY = "evo_dash_auth_v1";
   const MODELS_KEY = "evo_models_v1";
   const FEED_KEY = "evo_feed_v1";
   const PROFILE_KEY = "evo_profile_v1";
@@ -400,32 +431,61 @@ function show(view){
 
 async function login(){
   if(isLocked()){
-    alert("Çok fazla deneme. " + lockSecondsLeft() + " saniye sonra tekrar dene.");
+    alert("Çok deneme yaptın. " + lockSecondsLeft() + " saniye bekle.");
     return;
   }
 
-  const user = ($("userInput")?.value || "").trim().toLowerCase();
-  const pass = ($("passInput").value || "");
+  // 1) Supabase Auth (önerilen)
+  if(sb){
+    const email = ($("emailInput")?.value || "").trim().toLowerCase();
+    const pass = ($("passInput")?.value || "");
+    if(!email || !pass){ alert("E-mail ve şifre zorunlu."); return; }
+    if(ADMIN_EMAIL && email !== ADMIN_EMAIL.trim().toLowerCase()){
+      alert("Bu hesap admin değil.");
+      return;
+    }
+    try{
+      const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+      if(error) throw error;
 
+      // oturum açık kaldıkça dashboard açık
+      setAuthed(true);
+      show("dash");
+      await boot();
+
+      $("emailInput").value = "";
+      $("passInput").value = "";
+      return;
+    }catch(e){
+      const fails = parseInt(localStorage.getItem(FAIL_KEY) || "0", 10) + 1;
+      localStorage.setItem(FAIL_KEY, String(fails));
+      if(fails >= 5){
+        const mins = Math.min(60, 5 * Math.ceil((fails-4)/2));
+        localStorage.setItem(FAIL_UNTIL_KEY, String(now() + mins*60*1000));
+      }
+      alert("Giriş yanlış.");
+      return;
+    }
+  }
+
+  // 2) Fallback: client-side hash
+  const user = ($("emailInput")?.value || "").trim().toLowerCase();
+  const pass = ($("passInput").value || "");
   if(!user || !pass){
     alert("Kullanıcı adı ve şifre zorunlu.");
     return;
   }
-
   const passHash = await sha256(pass);
-
   const okUser = user === String(ADMIN_USER).toLowerCase();
   const okPass = passHash === String(ADMIN_PASS_SHA256).toLowerCase();
 
   if(!(okUser && okPass)){
     const fails = parseInt(localStorage.getItem(FAIL_KEY) || "0", 10) + 1;
     localStorage.setItem(FAIL_KEY, String(fails));
-
     if(fails >= 5){
-      const mins = Math.min(60, 5 * Math.ceil((fails-4)/2)); // 5dk,10dk,15dk...
+      const mins = Math.min(60, 5 * Math.ceil((fails-4)/2));
       localStorage.setItem(FAIL_UNTIL_KEY, String(now() + mins*60*1000));
     }
-
     alert("Giriş yanlış.");
     return;
   }
@@ -435,22 +495,23 @@ async function login(){
 
   setAuthed(true);
   show("dash");
-  boot();
+  await boot();
 
-  if($("userInput")) $("userInput").value = "";
+  if($("emailInput")) $("emailInput").value = "";
   $("passInput").value = "";
 }
 
-function logout(){
+async function logout(){
+  try{ if(sb) await sb.auth.signOut(); }catch(e){}
   setAuthed(false);
   show("login");
-  if($("userInput")) $("userInput").value = "";
+  if($("emailInput")) $("emailInput").value = "";
   $("passInput").value = "";
 }
   $("logoutBtn").addEventListener("click", logout);
 
   // Enter ile giriş
-  ["userInput","passInput"].forEach(id=>{
+  ["emailInput","passInput"].forEach(id=>{
     const el = $(id);
     if(!el) return;
     el.addEventListener("keydown", (e)=>{ if(e.key==="Enter") login(); });
@@ -485,13 +546,73 @@ function logout(){
   function setModels(arr){
     localStorage.setItem(MODELS_KEY, JSON.stringify(arr));
   }
-  function addModel(){
+  async function addModel(){
     const title = $("mTitle").value.trim();
     const link = $("mLink").value.trim();
-    if(!title || !link){
-      alert("Model adı ve Roblox linki zorunlu.");
+    const note = $("mNote").value.trim();
+    if(!title){
+      alert("Model adı zorunlu.");
       return;
     }
+
+    let thumbUrl = $("mThumb").value.trim();
+    let fileUrl = "";
+    let fileName = "";
+    let fileSize = "";
+
+    const file = $("mFile")?.files?.[0] || null;
+    const thumbFile = $("mThumbFile")?.files?.[0] || null;
+
+    try{
+      // Supabase varsa dosyaları Storage'a yükle
+      if(sb){
+        if(file){
+          const up = await uploadToBucket("assets", file, "models");
+          fileUrl = up.publicUrl;
+          fileName = file.name;
+          fileSize = bytesToHuman(file.size);
+        }
+        if(thumbFile){
+          const upT = await uploadToBucket("assets", thumbFile, "thumbs");
+          thumbUrl = upT.publicUrl;
+        }
+
+        // DB insert
+        const payload = {
+          title,
+          note: note || "Free Model",
+          roblox_link: link || "",
+          thumb_url: thumbUrl || "",
+          file_url: fileUrl || "",
+          file_name: fileName || "",
+          file_size: fileSize || ""
+        };
+        const { error } = await sb.from("models").insert(payload);
+        if(error) throw error;
+
+        // refresh
+        await sbSyncDown();
+      } else {
+        // LocalStorage fallback
+        if(!link && !file){
+          alert("Roblox linki veya model dosyası lazım.");
+          return;
+        }
+        const models = getModels();
+        models.push({ id: "m_" + Date.now(), title, link, thumbUrl, note: note || "Free Model", fileUrl, fileName, fileSize, createdAt: Date.now() });
+        setModels(models);
+      }
+
+      $("mTitle").value = ""; $("mLink").value=""; $("mThumb").value=""; $("mNote").value="";
+      if($("mFile")) $("mFile").value = "";
+      if($("mThumbFile")) $("mThumbFile").value = "";
+      renderModels();
+      alert("Model eklendi.");
+    }catch(e){
+      console.log(e);
+      alert("Model eklenemedi: " + (e?.message || e));
+    }
+  }
     const thumbUrl = $("mThumb").value.trim();
     const note = $("mNote").value.trim();
     const models = getModels();
@@ -545,13 +666,64 @@ function logout(){
   function setFeed(arr){
     localStorage.setItem(FEED_KEY, JSON.stringify(arr));
   }
-  function addFeed(){
+  async function addFeed(){
     const title = $("fTitle").value.trim();
     const content = $("fContent").value.trim();
     if(!title || !content){
       alert("Başlık ve içerik zorunlu.");
       return;
     }
+    const tag = $("fTag").value;
+    let mediaUrl = $("fMedia").value.trim();
+    const musicUrl = ($("fMusic")?.value || "").trim();
+    const pinned = $("fPinned").checked;
+
+    const mediaFile = $("fMediaFile")?.files?.[0] || null;
+
+    try{
+      if(sb){
+        if(mediaFile){
+          const folder = (mediaFile.type || "").startsWith("video/") ? "feed_videos" : "feed_images";
+          const up = await uploadToBucket("assets", mediaFile, folder);
+          mediaUrl = up.publicUrl;
+        }
+
+        const payload = {
+          title,
+          content,
+          tag,
+          media_url: mediaUrl || "",
+          music_url: musicUrl || "",
+          pinned,
+          author: "Evo Studios",
+          avatar_url: "evo_logo.png"
+        };
+        const { error } = await sb.from("feed_posts").insert(payload);
+        if(error) throw error;
+
+        await sbSyncDown();
+      } else {
+        const feed = getFeed();
+        feed.push({
+          id: "p_" + Date.now(),
+          title, content, tag, mediaUrl, musicUrl, pinned,
+          createdAt: Date.now(),
+          author: "Evo Studios",
+          avatarUrl: "evo_logo.png"
+        });
+        setFeed(feed);
+      }
+
+      $("fTitle").value=""; $("fContent").value=""; $("fMedia").value=""; $("fPinned").checked=false;
+      if($("fMusic")) $("fMusic").value="";
+      if($("fMediaFile")) $("fMediaFile").value="";
+      renderFeed();
+      alert("Post eklendi.");
+    }catch(e){
+      console.log(e);
+      alert("Post eklenemedi: " + (e?.message || e));
+    }
+  }
     const tag = $("fTag").value;
     const mediaUrl = $("fMedia").value.trim();
     const pinned = $("fPinned").checked;
@@ -656,13 +828,47 @@ function logout(){
       .replaceAll("'","&#039;");
   }
 
-  function boot(){
+  
+  async function sbSyncDown(){
+    if(!sb) return;
+    // models
+    const { data: m, error: me } = await sb.from("models").select("*").order("created_at", { ascending:false });
+    if(!me){
+      const mapped = (m||[]).map(r=>({
+        id: r.id, title:r.title, link:r.roblox_link||"", thumbUrl:r.thumb_url||"", note:r.note||"",
+        fileUrl:r.file_url||"", fileName:r.file_name||"", fileSize:r.file_size||"",
+        createdAt: r.created_at ? new Date(r.created_at).getTime() : Date.now()
+      }));
+      localStorage.setItem(MODELS_KEY, JSON.stringify(mapped));
+    }
+    // feed
+    const { data: f, error: fe } = await sb.from("feed_posts").select("*").order("created_at", { ascending:false });
+    if(!fe){
+      const mapped = (f||[]).map(r=>({
+        id:r.id, title:r.title, content:r.content, tag:r.tag||"info",
+        mediaUrl:r.media_url||"", musicUrl:r.music_url||"", pinned:!!r.pinned,
+        createdAt: r.created_at ? new Date(r.created_at).getTime() : Date.now(),
+        author:r.author||"Evo Studios", avatarUrl:r.avatar_url||"evo_logo.png"
+      }));
+      localStorage.setItem(FEED_KEY, JSON.stringify(mapped));
+    }
+  }
+async function boot(){
+  if(sb){
+    try{ await sbSyncDown(); }catch(e){ console.log(e); }
+  }
     loadProfile();
     renderModels();
     renderFeed();
   }
 
   // initial
+  if(sb){
+    const { data } = await sb.auth.getSession();
+    if(data?.session){
+      setAuthed(true);
+    }
+  }
   if(isAuthed()){
     show("dash");
     boot();
