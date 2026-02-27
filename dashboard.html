@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Evo Studios | Dashboard</title>
+  <link rel="icon" type="image/png" href="evo_logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root{
+      --bg1:#0b1020;
+      --bg2:#1b2a6b;
+      --ink:#1e2430;
+      --card:#ffffffde;
+      --accent:#6c5ce7;
+      --ok:#00b894;
+      --warn:#f1c40f;
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color: transparent;}
+    body{
+      margin:0; min-height:100vh;
+      font-family:'Outfit',sans-serif;
+      background:
+        radial-gradient(1200px circle at 20% 20%, rgba(108,92,231,0.25), transparent 55%),
+        radial-gradient(900px circle at 80% 30%, rgba(0,184,148,0.18), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      display:flex; align-items:center; justify-content:center;
+      padding:22px;
+      color:var(--ink);
+    }
+
+    .panel{
+      width:100%;
+      max-width:1100px;
+      background:var(--card);
+      border:4px solid rgba(30,36,48,0.18);
+      border-radius:22px;
+      box-shadow:15px 15px 0 rgba(0,0,0,0.08), 0 25px 60px rgba(0,0,0,0.22);
+      overflow:hidden;
+    }
+    .topbar{
+      padding:16px 18px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      background:linear-gradient(135deg, rgba(108,92,231,0.12), rgba(0,184,148,0.10));
+      border-bottom:2px dashed rgba(30,36,48,0.18);
+    }
+    .brand{display:flex; align-items:center; gap:10px; font-weight:900;}
+    .brand i{color:var(--accent);}
+    .actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+    .btn{
+      border:2px solid rgba(30,36,48,0.20);
+      background:#fff;
+      border-radius:14px;
+      padding:10px 12px;
+      cursor:pointer;
+      font-weight:900;
+      color:var(--ink);
+      display:inline-flex; align-items:center; gap:8px;
+      text-decoration:none;
+      box-shadow:3px 3px 0 rgba(0,0,0,0.08);
+      transition:0.15s;
+    }
+    .btn:hover{transform:translateY(-2px); box-shadow:6px 6px 0 rgba(0,0,0,0.10);}
+    .btn.primary{background:linear-gradient(135deg, var(--accent), var(--ok)); color:#fff;}
+    .btn.danger{background:#ffefef; border-color:#ffb3b3; color:#b91c1c;}
+    .body{padding:18px;}
+    .grid{display:grid; grid-template-columns: 1fr 1fr; gap:16px;}
+    @media(max-width:900px){ .grid{grid-template-columns:1fr;} }
+
+    .card{
+      background:#fff;
+      border:3px solid rgba(30,36,48,0.18);
+      border-radius:18px;
+      padding:16px;
+      box-shadow:10px 10px 0 rgba(0,0,0,0.08);
+    }
+    .card h2{margin:0 0 10px 0; font-size:18px;}
+    .muted{color:#6b7280; font-family:'Inter',sans-serif; font-size:12px;}
+    label{display:block; font-weight:900; margin:10px 0 6px 0;}
+    input, textarea, select{
+      width:100%;
+      border:2px solid rgba(30,36,48,0.14);
+      border-radius:14px;
+      padding:12px 12px;
+      font-family:'Inter',sans-serif;
+      outline:none;
+    }
+    textarea{min-height:110px; resize:vertical;}
+    .row{display:flex; gap:10px; flex-wrap:wrap;}
+    .row > *{flex:1; min-width:200px;}
+    .list{
+      margin-top:12px;
+      display:flex; flex-direction:column; gap:10px;
+      max-height:340px; overflow:auto;
+      padding-right:6px;
+    }
+    .item{
+      display:flex; gap:10px;
+      align-items:flex-start;
+      border:2px solid rgba(30,36,48,0.12);
+      border-radius:16px;
+      padding:12px;
+      background:rgba(255,255,255,0.8);
+    }
+    .thumb{
+      width:74px; height:54px;
+      border-radius:12px;
+      background:#0b1020;
+      overflow:hidden;
+      flex:0 0 auto;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .thumb img{width:100%; height:100%; object-fit:cover;}
+    .item-title{font-weight:900;}
+    .item-meta{font-size:12px; color:#6b7280; font-family:'Inter',sans-serif;}
+    .item-actions{margin-left:auto; display:flex; gap:8px;}
+    .mini{
+      border:2px solid rgba(30,36,48,0.14);
+      background:#fff;
+      border-radius:12px;
+      padding:8px 10px;
+      font-weight:900;
+      cursor:pointer;
+    }
+    .mini.del{background:#fff0f0; border-color:#ffb3b3; color:#b91c1c;}
+    .login-wrap{
+      max-width:520px;
+      margin:0 auto;
+      padding:26px 18px 30px 18px;
+    }
+    .login-card{
+      background:#fff;
+      border:3px solid rgba(30,36,48,0.18);
+      border-radius:18px;
+      padding:18px;
+      box-shadow:10px 10px 0 rgba(0,0,0,0.08);
+      text-align:center;
+    }
+    .lock{
+      font-size:44px;
+      color:var(--accent);
+      margin:8px 0 10px 0;
+    }
+    .hint{
+      margin-top:10px;
+      font-size:12px;
+      color:#6b7280;
+      font-family:'Inter',sans-serif;
+    }
+    .split{
+      display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+    }
+    .avatarPreview{
+      width:76px;height:76px;border-radius:18px;background:#0b1020; overflow:hidden;
+      border:2px solid rgba(30,36,48,0.18);
+      display:flex;align-items:center;justify-content:center;
+      flex:0 0 auto;
+    }
+    .avatarPreview img{width:100%;height:100%;object-fit:cover;}
+  </style>
+</head>
+<body>
+
+  <div class="panel">
+    <div class="topbar">
+      <div class="brand"><i class="fa-solid fa-gauge-high"></i> EVO Dashboard</div>
+      <div class="actions">
+        <a class="btn" href="index.html"><i class="fa-solid fa-house"></i> Site</a>
+        <button class="btn danger" id="logoutBtn" style="display:none;"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
+      </div>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="body" id="loginView">
+      <div class="login-wrap">
+        <div class="login-card">
+          <div class="lock"><i class="fa-solid fa-lock"></i></div>
+          <h1 style="margin:0 0 6px 0; font-size:22px;">Admin Girişi</h1>
+          <div class="muted">Bu sayfa sadece sana özel. Şifreyi bilmeyen giremez.</div>
+
+          <label style="text-align:left; margin-top:14px;">Şifre</label>
+          <input id="passInput" type="password" placeholder="Dashboard şifresi" autocomplete="current-password"/>
+
+          <div class="row" style="margin-top:12px;">
+            <button class="btn primary" onclick="login()"><i class="fa-solid fa-key"></i> Giriş</button>
+            <a class="btn" href="index.html"><i class="fa-solid fa-arrow-left"></i> Geri</a>
+          </div>
+
+          <div class="hint">
+            <!-- Güvenlik notu: Bu client-side bir koruma. Gerçek güvenlik için sunucu tarafı auth gerekir. -->
+            Şifreyi değiştirmek için bu dosyada <b>ADMIN_PASS</b> değerini düzenle.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="body" id="dashView" style="display:none;">
+      <div class="grid">
+
+        <!-- PROFILE -->
+        <div class="card">
+          <h2><i class="fa-solid fa-user-pen" style="color:var(--accent)"></i> Profil</h2>
+          <div class="muted">İsim + fotoğraf + kullanıcı adı. (Site “About” kartına yansır.)</div>
+
+          <div class="split" style="margin-top:12px;">
+            <div class="avatarPreview"><img id="avatarPreview" src="evo_logo.png" alt="Avatar"></div>
+            <div style="flex:1; min-width:220px;">
+              <label>Görünen İsim</label>
+              <input id="pName" placeholder="Örn: EVO" />
+              <label>Kullanıcı Adı (handle)</label>
+              <input id="pHandle" placeholder="Örn: @EvoStudios" />
+            </div>
+          </div>
+
+          <label>Avatar URL</label>
+          <input id="pAvatar" placeholder="https://..." oninput="document.getElementById('avatarPreview').src=this.value || 'evo_logo.png';" />
+
+          <div class="row" style="margin-top:12px;">
+            <button class="btn primary" onclick="saveProfile()"><i class="fa-solid fa-floppy-disk"></i> Kaydet</button>
+            <button class="btn" onclick="resetProfile()"><i class="fa-solid fa-rotate-left"></i> Sıfırla</button>
+          </div>
+        </div>
+
+        <!-- MODELS -->
+        <div class="card">
+          <h2><i class="fa-solid fa-gift" style="color:var(--ok)"></i> Free Models</h2>
+          <div class="muted">Link ekledikçe site “Free Models” ekranında yan yana listelenir.</div>
+
+          <div class="row" style="margin-top:10px;">
+            <div>
+              <label>Model Adı</label>
+              <input id="mTitle" placeholder="Örn: Modern City Hotel (FREE)" />
+            </div>
+            <div>
+              <label>Roblox Link</label>
+              <input id="mLink" placeholder="https://create.roblox.com/store/asset/..." />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label>Thumbnail URL (opsiyonel)</label>
+              <input id="mThumb" placeholder="https://.../image.png" />
+            </div>
+            <div>
+              <label>Not (opsiyonel)</label>
+              <input id="mNote" placeholder="Örn: Part Based / Editable" />
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:12px;">
+            <button class="btn primary" onclick="addModel()"><i class="fa-solid fa-plus"></i> Ekle</button>
+            <button class="btn" onclick="clearModelsConfirm()"><i class="fa-solid fa-trash"></i> Tümünü Temizle</button>
+          </div>
+
+          <div class="list" id="modelsList"></div>
+        </div>
+
+        <!-- FEED -->
+        <div class="card">
+          <h2><i class="fa-solid fa-newspaper" style="color:var(--warn)"></i> Evo Feed</h2>
+          <div class="muted">Dashboard’dan post ekle → Site “Evo Feed” bölümünde görünür.</div>
+
+          <label>Başlık</label>
+          <input id="fTitle" placeholder="Örn: Update v1.2 çıktı!" />
+
+          <label>İçerik</label>
+          <textarea id="fContent" placeholder="Detayları buraya yaz..."></textarea>
+
+          <div class="row">
+            <div>
+              <label>Etiket</label>
+              <select id="fTag">
+                <option value="info">News / Info</option>
+                <option value="update">Update</option>
+                <option value="leak">Leak</option>
+              </select>
+            </div>
+            <div>
+              <label>Medya URL (opsiyonel)</label>
+              <input id="fMedia" placeholder="https://.../image.png" />
+            </div>
+          </div>
+
+          <label style="display:flex; align-items:center; gap:10px; margin-top:12px;">
+            <input type="checkbox" id="fPinned" style="width:auto; transform:scale(1.1);" />
+            Pinned (üstte dursun)
+          </label>
+
+          <div class="row" style="margin-top:12px;">
+            <button class="btn primary" onclick="addFeed()"><i class="fa-solid fa-plus"></i> Post Ekle</button>
+            <button class="btn" onclick="clearFeedConfirm()"><i class="fa-solid fa-trash"></i> Feed Temizle</button>
+          </div>
+
+          <div class="list" id="feedList"></div>
+        </div>
+
+        <!-- QUICK NOTES -->
+        <div class="card">
+          <h2><i class="fa-solid fa-screwdriver-wrench" style="color:var(--accent)"></i> Notlar</h2>
+          <div class="muted">
+            - Bu dashboard client-side. Gerçek “kimse giremesin” güvenliği için sunucu tarafı login şart.<br/>
+            - Şimdilik <b>şifre</b> ile koruyor ve oturumu <b>sessionStorage</b>’da tutuyor.<br/>
+            - İstersen ben bunu Node/Express + JWT’ye de çeviririm (gerçek admin auth).
+          </div>
+
+          <div style="margin-top:12px;" class="row">
+            <button class="btn" onclick="exportAll()"><i class="fa-solid fa-file-export"></i> Verileri Dışa Aktar</button>
+            <label class="btn" style="cursor:pointer;">
+              <i class="fa-solid fa-file-import"></i> İçe Aktar
+              <input type="file" accept="application/json" style="display:none" onchange="importAll(event)" />
+            </label>
+          </div>
+
+          <div class="hint">Yedek: export al → farklı bilgisayara import et → her şey geri gelir.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<script>
+  // =========================
+  //  AYAR: ŞİFREYİ BURADAN DEĞİŞTİR
+  // =========================
+  const ADMIN_PASS = "EVO_ADMIN_123"; // <-- bunu değiştir
+
+  const AUTH_KEY = "evo_dash_auth_v1";
+  const MODELS_KEY = "evo_models_v1";
+  const FEED_KEY = "evo_feed_v1";
+  const PROFILE_KEY = "evo_profile_v1";
+
+  const $ = (id) => document.getElementById(id);
+
+  function safeJsonParse(str, fallback){
+    try{ return JSON.parse(str); }catch(e){ return fallback; }
+  }
+
+  function isAuthed(){
+    return sessionStorage.getItem(AUTH_KEY) === "1";
+  }
+
+  function setAuthed(val){
+    if(val) sessionStorage.setItem(AUTH_KEY, "1");
+    else sessionStorage.removeItem(AUTH_KEY);
+  }
+
+  function show(view){
+    $("loginView").style.display = view === "login" ? "block" : "none";
+    $("dashView").style.display = view === "dash" ? "block" : "none";
+    $("logoutBtn").style.display = view === "dash" ? "inline-flex" : "none";
+  }
+
+  function login(){
+    const pass = $("passInput").value || "";
+    if(pass !== ADMIN_PASS){
+      alert("Şifre yanlış.");
+      return;
+    }
+    setAuthed(true);
+    show("dash");
+    boot();
+  }
+
+  function logout(){
+    setAuthed(false);
+    show("login");
+    $("passInput").value = "";
+  }
+  $("logoutBtn").addEventListener("click", logout);
+
+  // ===== PROFILE =====
+  function loadProfile(){
+    const p = safeJsonParse(localStorage.getItem(PROFILE_KEY) || "null", null) || {};
+    $("pName").value = p.displayName || "EVO";
+    $("pHandle").value = p.handle || "@EvoStudiosT";
+    $("pAvatar").value = p.avatarUrl || "";
+    $("avatarPreview").src = (p.avatarUrl && String(p.avatarUrl).trim()) ? p.avatarUrl : "evo_logo.png";
+  }
+  function saveProfile(){
+    const displayName = $("pName").value.trim();
+    const handle = $("pHandle").value.trim();
+    const avatarUrl = $("pAvatar").value.trim();
+    localStorage.setItem(PROFILE_KEY, JSON.stringify({ displayName, handle, avatarUrl }));
+    alert("Profil kaydedildi. (Siteyi yenilersen görünür.)");
+  }
+  function resetProfile(){
+    if(!confirm("Profil sıfırlansın mı?")) return;
+    localStorage.removeItem(PROFILE_KEY);
+    loadProfile();
+  }
+
+  // ===== MODELS =====
+  function getModels(){
+    const arr = safeJsonParse(localStorage.getItem(MODELS_KEY) || "[]", []);
+    return Array.isArray(arr) ? arr : [];
+  }
+  function setModels(arr){
+    localStorage.setItem(MODELS_KEY, JSON.stringify(arr));
+  }
+  function addModel(){
+    const title = $("mTitle").value.trim();
+    const link = $("mLink").value.trim();
+    if(!title || !link){
+      alert("Model adı ve Roblox linki zorunlu.");
+      return;
+    }
+    const thumbUrl = $("mThumb").value.trim();
+    const note = $("mNote").value.trim();
+    const models = getModels();
+    models.push({ id: "m_" + Date.now(), title, link, thumbUrl, note, createdAt: Date.now() });
+    setModels(models);
+    $("mTitle").value = ""; $("mLink").value=""; $("mThumb").value=""; $("mNote").value="";
+    renderModels();
+  }
+  function deleteModel(id){
+    const models = getModels().filter(m => m.id !== id);
+    setModels(models);
+    renderModels();
+  }
+  function clearModelsConfirm(){
+    if(!confirm("Tüm modeller silinsin mi?")) return;
+    localStorage.removeItem(MODELS_KEY);
+    renderModels();
+  }
+  function renderModels(){
+    const list = $("modelsList");
+    const models = getModels().slice().sort((a,b)=> (b.createdAt||0)-(a.createdAt||0));
+    list.innerHTML = "";
+    if(!models.length){
+      list.innerHTML = '<div class="muted">Henüz model yok. Yukarıdan ekle.</div>';
+      return;
+    }
+    models.forEach(m=>{
+      const div = document.createElement("div");
+      div.className = "item";
+      const thumb = (m.thumbUrl && String(m.thumbUrl).trim()) ? m.thumbUrl : "https://via.placeholder.com/520x300/0b1020/ffffff?text=EVO+MODEL";
+      div.innerHTML = `
+        <div class="thumb"><img src="${thumb}" onerror="this.src='https://via.placeholder.com/520x300/0b1020/ffffff?text=EVO+MODEL'"></div>
+        <div style="min-width:0;">
+          <div class="item-title">${escapeHtml(m.title)}</div>
+          <div class="item-meta">${escapeHtml(m.note || "Free Model")}</div>
+          <div class="item-meta" style="margin-top:4px;"><a href="${m.link}" target="_blank" rel="noopener">Link</a></div>
+        </div>
+        <div class="item-actions">
+          <button class="mini del" onclick="deleteModel('${m.id}')"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  // ===== FEED =====
+  function getFeed(){
+    const arr = safeJsonParse(localStorage.getItem(FEED_KEY) || "[]", []);
+    return Array.isArray(arr) ? arr : [];
+  }
+  function setFeed(arr){
+    localStorage.setItem(FEED_KEY, JSON.stringify(arr));
+  }
+  function addFeed(){
+    const title = $("fTitle").value.trim();
+    const content = $("fContent").value.trim();
+    if(!title || !content){
+      alert("Başlık ve içerik zorunlu.");
+      return;
+    }
+    const tag = $("fTag").value;
+    const mediaUrl = $("fMedia").value.trim();
+    const pinned = $("fPinned").checked;
+
+    const feed = getFeed();
+    feed.push({
+      id: "p_" + Date.now(),
+      title, content, tag, mediaUrl, pinned,
+      createdAt: Date.now(),
+      author: "Evo Studios",
+      avatarUrl: "evo_logo.png"
+    });
+    setFeed(feed);
+
+    $("fTitle").value=""; $("fContent").value=""; $("fMedia").value=""; $("fPinned").checked=false;
+    renderFeed();
+  }
+  function deleteFeed(id){
+    const feed = getFeed().filter(p => p.id !== id);
+    setFeed(feed);
+    renderFeed();
+  }
+  function clearFeedConfirm(){
+    if(!confirm("Feed temizlensin mi?")) return;
+    localStorage.removeItem(FEED_KEY);
+    renderFeed();
+  }
+  function renderFeed(){
+    const list = $("feedList");
+    const feed = getFeed().slice().sort((a,b)=>{
+      const ap = a.pinned ? 1:0;
+      const bp = b.pinned ? 1:0;
+      if(ap!==bp) return bp-ap;
+      return (b.createdAt||0)-(a.createdAt||0);
+    });
+    list.innerHTML="";
+    if(!feed.length){
+      list.innerHTML = '<div class="muted">Henüz post yok. Yukarıdan ekle.</div>';
+      return;
+    }
+    feed.forEach(p=>{
+      const div = document.createElement("div");
+      div.className="item";
+      const tag = p.tag || "info";
+      const icon = tag==="update" ? "fa-rotate" : (tag==="leak" ? "fa-bug" : "fa-bullhorn");
+      div.innerHTML = `
+        <div class="thumb"><i class="fa-solid ${icon}" style="color:#fff;"></i></div>
+        <div style="min-width:0;">
+          <div class="item-title">${escapeHtml(p.title)} ${p.pinned ? '<span class="item-meta" style="margin-left:8px;">(PIN)</span>' : ''}</div>
+          <div class="item-meta">${new Date(p.createdAt||Date.now()).toLocaleString()}</div>
+          <div class="item-meta" style="margin-top:6px; white-space:pre-wrap;">${escapeHtml(p.content)}</div>
+          ${p.mediaUrl ? `<div class="item-meta" style="margin-top:6px;"><a href="${p.mediaUrl}" target="_blank">Medya</a></div>` : ""}
+        </div>
+        <div class="item-actions">
+          <button class="mini del" onclick="deleteFeed('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      `;
+      list.appendChild(div);
+    });
+  }
+
+  // ===== EXPORT / IMPORT =====
+  function exportAll(){
+    const blob = new Blob([JSON.stringify({
+      profile: safeJsonParse(localStorage.getItem(PROFILE_KEY) || "null", null),
+      models: getModels(),
+      feed: getFeed()
+    }, null, 2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "evo_dashboard_backup.json";
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function importAll(ev){
+    const file = ev.target.files && ev.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const data = safeJsonParse(reader.result, null);
+      if(!data){ alert("JSON okunamadı."); return; }
+
+      if(data.profile) localStorage.setItem(PROFILE_KEY, JSON.stringify(data.profile));
+      if(Array.isArray(data.models)) localStorage.setItem(MODELS_KEY, JSON.stringify(data.models));
+      if(Array.isArray(data.feed)) localStorage.setItem(FEED_KEY, JSON.stringify(data.feed));
+
+      alert("İçe aktarıldı. Siteyi yenilersen görünür.");
+      boot();
+    };
+    reader.readAsText(file);
+    ev.target.value = "";
+  }
+
+  function escapeHtml(str){
+    return String(str ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function boot(){
+    loadProfile();
+    renderModels();
+    renderFeed();
+  }
+
+  // initial
+  if(isAuthed()){
+    show("dash");
+    boot();
+  }else{
+    show("login");
+  }
+</script>
+</body>
+</html>
