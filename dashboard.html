@@ -178,9 +178,12 @@
         <div class="login-card">
           <div class="lock"><i class="fa-solid fa-lock"></i></div>
           <h1 style="margin:0 0 6px 0; font-size:22px;">Admin Girişi</h1>
-          <div class="muted">Bu sayfa sadece sana özel. Şifreyi bilmeyen giremez.</div>
+          <div class="muted">Bu sayfa sadece sana özel. Kullanıcı adı + şifre olmadan açılmaz.</div>
 
-          <label style="text-align:left; margin-top:14px;">Şifre</label>
+          <label style="text-align:left; margin-top:14px;">Kullanıcı Adı</label>
+          <input id="userInput" placeholder="admin kullanıcı adı" autocomplete="username"/>
+
+          <label style="text-align:left; margin-top:10px;">Şifre</label>
           <input id="passInput" type="password" placeholder="Dashboard şifresi" autocomplete="current-password"/>
 
           <div class="row" style="margin-top:12px;">
@@ -326,7 +329,16 @@
   // =========================
   //  AYAR: ŞİFREYİ BURADAN DEĞİŞTİR
   // =========================
-  const ADMIN_PASS = "EVO_ADMIN_123"; // <-- bunu değiştir
+  // =========================
+//  AYAR: ADMIN GİRİŞİ (CLIENT-SIDE)
+//  Not: Gerçek güvenlik için sunucu tarafı login gerekir.
+// =========================
+const ADMIN_USER = "evo"; // <-- bunu değiştir (küçük harf önerilir)
+
+// Şifreyi burada DÜZ METİN yazmıyoruz. SHA-256 hash karşılaştırması var.
+// Hash üretmek için tarayıcı konsolunda şunu çalıştır:
+//   await sha256("SENIN_YENI_SIFREN")
+const ADMIN_PASS_SHA256 = "80c6a995b0e35edfb8dced32237febd1dcca81e5ec91c649ec5215a652fcd89b"; // EVO_ADMIN_123
 
   const AUTH_KEY = "evo_dash_auth_v1";
   const MODELS_KEY = "evo_models_v1";
@@ -339,38 +351,110 @@
     try{ return JSON.parse(str); }catch(e){ return fallback; }
   }
 
-  function isAuthed(){
-    return sessionStorage.getItem(AUTH_KEY) === "1";
+  // ===== AUTH (hardening) =====
+const AUTH_EXP_KEY = "evo_dash_auth_exp_v1";
+const FAIL_KEY = "evo_dash_fail_v1";
+const FAIL_UNTIL_KEY = "evo_dash_lock_until_v1";
+
+async function sha256(text){
+  const enc = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest("SHA-256", enc);
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+function now(){ return Date.now(); }
+
+function isLocked(){
+  const until = parseInt(localStorage.getItem(FAIL_UNTIL_KEY) || "0", 10);
+  return until && now() < until;
+}
+
+function lockSecondsLeft(){
+  const until = parseInt(localStorage.getItem(FAIL_UNTIL_KEY) || "0", 10);
+  if(!until) return 0;
+  return Math.ceil(Math.max(0, until - now())/1000);
+}
+
+function isAuthed(){
+  const token = sessionStorage.getItem(AUTH_KEY);
+  const exp = parseInt(sessionStorage.getItem(AUTH_EXP_KEY) || "0", 10);
+  return !!token && exp && now() < exp;
+}
+
+function setAuthed(val){
+  if(val){
+    // 8 saatlik session
+    sessionStorage.setItem(AUTH_KEY, Math.random().toString(36).slice(2) + "_" + now());
+    sessionStorage.setItem(AUTH_EXP_KEY, String(now() + 8*60*60*1000));
+  } else {
+    sessionStorage.removeItem(AUTH_KEY);
+    sessionStorage.removeItem(AUTH_EXP_KEY);
+  }
+}
+
+function show(view){
+  $("loginView").style.display = view === "login" ? "block" : "none";
+  $("dashView").style.display = view === "dash" ? "block" : "none";
+  $("logoutBtn").style.display = view === "dash" ? "inline-flex" : "none";
+}
+
+async function login(){
+  if(isLocked()){
+    alert("Çok fazla deneme. " + lockSecondsLeft() + " saniye sonra tekrar dene.");
+    return;
   }
 
-  function setAuthed(val){
-    if(val) sessionStorage.setItem(AUTH_KEY, "1");
-    else sessionStorage.removeItem(AUTH_KEY);
+  const user = ($("userInput")?.value || "").trim().toLowerCase();
+  const pass = ($("passInput").value || "");
+
+  if(!user || !pass){
+    alert("Kullanıcı adı ve şifre zorunlu.");
+    return;
   }
 
-  function show(view){
-    $("loginView").style.display = view === "login" ? "block" : "none";
-    $("dashView").style.display = view === "dash" ? "block" : "none";
-    $("logoutBtn").style.display = view === "dash" ? "inline-flex" : "none";
-  }
+  const passHash = await sha256(pass);
 
-  function login(){
-    const pass = $("passInput").value || "";
-    if(pass !== ADMIN_PASS){
-      alert("Şifre yanlış.");
-      return;
+  const okUser = user === String(ADMIN_USER).toLowerCase();
+  const okPass = passHash === String(ADMIN_PASS_SHA256).toLowerCase();
+
+  if(!(okUser && okPass)){
+    const fails = parseInt(localStorage.getItem(FAIL_KEY) || "0", 10) + 1;
+    localStorage.setItem(FAIL_KEY, String(fails));
+
+    if(fails >= 5){
+      const mins = Math.min(60, 5 * Math.ceil((fails-4)/2)); // 5dk,10dk,15dk...
+      localStorage.setItem(FAIL_UNTIL_KEY, String(now() + mins*60*1000));
     }
-    setAuthed(true);
-    show("dash");
-    boot();
+
+    alert("Giriş yanlış.");
+    return;
   }
 
-  function logout(){
-    setAuthed(false);
-    show("login");
-    $("passInput").value = "";
-  }
+  localStorage.removeItem(FAIL_KEY);
+  localStorage.removeItem(FAIL_UNTIL_KEY);
+
+  setAuthed(true);
+  show("dash");
+  boot();
+
+  if($("userInput")) $("userInput").value = "";
+  $("passInput").value = "";
+}
+
+function logout(){
+  setAuthed(false);
+  show("login");
+  if($("userInput")) $("userInput").value = "";
+  $("passInput").value = "";
+}
   $("logoutBtn").addEventListener("click", logout);
+
+  // Enter ile giriş
+  ["userInput","passInput"].forEach(id=>{
+    const el = $(id);
+    if(!el) return;
+    el.addEventListener("keydown", (e)=>{ if(e.key==="Enter") login(); });
+  });
 
   // ===== PROFILE =====
   function loadProfile(){
