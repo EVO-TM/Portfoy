@@ -803,5 +803,15 @@
     show("login");
   }
 </script>
+<script src="evo-sync-config.js"></script>
+<script src="evo-sync.js"></script>
+<script>
+/* ===== EvoSync (Dashboard) ===== */
+try {
+  EvoSync.hookLocalStorage([MODELS_KEY, FEED_KEY, PROJECT_KEY, PROFILE_KEY]);
+} catch(e) {
+  console.warn("EvoSync disabled:", e);
+}
+</script>
 </body>
 </html>
