@@ -289,6 +289,19 @@
             </div>
           </div>
 
+          <div class="row">
+            <div>
+              <label>Model Dosyası (rbxm/zip) (Opsiyonel)</label>
+              <input id="mFile" type="file" accept=".rbxm,.rbxmx,.zip,.rar,application/zip,application/x-rar-compressed" />
+              <div class="muted" style="margin-top:6px;">Dosya yüklersen, sitede direkt indirilebilir olacak. (Sunucusuz: tarayıcı depolama)</div>
+            </div>
+            <div>
+              <label>Görsel Dosyası (Opsiyonel)</label>
+              <input id="mThumbFile" type="file" accept="image/*" />
+            </div>
+          </div>
+
+
           <div class="row" style="margin-top:20px;">
             <button class="btn primary" onclick="addModel()"><i class="fa-solid fa-plus"></i> Modele Ekle</button>
             <button class="btn danger" onclick="clearModelsConfirm()"><i class="fa-solid fa-trash"></i></button>
@@ -323,6 +336,10 @@
             </div>
           </div>
 
+          <label>Medya Dosyası (Opsiyonel)</label>
+          <input id="fMediaFile" type="file" accept="image/*,.gif" />
+          <div class="muted" style="margin-top:6px;">Dosya yüklersen, linke gerek yok. (Sunucusuz: tarayıcı depolama)</div>
+
           <label style="display:flex; align-items:center; gap:10px; margin-top:20px; cursor:pointer;">
             <input type="checkbox" id="fPinned" style="width:20px; height:20px; accent-color: var(--accent);" />
             <span>Bu gönderiyi en başa tuttur (Pinned)</span>
@@ -334,6 +351,38 @@
           </div>
 
           <div class="list" id="feedList"></div>
+        </div>
+
+
+        <!-- PROJECT / TEST GAME -->
+        <div class="card">
+          <h2><i class="fa-solid fa-gamepad" style="color:var(--accent)"></i> Test Oyun & Görseller</h2>
+          <div class="muted">Sitedeki proje/test oyun kartını buradan yönet.</div>
+
+          <label>Oyun Başlığı</label>
+          <input id="gTitle" placeholder="Örn: Sohbet Oyunu" />
+
+          <label>Oyun Linki</label>
+          <input id="gLink" placeholder="https://www.roblox.com/games/..." />
+
+          <div class="row">
+            <div>
+              <label>Kapak Görsel URL (Opsiyonel)</label>
+              <input id="gThumb" placeholder="https://..." />
+            </div>
+            <div>
+              <label>Kapak Görsel Dosyası (Opsiyonel)</label>
+              <input id="gThumbFile" type="file" accept="image/*" />
+            </div>
+          </div>
+
+          <label>Açıklama (Opsiyonel)</label>
+          <textarea id="gDesc" placeholder="Kısa proje açıklaması..."></textarea>
+
+          <div class="row" style="margin-top:20px;">
+            <button class="btn primary" onclick="saveProject()"><i class="fa-solid fa-floppy-disk"></i> Projeyi Kaydet</button>
+            <button class="btn danger" onclick="resetProject()"><i class="fa-solid fa-trash"></i></button>
+          </div>
         </div>
 
         <!-- SYSTEM & BACKUP -->
@@ -374,10 +423,29 @@
   const MODELS_KEY = "evo_models_data";
   const FEED_KEY = "evo_feed_data";
   const PROFILE_KEY = "evo_prof_data";
+  const PROJECT_KEY = "evo_project_data";
 
   const $ = (id) => document.getElementById(id);
   const safeParse = (str, def) => { try { return JSON.parse(str); } catch { return def; } };
   const now = () => Date.now();
+
+  const readFileAsDataURL = (file) => new Promise((resolve, reject) => {
+    if (!file) return resolve(null);
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (e) => reject(e);
+    reader.readAsDataURL(file);
+  });
+
+  function downloadDataUrl(dataUrl, filename) {
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = filename || 'download';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
 
   // --- GÜVENLİK KATMANI 1: BRUTE FORCE KORUMASI ---
   function getLockStatus() {
@@ -494,6 +562,7 @@
 
     renderModels();
     renderFeed();
+    loadProject();
   }
 
   // Profil
@@ -511,27 +580,81 @@
     initDashboard();
   }
 
+
+  // Project / Test Game
+  const getProject = () => safeParse(localStorage.getItem(PROJECT_KEY), null) || {};
+
+  function loadProject() {
+    const g = getProject();
+    $("gTitle").value = g.title || "";
+    $("gLink").value = g.link || "";
+    $("gThumb").value = g.thumbUrl || "";
+    $("gDesc").value = g.desc || "";
+  }
+
+  async function saveProject() {
+    const thumbFile = $("gThumbFile").files && $("gThumbFile").files[0];
+    const thumbDataUrl = thumbFile ? await readFileAsDataURL(thumbFile) : null;
+    const current = getProject();
+
+    localStorage.setItem(PROJECT_KEY, JSON.stringify({
+      title: $("gTitle").value.trim(),
+      link: $("gLink").value.trim(),
+      desc: $("gDesc").value.trim(),
+      thumbUrl: $("gThumb").value.trim(),
+      thumbDataUrl: thumbDataUrl || current.thumbDataUrl || "",
+      updatedAt: now()
+    }));
+
+    alert("✅ Proje/Test oyun kaydedildi! Sitede yansıyacaktır.");
+  }
+
+  function resetProject() {
+    if(!confirm("Proje/Test oyun verilerini sıfırlamak istiyor musun?")) return;
+    localStorage.removeItem(PROJECT_KEY);
+    loadProject();
+  }
+
   // Modeller
   const getModels = () => safeParse(localStorage.getItem(MODELS_KEY), []);
   const setModels = (d) => localStorage.setItem(MODELS_KEY, JSON.stringify(d));
   
-  function addModel() {
+  async function addModel() {
     const title = $("mTitle").value.trim(), link = $("mLink").value.trim();
     if(!title || !link) return alert("Model Adı ve Linki zorunludur!");
     
     const models = getModels();
+
+    const file = $("mFile").files && $("mFile").files[0];
+    const thumbFile = $("mThumbFile").files && $("mThumbFile").files[0];
+
+    const fileData = file ? await readFileAsDataURL(file) : "";
+    const thumbDataUrl = thumbFile ? await readFileAsDataURL(thumbFile) : "";
+
     models.push({
-      id: "mdl_" + now(), title, link, 
-      thumbUrl: $("mThumb").value.trim(), 
-      note: $("mNote").value.trim(), 
+      id: "mdl_" + now(), title, link,
+      thumbUrl: $("mThumb").value.trim(),
+      thumbDataUrl,
+      note: $("mNote").value.trim(),
+      fileName: file ? file.name : "",
+      fileType: file ? (file.type || "") : "",
+      fileData,
       createdAt: now()
     });
     setModels(models);
     
     $("mTitle").value=""; $("mLink").value=""; $("mThumb").value=""; $("mNote").value="";
+    $("mFile").value=""; $("mThumbFile").value="";
     renderModels();
   }
   
+
+  window.downloadModelFile = (id) => {
+    const m = getModels().find(x => x.id === id);
+    if(!m || !m.fileData) return alert("Bu modelde yüklü dosya yok.");
+    downloadDataUrl(m.fileData, m.fileName || (m.title + ".rbxm"));
+  };
+
   window.deleteModel = (id) => {
     setModels(getModels().filter(m => m.id !== id));
     renderModels();
@@ -549,7 +672,7 @@
     if(!arr.length) return list.innerHTML = '<div class="muted" style="text-align:center; padding:20px;">Henüz model eklenmedi.</div>';
     
     arr.forEach(m => {
-      const thumb = m.thumbUrl || 'https://via.placeholder.com/80x60/141f4d/ffffff?text=MODEL';
+      const thumb = m.thumbDataUrl || m.thumbUrl || 'https://via.placeholder.com/80x60/141f4d/ffffff?text=MODEL';
       list.innerHTML += `
         <div class="item">
           <div class="thumb"><img src="${thumb}" onerror="this.src='https://via.placeholder.com/80x60/141f4d/ffffff?text=HATA'"></div>
@@ -558,6 +681,7 @@
             <div class="item-meta">${escapeHtml(m.note || "Ücretsiz Model")}</div>
             <div class="item-meta"><a href="${m.link}" target="_blank"><i class="fa-solid fa-link"></i> Roblox'ta Aç</a></div>
           </div>
+          ${m.fileData ? `<button class="mini" onclick="downloadModelFile('${m.id}')" title="İndir"><i class="fa-solid fa-download"></i></button>` : ""}
           <button class="mini del" onclick="deleteModel('${m.id}')" title="Sil"><i class="fa-solid fa-trash"></i></button>
         </div>`;
     });
@@ -567,21 +691,24 @@
   const getFeed = () => safeParse(localStorage.getItem(FEED_KEY), []);
   const setFeed = (d) => localStorage.setItem(FEED_KEY, JSON.stringify(d));
 
-  function addFeed() {
+  async function addFeed() {
     const title = $("fTitle").value.trim(), content = $("fContent").value.trim();
     if(!title || !content) return alert("Başlık ve içerik girmelisin.");
     
     const feed = getFeed();
+    const mediaFile = $("fMediaFile").files && $("fMediaFile").files[0];
+    const mediaDataUrl = mediaFile ? await readFileAsDataURL(mediaFile) : "";
     feed.push({
       id: "fd_" + now(), title, content,
       tag: $("fTag").value,
       mediaUrl: $("fMedia").value.trim(),
+      mediaDataUrl,
       pinned: $("fPinned").checked,
       createdAt: now()
     });
     setFeed(feed);
     
-    $("fTitle").value=""; $("fContent").value=""; $("fMedia").value=""; $("fPinned").checked=false;
+    $("fTitle").value=""; $("fContent").value=""; $("fMedia").value=""; $("fMediaFile").value=""; $("fPinned").checked=false;
     renderFeed();
   }
 
@@ -633,7 +760,8 @@
     const data = {
       profile: safeParse(localStorage.getItem(PROFILE_KEY), {}),
       models: getModels(),
-      feed: getFeed()
+      feed: getFeed(),
+      project: getProject()
     };
     const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
     const url = URL.createObjectURL(blob);
@@ -653,6 +781,7 @@
       if(data.profile) localStorage.setItem(PROFILE_KEY, JSON.stringify(data.profile));
       if(data.models) localStorage.setItem(MODELS_KEY, JSON.stringify(data.models));
       if(data.feed) localStorage.setItem(FEED_KEY, JSON.stringify(data.feed));
+      if(data.project) localStorage.setItem(PROJECT_KEY, JSON.stringify(data.project));
       
       alert("✅ Yedek başarıyla geri yüklendi!");
       initDashboard();
