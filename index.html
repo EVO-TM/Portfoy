@@ -794,5 +794,100 @@
         });
 
 </script>
+<script src="evo-sync-config.js"></script>
+<script src="evo-sync.js"></script>
+<script>
+/* ===== EvoSync (Site) ===== */
+(function(){
+  try {
+    EvoSync.hookLocalStorage([MODELS_KEY, FEED_KEY, PROJECT_KEY, PROFILE_KEY]);
+
+    function applyProfile(){
+      const p = getProfile ? getProfile() : (safeParse(localStorage.getItem(PROFILE_KEY), {}) || {});
+      const handle = (p.handle || "").trim();
+      const displayName = (p.displayName || "").trim();
+      const avatarUrl = (p.avatarUrl || "").trim();
+
+      const userEl = document.getElementById("rbx-user");
+      if(userEl && (handle || displayName)) {
+        userEl.textContent = handle ? (handle.startsWith("@") ? handle : "@"+handle) : displayName;
+      }
+      // Avatar: dashboard avatarUrl overrides Roblox thumb
+      const av = document.getElementById("my-avatar");
+      if(av && avatarUrl) av.src = avatarUrl;
+    }
+
+    function applyProject(){
+      const g = getProject ? getProject() : (safeParse(localStorage.getItem(PROJECT_KEY), {}) || {});
+      document.querySelectorAll("[data-project]").forEach(el => {
+        const k = el.getAttribute("data-project");
+        if(k === "title") el.textContent = g.title || el.textContent;
+        if(k === "desc") el.textContent = g.desc || el.textContent;
+        if(k === "link" && el.tagName.toLowerCase() === "a") el.href = g.link || el.href;
+        if(k === "thumb") {
+          const img = el.tagName.toLowerCase() === "img" ? el : el.querySelector("img");
+          if(img) img.src = g.thumbDataUrl || g.thumbUrl || img.src;
+        }
+      });
+
+      // also update project card image if present
+      const img = document.querySelector("[data-project='thumb']");
+      if(img && img.tagName.toLowerCase() === "img") {
+        img.src = g.thumbDataUrl || g.thumbUrl || img.src;
+      }
+    }
+
+    function mergeLocalFeedIntoGlobal(){
+      const local = (getFeed ? getFeed() : (safeParse(localStorage.getItem(FEED_KEY), []) || [])).slice()
+        .sort((a,b) => {
+          if(!!a.pinned !== !!b.pinned) return a.pinned ? -1 : 1;
+          return (b.createdAt||0) - (a.createdAt||0);
+        })
+        .map(f => ({
+          baslik: f.title || "Duyuru",
+          icerik: f.content || "",
+          etiket: (f.tag || "info"),
+          gorsel: f.mediaDataUrl || f.mediaUrl || "",
+          music: "",
+          _local: true,
+          _pinned: !!f.pinned,
+          _ts: f.createdAt || Date.now()
+        }));
+
+      // Local items go first
+      globalNewsData = local.concat(globalNewsData || []);
+      try { renderNewsBatch("all"); } catch(_){}
+    }
+
+    function refreshUI(){
+      try { renderModelsFromDashboard(); } catch(_){}
+      try { applyProfile(); } catch(_){}
+      try { applyProject(); } catch(_){}
+      // If sheet already loaded, re-merge local on top
+      try { mergeLocalFeedIntoGlobal(); } catch(_){}
+    }
+
+    // Patch: when sheet loads, always merge local feed on top
+    const __origLoad = window.loadNewsFromSheet;
+    if(typeof __origLoad === "function") {
+      window.loadNewsFromSheet = async function(){
+        await __origLoad();
+        mergeLocalFeedIntoGlobal();
+      }
+    }
+
+    // Start pulling remote changes and re-render
+    EvoSync.startAutoPull([MODELS_KEY, FEED_KEY, PROJECT_KEY, PROFILE_KEY], {
+      intervalMs: 4000,
+      onPulled: refreshUI
+    });
+
+    // First paint from current storage
+    refreshUI();
+  } catch(e) {
+    console.warn("EvoSync disabled:", e);
+  }
+})();
+</script>
 </body>
 </html>
