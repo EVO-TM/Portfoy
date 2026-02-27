@@ -3,900 +3,873 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Evo Studios | Dashboard</title>
-  <link rel="icon" type="image/png" href="evo_logo.png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <title>Evo Studios | Admin Secure Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    :root{
-      --bg1:#0b1020;
-      --bg2:#1b2a6b;
-      --ink:#1e2430;
-      --card:#ffffffde;
-      --accent:#6c5ce7;
-      --ok:#00b894;
-      --warn:#f1c40f;
-    }
-    *{box-sizing:border-box;-webkit-tap-highlight-color: transparent;}
-    body{
-      margin:0; min-height:100vh;
-      font-family:'Outfit',sans-serif;
-      background:
-        radial-gradient(1200px circle at 20% 20%, rgba(108,92,231,0.25), transparent 55%),
-        radial-gradient(900px circle at 80% 30%, rgba(0,184,148,0.18), transparent 55%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
-      display:flex; align-items:center; justify-content:center;
-      padding:22px;
-      color:var(--ink);
+    :root {
+      --bg-dark: #0f172a;
+      --bg-panel: #1e293b;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --border: #e2e8f0;
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
     }
 
-    .panel{
-      width:100%;
-      max-width:1100px;
-      background:var(--card);
-      border:4px solid rgba(30,36,48,0.18);
-      border-radius:22px;
-      box-shadow:15px 15px 0 rgba(0,0,0,0.08), 0 25px 60px rgba(0,0,0,0.22);
-      overflow:hidden;
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      background-image: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent 40%),
+                        radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.1), transparent 40%);
     }
-    .topbar{
-      padding:16px 18px;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      background:linear-gradient(135deg, rgba(108,92,231,0.12), rgba(0,184,148,0.10));
-      border-bottom:2px dashed rgba(30,36,48,0.18);
-    }
-    .brand{display:flex; align-items:center; gap:10px; font-weight:900;}
-    .brand i{color:var(--accent);}
-    .actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
-    .btn{
-      border:2px solid rgba(30,36,48,0.20);
-      background:#fff;
-      border-radius:14px;
-      padding:10px 12px;
-      cursor:pointer;
-      font-weight:900;
-      color:var(--ink);
-      display:inline-flex; align-items:center; gap:8px;
-      text-decoration:none;
-      box-shadow:3px 3px 0 rgba(0,0,0,0.08);
-      transition:0.15s;
-    }
-    .btn:hover{transform:translateY(-2px); box-shadow:6px 6px 0 rgba(0,0,0,0.10);}
-    .btn.primary{background:linear-gradient(135deg, var(--accent), var(--ok)); color:#fff;}
-    .btn.danger{background:#ffefef; border-color:#ffb3b3; color:#b91c1c;}
-    .body{padding:18px;}
-    .grid{display:grid; grid-template-columns: 1fr 1fr; gap:16px;}
-    @media(max-width:900px){ .grid{grid-template-columns:1fr;} }
 
-    .card{
-      background:#fff;
-      border:3px solid rgba(30,36,48,0.18);
-      border-radius:18px;
-      padding:16px;
-      box-shadow:10px 10px 0 rgba(0,0,0,0.08);
+    /* Typography */
+    h1, h2, h3 { font-family: 'Outfit', sans-serif; font-weight: 800; color: var(--text-main); }
+    
+    /* Layout */
+    .container { width: 100%; max-width: 1200px; }
+    
+    .panel {
+      background: #f8fafc;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 90vh;
     }
-    .card h2{margin:0 0 10px 0; font-size:18px;}
-    .muted{color:#6b7280; font-family:'Inter',sans-serif; font-size:12px;}
-    label{display:block; font-weight:900; margin:10px 0 6px 0;}
-    input, textarea, select{
-      width:100%;
-      border:2px solid rgba(30,36,48,0.14);
-      border-radius:14px;
-      padding:12px 12px;
-      font-family:'Inter',sans-serif;
-      outline:none;
+
+    .topbar {
+      background: #ffffff;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
     }
-    textarea{min-height:110px; resize:vertical;}
-    .row{display:flex; gap:10px; flex-wrap:wrap;}
-    .row > *{flex:1; min-width:200px;}
-    .list{
-      margin-top:12px;
-      display:flex; flex-direction:column; gap:10px;
-      max-height:340px; overflow:auto;
-      padding-right:6px;
+
+    .brand { font-size: 24px; display: flex; align-items: center; gap: 10px; }
+    .brand i { color: var(--accent); }
+
+    .content { padding: 30px; flex: 1; overflow-y: auto; }
+    
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 25px; }
+    @media(max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 25px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      position: relative;
     }
-    .item{
-      display:flex; gap:10px;
-      align-items:flex-start;
-      border:2px solid rgba(30,36,48,0.12);
-      border-radius:16px;
-      padding:12px;
-      background:rgba(255,255,255,0.8);
+    
+    .card-header { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px dashed var(--border); }
+    .card-header p { color: var(--text-muted); font-size: 13px; margin-top: 5px; }
+
+    /* Forms */
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px; color: #334155; }
+    
+    input[type="text"], input[type="password"], select, textarea {
+      width: 100%; padding: 12px 15px; border: 2px solid var(--border);
+      border-radius: var(--radius-md); font-family: 'Inter', sans-serif;
+      font-size: 14px; transition: 0.2s; outline: none; background: #f8fafc;
     }
-    .thumb{
-      width:74px; height:54px;
-      border-radius:12px;
-      background:#0b1020;
-      overflow:hidden;
-      flex:0 0 auto;
-      display:flex; align-items:center; justify-content:center;
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+    textarea { min-height: 100px; resize: vertical; }
+
+    /* File Input Styling */
+    .file-upload {
+      border: 2px dashed var(--border); border-radius: var(--radius-md);
+      padding: 15px; text-align: center; cursor: pointer; transition: 0.2s;
+      background: #f8fafc; position: relative; overflow: hidden;
     }
-    .thumb img{width:100%; height:100%; object-fit:cover;}
-    .item-title{font-weight:900;}
-    .item-meta{font-size:12px; color:#6b7280; font-family:'Inter',sans-serif;}
-    .item-actions{margin-left:auto; display:flex; gap:8px;}
-    .mini{
-      border:2px solid rgba(30,36,48,0.14);
-      background:#fff;
-      border-radius:12px;
-      padding:8px 10px;
-      font-weight:900;
-      cursor:pointer;
+    .file-upload:hover { border-color: var(--accent); background: #e0e7ff; }
+    .file-upload input[type="file"] {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      opacity: 0; cursor: pointer;
     }
-    .mini.del{background:#fff0f0; border-color:#ffb3b3; color:#b91c1c;}
-    .login-wrap{
-      max-width:520px;
-      margin:0 auto;
-      padding:26px 18px 30px 18px;
+    .file-name-display { font-size: 12px; color: var(--accent); font-weight: 600; margin-top: 5px; word-break: break-all;}
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 10px 18px; border-radius: var(--radius-md); font-weight: 600;
+      font-size: 14px; cursor: pointer; border: none; transition: all 0.2s; text-decoration: none;
     }
-    .login-card{
-      background:#fff;
-      border:3px solid rgba(30,36,48,0.18);
-      border-radius:18px;
-      padding:18px;
-      box-shadow:10px 10px 0 rgba(0,0,0,0.08);
-      text-align:center;
+    .btn-primary { background: var(--accent); color: white; box-shadow: 0 4px 10px rgba(99,102,241,0.3); }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); }
+    .btn-danger { background: #fee2e2; color: var(--danger); }
+    .btn-danger:hover { background: #fecaca; }
+    .btn-outline { border: 2px solid var(--border); background: transparent; color: var(--text-main); }
+    .btn-outline:hover { background: #f1f5f9; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+
+    /* Lists & Items */
+    .list-container { margin-top: 20px; max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 5px; }
+    .list-container::-webkit-scrollbar { width: 6px; }
+    .list-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+    .item {
+      display: flex; gap: 15px; background: #f8fafc; border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 12px; align-items: center; transition: 0.2s;
     }
-    .lock{
-      font-size:44px;
-      color:var(--accent);
-      margin:8px 0 10px 0;
+    .item:hover { border-color: #cbd5e1; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+    
+    .item-thumb {
+      width: 60px; height: 60px; border-radius: 8px; background: var(--bg-dark);
+      flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center;
     }
-    .hint{
-      margin-top:10px;
-      font-size:12px;
-      color:#6b7280;
-      font-family:'Inter',sans-serif;
+    .item-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .item-thumb i { font-size: 24px; color: white; }
+    
+    .item-info { flex: 1; min-width: 0; }
+    .item-title { font-weight: 700; font-size: 15px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-meta { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+    .item-badge { display: inline-block; padding: 2px 8px; background: #e0e7ff; color: var(--accent); border-radius: 20px; font-size: 11px; font-weight: 700; margin-left: 5px; }
+
+    .item-actions { display: flex; gap: 8px; }
+    .btn-icon { width: 32px; height: 32px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+    .btn-edit { background: #e0f2fe; color: #0284c7; }
+    .btn-edit:hover { background: #bae6fd; }
+    .btn-del { background: #fee2e2; color: #ef4444; }
+    .btn-del:hover { background: #fecaca; }
+
+    /* Login Screen */
+    .login-wrapper { display: flex; align-items: center; justify-content: center; height: 100%; padding: 20px; }
+    .login-box { width: 100%; max-width: 400px; text-align: center; }
+    .login-icon { font-size: 48px; color: var(--accent); margin-bottom: 20px; }
+
+    /* Loading Overlay */
+    .loader-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(255,255,255,0.8); backdrop-filter: blur(4px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 9999; display: none;
     }
-    .split{
-      display:flex; gap:16px; align-items:center; flex-wrap:wrap;
+    .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--accent); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* Toast Notification */
+    #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; }
+    .toast {
+      background: white; border-left: 4px solid var(--accent); padding: 15px 20px;
+      border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+      display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px;
+      animation: slideIn 0.3s forwards;
     }
-    .avatarPreview{
-      width:76px;height:76px;border-radius:18px;background:#0b1020; overflow:hidden;
-      border:2px solid rgba(30,36,48,0.18);
-      display:flex;align-items:center;justify-content:center;
-      flex:0 0 auto;
+    .toast.error { border-color: var(--danger); color: var(--danger); }
+    .toast.success { border-color: var(--success); color: var(--success); }
+    @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s;
     }
-    .avatarPreview img{width:100%;height:100%;object-fit:cover;}
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-content {
+      background: white; width: 100%; max-width: 500px; border-radius: var(--radius-lg);
+      padding: 30px; transform: translateY(20px); transition: 0.3s; box-shadow: var(--shadow);
+    }
+    .modal-overlay.active .modal-content { transform: translateY(0); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); }
   </style>
 </head>
 <body>
 
-  <div class="panel">
-    <div class="topbar">
-      <div class="brand"><i class="fa-solid fa-gauge-high"></i> EVO Dashboard</div>
-      <div class="actions">
-        <a class="btn" href="index.html"><i class="fa-solid fa-house"></i> Site</a>
-        <button class="btn danger" id="logoutBtn" style="display:none;"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
-      </div>
-    </div>
+  <!-- LOADING OVERLAY -->
+  <div class="loader-overlay" id="globalLoader">
+    <div class="spinner"></div>
+    <h3 style="margin-top: 15px; color: var(--accent);" id="loaderText">İşleniyor...</h3>
+  </div>
 
-    <!-- LOGIN -->
-    <div class="body" id="loginView">
-      <div class="login-wrap">
-        <div class="login-card">
-          <div class="lock"><i class="fa-solid fa-lock"></i></div>
-          <h1 style="margin:0 0 6px 0; font-size:22px;">Admin Girişi</h1>
-          <div class="muted">Bu sayfa sadece sana özel. Admin e-mail + şifre olmadan açılmaz.</div>
+  <!-- TOAST CONTAINER -->
+  <div id="toast-container"></div>
 
-          <label style="text-align:left; margin-top:14px;">Kullanıcı Adı</label>
-          <input id="emailInput" placeholder="admin kullanıcı adı" autocomplete="username"/>
-
-          <label style="text-align:left; margin-top:10px;">Şifre</label>
-          <input id="passInput" type="password" placeholder="Dashboard şifresi" autocomplete="current-password"/>
-
-          <div class="row" style="margin-top:12px;">
-            <button class="btn primary" onclick="login()"><i class="fa-solid fa-key"></i> Giriş</button>
-            <a class="btn" href="index.html"><i class="fa-solid fa-arrow-left"></i> Geri</a>
-          </div>
-
-          <div class="hint">
-            <!-- Güvenlik notu: Bu client-side bir koruma. Gerçek güvenlik için sunucu tarafı auth gerekir. -->
-            Şifreyi değiştirmek için bu dosyada <b>ADMIN_PASS</b> değerini düzenle.
-          </div>
+  <div class="container">
+    <div class="panel">
+      
+      <!-- TOPBAR -->
+      <div class="topbar">
+        <div class="brand"><i class="fa-solid fa-shield-halved"></i> EVO Admin Space</div>
+        <div>
+          <a class="btn btn-outline" href="index.html" target="_blank"><i class="fa-solid fa-globe"></i> Siteyi Gör</a>
+          <button class="btn btn-danger" id="logoutBtn" style="display:none;" onclick="appAuth.logout()"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
         </div>
       </div>
+
+      <!-- LOGIN VIEW -->
+      <div class="content" id="loginView">
+        <div class="login-wrapper">
+          <div class="card login-box">
+            <div class="login-icon"><i class="fa-solid fa-user-lock"></i></div>
+            <h2>Güvenli Giriş</h2>
+            <p style="color:var(--text-muted); font-size:14px; margin: 10px 0 20px;">Sadece yetkili personeller içindir.</p>
+            
+            <div class="form-group" style="text-align: left;">
+              <label>Admin E-Mail</label>
+              <input type="text" id="loginEmail" placeholder="admin@evostudios.com">
+            </div>
+            <div class="form-group" style="text-align: left;">
+              <label>Şifre</label>
+              <input type="password" id="loginPass" placeholder="••••••••">
+            </div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="appAuth.login()">Giriş Yap <i class="fa-solid fa-arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DASHBOARD VIEW -->
+      <div class="content" id="dashView" style="display:none;">
+        <div class="grid">
+
+          <!-- MODELS MANAGER -->
+          <div class="card">
+            <div class="card-header">
+              <h2><i class="fa-solid fa-cube text-accent"></i> Model Yönetimi</h2>
+              <p>Siteye ücretsiz model ve dosya ekleyin.</p>
+            </div>
+            
+            <div class="form-group">
+              <label>Model Adı (Zorunlu)</label>
+              <input type="text" id="mTitle" placeholder="Örn: Sci-Fi Weapon Pack">
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+              <div class="form-group" style="flex:1;">
+                <label>Görsel (Thumbnail) Seç</label>
+                <div class="file-upload">
+                  <i class="fa-solid fa-image"></i> PC'den Seç
+                  <input type="file" id="mThumbFile" accept="image/png, image/jpeg, image/webp" onchange="uiManager.updateFileName(this, 'mThumbName')">
+                  <div class="file-name-display" id="mThumbName">Seçilmedi</div>
+                </div>
+              </div>
+              <div class="form-group" style="flex:1;">
+                <label>Model Dosyası (.rbxm, .zip)</label>
+                <div class="file-upload">
+                  <i class="fa-solid fa-file-zipper"></i> PC'den Seç
+                  <input type="file" id="mFile" onchange="uiManager.updateFileName(this, 'mFileName')">
+                  <div class="file-name-display" id="mFileName">Seçilmedi</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Alternatif Link (Opsiyonel - Dosya yüklenmezse kullanılır)</label>
+              <input type="text" id="mLink" placeholder="https://create.roblox.com/...">
+            </div>
+
+            <div class="form-group">
+              <label>Kısa Not / Etiket</label>
+              <input type="text" id="mNote" placeholder="Örn: Part Based, Scripted">
+            </div>
+
+            <button class="btn btn-primary" style="width:100%" onclick="appData.addModel()"><i class="fa-solid fa-plus"></i> Modeli Yayınla</button>
+
+            <!-- Models List -->
+            <div class="list-container" id="modelsList">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- FEED MANAGER -->
+          <div class="card">
+            <div class="card-header">
+              <h2><i class="fa-solid fa-rss" style="color:var(--warning)"></i> Feed & Duyurular</h2>
+              <p>Oyunculara yenilikleri ve sızıntıları duyurun.</p>
+            </div>
+
+            <div class="form-group">
+              <label>Başlık (Zorunlu)</label>
+              <input type="text" id="fTitle" placeholder="Örn: Evo Update v2 Geliyor!">
+            </div>
+
+            <div class="form-group">
+              <label>İçerik (Zorunlu)</label>
+              <textarea id="fContent" placeholder="Duyuru detaylarını buraya yazın..."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+              <div class="form-group" style="flex:1;">
+                <label>Kategori (Etiket)</label>
+                <select id="fTag">
+                  <option value="info">Info / Haber</option>
+                  <option value="update">Güncelleme</option>
+                  <option value="leak">Sızıntı (Leak)</option>
+                </select>
+              </div>
+              <div class="form-group" style="flex:1;">
+                <label>Görsel/Video Yükle</label>
+                <div class="file-upload">
+                  <i class="fa-solid fa-photo-film"></i> PC'den Seç
+                  <input type="file" id="fMediaFile" accept="image/*, video/mp4" onchange="uiManager.updateFileName(this, 'fMediaName')">
+                  <div class="file-name-display" id="fMediaName">Seçilmedi</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+              <input type="checkbox" id="fPinned" style="width: 20px; height: 20px; cursor: pointer;">
+              <label style="margin:0; cursor: pointer;" for="fPinned">Bu postu en başa tuttur (Pinned)</label>
+            </div>
+
+            <button class="btn btn-primary" style="width:100%" onclick="appData.addFeed()"><i class="fa-solid fa-paper-plane"></i> Post Paylaş</button>
+
+            <!-- Feed List -->
+            <div class="list-container" id="feedList">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- DASHBOARD -->
-    <div class="body" id="dashView" style="display:none;">
-      <div class="grid">
+  <!-- EDIT MODEL MODAL -->
+  <div class="modal-overlay" id="editModelModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Modeli Düzenle</h3>
+        <button class="modal-close" onclick="uiManager.closeModal('editModelModal')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <input type="hidden" id="editModelId">
+      <div class="form-group">
+        <label>Başlık</label>
+        <input type="text" id="emTitle">
+      </div>
+      <div class="form-group">
+        <label>Not</label>
+        <input type="text" id="emNote">
+      </div>
+      <div class="form-group">
+        <label>Dış Link (Varsa)</label>
+        <input type="text" id="emLink">
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="appData.saveEditModel()" style="flex:1;">Kaydet</button>
+        <button class="btn btn-outline" onclick="uiManager.closeModal('editModelModal')" style="flex:1;">İptal</button>
+      </div>
+      <p style="font-size: 11px; color:gray; margin-top:10px;">*Not: Dosyaları değiştirmek için modeli silip tekrar yüklemeniz önerilir.</p>
+    </div>
+  </div>
 
-        <!-- PROFILE -->
-        <div class="card">
-          <h2><i class="fa-solid fa-user-pen" style="color:var(--accent)"></i> Profil</h2>
-          <div class="muted">İsim + fotoğraf + kullanıcı adı. (Site “About” kartına yansır.)</div>
-
-          <div class="split" style="margin-top:12px;">
-            <div class="avatarPreview"><img id="avatarPreview" src="evo_logo.png" alt="Avatar"></div>
-            <div style="flex:1; min-width:220px;">
-              <label>Görünen İsim</label>
-              <input id="pName" placeholder="Örn: EVO" />
-              <label>Kullanıcı Adı (handle)</label>
-              <input id="pHandle" placeholder="Örn: @EvoStudios" />
-            </div>
-          </div>
-
-          <label>Avatar URL</label>
-          <input id="pAvatar" placeholder="https://..." oninput="document.getElementById('avatarPreview').src=this.value || 'evo_logo.png';" />
-
-          <div class="row" style="margin-top:12px;">
-            <button class="btn primary" onclick="saveProfile()"><i class="fa-solid fa-floppy-disk"></i> Kaydet</button>
-            <button class="btn" onclick="resetProfile()"><i class="fa-solid fa-rotate-left"></i> Sıfırla</button>
-          </div>
-        </div>
-
-        <!-- MODELS -->
-        <div class="card">
-          <h2><i class="fa-solid fa-gift" style="color:var(--ok)"></i> Free Models</h2>
-          <div class="muted">Link ekledikçe site “Free Models” ekranında yan yana listelenir.</div>
-
-          <div class="row" style="margin-top:10px;">
-            <div>
-              <label>Model Adı</label>
-              <input id="mTitle" placeholder="Örn: Modern City Hotel (FREE)" />
-            </div>
-            <div>
-              <label>Roblox Link</label>
-              <input id="mLink" placeholder="https://create.roblox.com/store/asset/..." />
-            </div>
-          </div>
-
-          <div class="row">
-            <div>
-              <label>Thumbnail URL (opsiyonel)</label>
-              <input id="mThumb" placeholder="https://.../image.png" />
-            </div>
-            <div>
-              <label>Not (opsiyonel)</label>
-              <input id="mNote" placeholder="Örn: Part Based / Editable" />
-            </div>
-          </div>
-
-          <div class="row" style="margin-top:12px;">
-            <button class="btn primary" onclick="addModel()"><i class="fa-solid fa-plus"></i> Ekle</button>
-            <button class="btn" onclick="clearModelsConfirm()"><i class="fa-solid fa-trash"></i> Tümünü Temizle</button>
-          </div>
-
-          <div class="list" id="modelsList"></div>
-        </div>
-
-        <!-- FEED -->
-        <div class="card">
-          <h2><i class="fa-solid fa-newspaper" style="color:var(--warn)"></i> Evo Feed</h2>
-          <div class="muted">Dashboard’dan post ekle → Site “Evo Feed” bölümünde görünür.</div>
-
-          <label>Başlık</label>
-          <input id="fTitle" placeholder="Örn: Update v1.2 çıktı!" />
-
-          <label>İçerik</label>
-          <textarea id="fContent" placeholder="Detayları buraya yaz..."></textarea>
-
-          <div class="row">
-            <div>
-              <label>Etiket</label>
-              <select id="fTag">
-                <option value="info">News / Info</option>
-                <option value="update">Update</option>
-                <option value="leak">Leak</option>
-              </select>
-            </div>
-            <div>
-              <label>Medya URL (opsiyonel)</label>
-              <input id="fMedia" placeholder="https://.../image.png" />
-            </div>
-          </div>
-
-          <label style="display:flex; align-items:center; gap:10px; margin-top:12px;">
-            <input type="checkbox" id="fPinned" style="width:auto; transform:scale(1.1);" />
-            Pinned (üstte dursun)
-          </label>
-
-          <div class="row" style="margin-top:12px;">
-            <button class="btn primary" onclick="addFeed()"><i class="fa-solid fa-plus"></i> Post Ekle</button>
-            <button class="btn" onclick="clearFeedConfirm()"><i class="fa-solid fa-trash"></i> Feed Temizle</button>
-          </div>
-
-          <div class="list" id="feedList"></div>
-        </div>
-
-        <!-- QUICK NOTES -->
-        <div class="card">
-          <h2><i class="fa-solid fa-screwdriver-wrench" style="color:var(--accent)"></i> Notlar</h2>
-          <div class="muted">
-            - Bu dashboard client-side. Gerçek “kimse giremesin” güvenliği için sunucu tarafı login şart.<br/>
-            - Şimdilik <b>şifre</b> ile koruyor ve oturumu <b>sessionStorage</b>’da tutuyor.<br/>
-            - İstersen ben bunu Node/Express + JWT’ye de çeviririm (gerçek admin auth).
-          </div>
-
-          <div style="margin-top:12px;" class="row">
-            <button class="btn" onclick="exportAll()"><i class="fa-solid fa-file-export"></i> Verileri Dışa Aktar</button>
-            <label class="btn" style="cursor:pointer;">
-              <i class="fa-solid fa-file-import"></i> İçe Aktar
-              <input type="file" accept="application/json" style="display:none" onchange="importAll(event)" />
-            </label>
-          </div>
-
-          <div class="hint">Yedek: export al → farklı bilgisayara import et → her şey geri gelir.</div>
-        </div>
-
+  <!-- EDIT FEED MODAL -->
+  <div class="modal-overlay" id="editFeedModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Postu Düzenle</h3>
+        <button class="modal-close" onclick="uiManager.closeModal('editFeedModal')"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <input type="hidden" id="editFeedId">
+      <div class="form-group">
+        <label>Başlık</label>
+        <input type="text" id="efTitle">
+      </div>
+      <div class="form-group">
+        <label>İçerik</label>
+        <textarea id="efContent"></textarea>
+      </div>
+      <div class="form-group" style="display: flex; gap: 10px; align-items:center;">
+        <input type="checkbox" id="efPinned" style="width: 18px; height: 18px;">
+        <label style="margin:0;">Başa Tuttur</label>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="appData.saveEditFeed()" style="flex:1;">Kaydet</button>
+        <button class="btn btn-outline" onclick="uiManager.closeModal('editFeedModal')" style="flex:1;">İptal</button>
       </div>
     </div>
   </div>
 
 <script>
-/*
-  EVO Dashboard - fixed build
-  Fixes:
-  - Removed duplicated stray code blocks that were causing a syntax error (page looked frozen).
-  - Removed top-level 'await' by wrapping init in an async IIFE.
-*/
-(() => {
-  // =========================
-  //  AYAR: ADMIN GİRİŞİ (CLIENT-SIDE)
-  //  Not: Gerçek güvenlik için sunucu tarafı login gerekir.
-  // =========================
-  const ADMIN_USER = "evo"; // <-- bunu değiştir (küçük harf önerilir)
+/**
+ * EVO DASHBOARD V2.0 - SECURE & REFACTORED
+ * Geliştirici: AI
+ */
 
-  // Şifreyi burada DÜZ METİN yazmıyoruz. SHA-256 hash karşılaştırması var.
-  // Hash üretmek için tarayıcı konsolunda şunu çalıştır:
-  //   await sha256("SENIN_YENI_SIFREN")
-  const ADMIN_PASS_SHA256 = "80c6a995b0e35edfb8dced32237febd1dcca81e5ec91c649ec5215a652fcd89b"; // EVO_ADMIN_123
+// ==========================================
+// CONFIG & SUPABASE (BURAYI KENDİ BİLGİLERİNLE DOLDUR)
+// ==========================================
+const CONFIG = {
+  SUPABASE_URL: "https://ixvovmragysxwbcspixo.supabase.co",
+  SUPABASE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4dm92bXJhZ3lzeHdiY3NwaXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxNzg3NDMsImV4cCI6MjA4Nzc1NDc0M30.mIMKSz5Jaxxm355NfMWYwP76GFlEQMaifkuyeNSIkPs",
+  BUCKET_NAME: "assets" // Supabase Storage içindeki public bucket adın
+};
 
-  // ===== SUPABASE (ÖNERİLEN: gerçek güvenlik + cihazlar arası senkron) =====
-  // Settings -> API: URL + anon key
-  const SUPABASE_URL = "https://ixvovmragysxwbcspixo.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4dm92bXJhZ3lzeHdiY3NwaXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxNzg3NDMsImV4cCI6MjA4Nzc1NDc0M30.mIMKSz5Jaxxm355NfMWYwP76GFlEQMaifkuyeNSIkPs";
-  const ADMIN_EMAIL = "burakhusta@gmail.com"; // Supabase Auth'ta kayıtlı admin mail
-  const USE_SUPABASE = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+const sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
 
-  const sb = USE_SUPABASE ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+// State Management
+let STATE = {
+  models: [],
+  feeds: []
+};
 
-  // ===== Keys =====
-  const AUTH_KEY = "evo_dash_auth_v1";
-  const AUTH_EXP_KEY = "evo_dash_auth_exp_v1";
-  const FAIL_KEY = "evo_dash_fail_v1";
-  const FAIL_UNTIL_KEY = "evo_dash_lock_until_v1";
+// ==========================================
+// UTILITY FUNCTIONS (GÜVENLİK VE ARAÇLAR)
+// ==========================================
+const utils = {
+  // XSS Koruması: Ekrana basılan her veriyi temizler
+  escapeHTML: (str) => {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  },
+  
+  // Dosya boyutu hesaplama
+  formatBytes: (bytes, decimals = 2) => {
+    if (!+bytes) return '0 Bytes';
+    const k = 1024, dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+  },
 
-  const MODELS_KEY = "evo_models_v1";
-  const FEED_KEY = "evo_feed_v1";
-  const PROFILE_KEY = "evo_profile_v1";
-
-  // ===== Helpers =====
-  const $ = (id) => document.getElementById(id);
-
-  function safeJsonParse(str, fallback){
-    try{ return JSON.parse(str); }catch(e){ return fallback; }
+  // Rastgele dosya ismi üretici (Overwrite engellemek için)
+  generateFileName: (originalName) => {
+    const ext = originalName.split('.').pop();
+    const safeName = originalName.replace(/[^a-zA-Z0-9]/g, "").substring(0, 15);
+    return `${Date.now()}_${Math.random().toString(36).substring(2,8)}_${safeName}.${ext}`;
   }
-  function now(){ return Date.now(); }
+};
 
-  async function sha256(text){
-    const enc = new TextEncoder().encode(text);
-    const buf = await crypto.subtle.digest("SHA-256", enc);
-    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
-  }
-
-  function bytesToHuman(bytes){
-    const b = Number(bytes||0);
-    if(!b) return "";
-    const units = ["B","KB","MB","GB"];
-    let i=0, v=b;
-    while(v>=1024 && i<units.length-1){ v/=1024; i++; }
-    return (v>=10 || i===0 ? v.toFixed(0) : v.toFixed(1)) + " " + units[i];
-  }
-
-  async function uploadToBucket(bucket, file, folder){
-    if(!sb) throw new Error("Supabase kapalı");
-    const safeBase = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0,60);
-    const path = `${folder}/${Date.now()}_${Math.random().toString(16).slice(2)}_${safeBase}`;
-    const { error } = await sb.storage.from(bucket).upload(path, file, { upsert:false, contentType:file.type || undefined });
-    if(error) throw error;
-    const { data } = sb.storage.from(bucket).getPublicUrl(path);
-    return { publicUrl: data.publicUrl, path };
-  }
-
-  function escapeHtml(str){
-    return String(str ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-  // ===== Auth =====
-  function isLocked(){
-    const until = parseInt(localStorage.getItem(FAIL_UNTIL_KEY) || "0", 10);
-    return until && now() < until;
-  }
-  function lockSecondsLeft(){
-    const until = parseInt(localStorage.getItem(FAIL_UNTIL_KEY) || "0", 10);
-    if(!until) return 0;
-    return Math.ceil(Math.max(0, until - now())/1000);
-  }
-  function isAuthed(){
-    const token = sessionStorage.getItem(AUTH_KEY);
-    const exp = parseInt(sessionStorage.getItem(AUTH_EXP_KEY) || "0", 10);
-    return !!token && exp && now() < exp;
-  }
-  function setAuthed(val){
-    if(val){
-      // 8 saatlik session
-      sessionStorage.setItem(AUTH_KEY, Math.random().toString(36).slice(2) + "_" + now());
-      sessionStorage.setItem(AUTH_EXP_KEY, String(now() + 8*60*60*1000));
+// ==========================================
+// UI MANAGER (Bildirimler, Loader, Modallar)
+// ==========================================
+const uiManager = {
+  showLoader: (text = "İşleniyor...") => {
+    document.getElementById('loaderText').innerText = text;
+    document.getElementById('globalLoader').style.display = 'flex';
+  },
+  hideLoader: () => {
+    document.getElementById('globalLoader').style.display = 'none';
+  },
+  toast: (message, type = "success") => {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-check-circle' : 'fa-circle-exclamation'}"></i> ${utils.escapeHTML(message)}`;
+    container.appendChild(toast);
+    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 4000);
+  },
+  switchView: (view) => {
+    document.getElementById('loginView').style.display = view === 'login' ? 'block' : 'none';
+    document.getElementById('dashView').style.display = view === 'dash' ? 'block' : 'none';
+    document.getElementById('logoutBtn').style.display = view === 'dash' ? 'inline-flex' : 'none';
+  },
+  updateFileName: (inputElem, displayId) => {
+    const display = document.getElementById(displayId);
+    if (inputElem.files && inputElem.files[0]) {
+      display.innerText = inputElem.files[0].name;
+      display.style.color = 'var(--success)';
     } else {
-      sessionStorage.removeItem(AUTH_KEY);
-      sessionStorage.removeItem(AUTH_EXP_KEY);
+      display.innerText = "Seçilmedi";
+      display.style.color = 'var(--accent)';
     }
+  },
+  openModal: (id) => document.getElementById(id).classList.add('active'),
+  closeModal: (id) => document.getElementById(id).classList.remove('active'),
+  clearInputs: (containerId) => {
+    const container = document.getElementById(containerId) || document;
+    container.querySelectorAll('input[type="text"], input[type="file"], textarea').forEach(el => el.value = '');
+    container.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+    container.querySelectorAll('.file-name-display').forEach(el => { el.innerText = "Seçilmedi"; el.style.color = 'var(--accent)'; });
   }
+};
 
-  function show(view){
-    $("loginView").style.display = view === "login" ? "block" : "none";
-    $("dashView").style.display = view === "dash" ? "block" : "none";
-    $("logoutBtn").style.display = view === "dash" ? "inline-flex" : "none";
-  }
-
-  async function login(){
-    if(isLocked()){
-      alert("Çok deneme yaptın. " + lockSecondsLeft() + " saniye bekle.");
-      return;
+// ==========================================
+// AUTHENTICATION LOGIC (Supabase Auth)
+// ==========================================
+const appAuth = {
+  checkSession: async () => {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      uiManager.switchView('dash');
+      appData.fetchAll(); // Verileri yükle
+    } else {
+      uiManager.switchView('login');
     }
+  },
+  login: async () => {
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    
+    if (!email || !pass) return uiManager.toast('E-mail ve şifre zorunludur.', 'error');
+    
+    uiManager.showLoader('Giriş yapılıyor...');
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+    uiManager.hideLoader();
 
-    // 1) Supabase Auth
-    if(sb){
-      const email = ($("emailInput")?.value || "").trim().toLowerCase();
-      const pass = ($("passInput")?.value || "");
-      if(!email || !pass){ alert("E-mail ve şifre zorunlu."); return; }
-      if(ADMIN_EMAIL && email !== ADMIN_EMAIL.trim().toLowerCase()){
-        alert("Bu hesap admin değil.");
-        return;
+    if (error) {
+      uiManager.toast('Hatalı giriş: ' + error.message, 'error');
+    } else {
+      uiManager.toast('Başarıyla giriş yapıldı!');
+      document.getElementById('loginPass').value = '';
+      uiManager.switchView('dash');
+      appData.fetchAll();
+    }
+  },
+  logout: async () => {
+    await sb.auth.signOut();
+    uiManager.switchView('login');
+    uiManager.toast('Çıkış yapıldı.');
+  }
+};
+
+// ==========================================
+// DATA & STORAGE LOGIC (Supabase CRUD)
+// ==========================================
+const appData = {
+  
+  // YARDIMCI: Dosya Yükleme Motoru
+  uploadFileToStorage: async (file, folderName) => {
+    if (!file) return null;
+    const newName = utils.generateFileName(file.name);
+    const path = `${folderName}/${newName}`;
+    
+    const { data, error } = await sb.storage.from(CONFIG.BUCKET_NAME).upload(path, file);
+    if (error) throw error;
+    
+    const { data: urlData } = sb.storage.from(CONFIG.BUCKET_NAME).getPublicUrl(path);
+    return { url: urlData.publicUrl, path: path, name: file.name, size: file.size };
+  },
+
+  // Tüm Verileri Çek ve Ekrana Bas
+  fetchAll: async () => {
+    uiManager.showLoader('Veriler sekronize ediliyor...');
+    try {
+      // Modelleri Çek
+      const { data: mData, error: mErr } = await sb.from('models').select('*').order('created_at', { ascending: false });
+      if (mErr) throw mErr;
+      STATE.models = mData || [];
+      renderEngine.renderModels();
+
+      // Feedleri Çek
+      const { data: fData, error: fErr } = await sb.from('feed_posts').select('*').order('pinned', { ascending: false }).order('created_at', { ascending: false });
+      if (fErr) throw fErr;
+      STATE.feeds = fData || [];
+      renderEngine.renderFeeds();
+      
+    } catch (e) {
+      uiManager.toast('Veri çekme hatası: ' + e.message, 'error');
+    }
+    uiManager.hideLoader();
+  },
+
+  // --- MODELS ---
+  addModel: async () => {
+    const title = document.getElementById('mTitle').value.trim();
+    if (!title) return uiManager.toast('Model adı zorunludur!', 'error');
+
+    const fileInput = document.getElementById('mFile').files[0];
+    const thumbInput = document.getElementById('mThumbFile').files[0];
+    const link = document.getElementById('mLink').value.trim();
+    const note = document.getElementById('mNote').value.trim();
+
+    uiManager.showLoader('Dosyalar yükleniyor ve model ekleniyor...');
+    try {
+      let thumbUrl = "", fileUrl = "", fileName = "", fileSize = "";
+
+      if (thumbInput) {
+        uiManager.showLoader('Görsel Yükleniyor...');
+        const tData = await appData.uploadFileToStorage(thumbInput, 'model_thumbs');
+        thumbUrl = tData.url;
       }
-      try{
-        const { error } = await sb.auth.signInWithPassword({ email, password: pass });
-        if(error) throw error;
-
-        setAuthed(true);
-        show("dash");
-        await boot();
-
-        $("emailInput").value = "";
-        $("passInput").value = "";
-        return;
-      }catch(e){
-        const fails = parseInt(localStorage.getItem(FAIL_KEY) || "0", 10) + 1;
-        localStorage.setItem(FAIL_KEY, String(fails));
-        if(fails >= 5){
-          const mins = Math.min(60, 5 * Math.ceil((fails-4)/2));
-          localStorage.setItem(FAIL_UNTIL_KEY, String(now() + mins*60*1000));
-        }
-        alert("Giriş yanlış.");
-        return;
-      }
-    }
-
-    // 2) Fallback: client-side hash
-    const user = ($("emailInput")?.value || "").trim().toLowerCase();
-    const pass = ($("passInput").value || "");
-    if(!user || !pass){
-      alert("Kullanıcı adı ve şifre zorunlu.");
-      return;
-    }
-    const passHash = await sha256(pass);
-    const okUser = user === String(ADMIN_USER).toLowerCase();
-    const okPass = passHash === String(ADMIN_PASS_SHA256).toLowerCase();
-
-    if(!(okUser && okPass)){
-      const fails = parseInt(localStorage.getItem(FAIL_KEY) || "0", 10) + 1;
-      localStorage.setItem(FAIL_KEY, String(fails));
-      if(fails >= 5){
-        const mins = Math.min(60, 5 * Math.ceil((fails-4)/2));
-        localStorage.setItem(FAIL_UNTIL_KEY, String(now() + mins*60*1000));
-      }
-      alert("Giriş yanlış.");
-      return;
-    }
-
-    localStorage.removeItem(FAIL_KEY);
-    localStorage.removeItem(FAIL_UNTIL_KEY);
-
-    setAuthed(true);
-    show("dash");
-    await boot();
-
-    if($("emailInput")) $("emailInput").value = "";
-    $("passInput").value = "";
-  }
-
-  async function logout(){
-    try{ if(sb) await sb.auth.signOut(); }catch(e){}
-    setAuthed(false);
-    show("login");
-    if($("emailInput")) $("emailInput").value = "";
-    $("passInput").value = "";
-  }
-
-  // expose for inline onclick
-  window.login = login;
-  window.logout = logout;
-
-  // ===== Profile =====
-  function loadProfile(){
-    const p = safeJsonParse(localStorage.getItem(PROFILE_KEY) || "null", null) || {};
-    $("pName").value = p.displayName || "EVO";
-    $("pHandle").value = p.handle || "@EvoStudiosT";
-    $("pAvatar").value = p.avatarUrl || "";
-    $("avatarPreview").src = (p.avatarUrl && String(p.avatarUrl).trim()) ? p.avatarUrl : "evo_logo.png";
-  }
-  function saveProfile(){
-    const displayName = $("pName").value.trim();
-    const handle = $("pHandle").value.trim();
-    const avatarUrl = $("pAvatar").value.trim();
-    localStorage.setItem(PROFILE_KEY, JSON.stringify({ displayName, handle, avatarUrl }));
-    alert("Profil kaydedildi. (Siteyi yenilersen görünür.)");
-  }
-  function resetProfile(){
-    if(!confirm("Profil sıfırlansın mı?")) return;
-    localStorage.removeItem(PROFILE_KEY);
-    loadProfile();
-  }
-  window.saveProfile = saveProfile;
-  window.resetProfile = resetProfile;
-
-  // ===== Models =====
-  function getModels(){
-    const arr = safeJsonParse(localStorage.getItem(MODELS_KEY) || "[]", []);
-    return Array.isArray(arr) ? arr : [];
-  }
-  function setModels(arr){
-    localStorage.setItem(MODELS_KEY, JSON.stringify(arr));
-  }
-
-  async function addModel(){
-    const title = $("mTitle").value.trim();
-    const link = $("mLink").value.trim();
-    const note = $("mNote").value.trim();
-    if(!title){
-      alert("Model adı zorunlu.");
-      return;
-    }
-
-    let thumbUrl = $("mThumb").value.trim();
-    let fileUrl = "";
-    let fileName = "";
-    let fileSize = "";
-
-    const file = $("mFile")?.files?.[0] || null;
-    const thumbFile = $("mThumbFile")?.files?.[0] || null;
-
-    try{
-      if(sb){
-        if(file){
-          const up = await uploadToBucket("assets", file, "models");
-          fileUrl = up.publicUrl;
-          fileName = file.name;
-          fileSize = bytesToHuman(file.size);
-        }
-        if(thumbFile){
-          const upT = await uploadToBucket("assets", thumbFile, "thumbs");
-          thumbUrl = upT.publicUrl;
-        }
-
-        const payload = {
-          title,
-          note: note || "Free Model",
-          roblox_link: link || "",
-          thumb_url: thumbUrl || "",
-          file_url: fileUrl || "",
-          file_name: fileName || "",
-          file_size: fileSize || ""
-        };
-        const { error } = await sb.from("models").insert(payload);
-        if(error) throw error;
-
-        await sbSyncDown();
-      } else {
-        if(!link && !file){
-          alert("Roblox linki veya model dosyası lazım.");
-          return;
-        }
-        const models = getModels();
-        models.push({ id: "m_" + Date.now(), title, link, thumbUrl, note: note || "Free Model", fileUrl, fileName, fileSize, createdAt: Date.now() });
-        setModels(models);
+      
+      if (fileInput) {
+        uiManager.showLoader('Model Dosyası Yükleniyor...');
+        const fData = await appData.uploadFileToStorage(fileInput, 'model_files');
+        fileUrl = fData.url;
+        fileName = fData.name;
+        fileSize = utils.formatBytes(fData.size);
       }
 
-      $("mTitle").value = ""; $("mLink").value=""; $("mThumb").value=""; $("mNote").value="";
-      if($("mFile")) $("mFile").value = "";
-      if($("mThumbFile")) $("mThumbFile").value = "";
-      renderModels();
-      alert("Model eklendi.");
-    }catch(e){
-      console.log(e);
-      alert("Model eklenemedi: " + (e?.message || e));
+      const payload = {
+        title: title,
+        note: note || "Free Model",
+        roblox_link: link,
+        thumb_url: thumbUrl,
+        file_url: fileUrl,
+        file_name: fileName,
+        file_size: fileSize
+      };
+
+      const { error } = await sb.from('models').insert(payload);
+      if (error) throw error;
+
+      uiManager.toast('Model başarıyla eklendi!');
+      uiManager.clearInputs('dashView'); // Sadece ilgili alanı temizlemek için geliştirilebilir
+      appData.fetchAll(); // Listeyi yenile
+
+    } catch (e) {
+      uiManager.toast('Hata: ' + e.message, 'error');
     }
-  }
-  window.addModel = addModel;
+    uiManager.hideLoader();
+  },
 
-  function deleteModel(id){
-    const models = getModels().filter(m => m.id !== id);
-    setModels(models);
-    renderModels();
-  }
-  window.deleteModel = deleteModel;
+  deleteModel: async (id) => {
+    if(!confirm('Bu modeli kalıcı olarak silmek istiyor musun?')) return;
+    uiManager.showLoader('Siliniyor...');
+    try {
+      const { error } = await sb.from('models').delete().eq('id', id);
+      if (error) throw error;
+      uiManager.toast('Model silindi.');
+      appData.fetchAll();
+    } catch (e) {
+      uiManager.toast('Silme hatası: ' + e.message, 'error');
+    }
+    uiManager.hideLoader();
+  },
 
-  function clearModelsConfirm(){
-    if(!confirm("Tüm modeller silinsin mi?")) return;
-    localStorage.removeItem(MODELS_KEY);
-    renderModels();
-  }
-  window.clearModelsConfirm = clearModelsConfirm;
+  openEditModel: (id) => {
+    const model = STATE.models.find(m => m.id === id);
+    if(!model) return;
+    document.getElementById('editModelId').value = model.id;
+    document.getElementById('emTitle').value = model.title || '';
+    document.getElementById('emNote').value = model.note || '';
+    document.getElementById('emLink').value = model.roblox_link || '';
+    uiManager.openModal('editModelModal');
+  },
 
-  function renderModels(){
-    const list = $("modelsList");
-    const models = getModels().slice().sort((a,b)=> (b.createdAt||0)-(a.createdAt||0));
-    list.innerHTML = "";
-    if(!models.length){
-      list.innerHTML = '<div class="muted">Henüz model yok. Yukarıdan ekle.</div>';
+  saveEditModel: async () => {
+    const id = document.getElementById('editModelId').value;
+    const title = document.getElementById('emTitle').value.trim();
+    const note = document.getElementById('emNote').value.trim();
+    const link = document.getElementById('emLink').value.trim();
+
+    if(!title) return uiManager.toast('Başlık boş olamaz', 'error');
+
+    uiManager.showLoader('Güncelleniyor...');
+    try {
+      const { error } = await sb.from('models').update({
+        title: title, note: note, roblox_link: link
+      }).eq('id', id);
+      if (error) throw error;
+
+      uiManager.toast('Model güncellendi');
+      uiManager.closeModal('editModelModal');
+      appData.fetchAll();
+    } catch (e) {
+      uiManager.toast('Güncelleme hatası', 'error');
+    }
+    uiManager.hideLoader();
+  },
+
+  // --- FEEDS ---
+  addFeed: async () => {
+    const title = document.getElementById('fTitle').value.trim();
+    const content = document.getElementById('fContent').value.trim();
+    if (!title || !content) return uiManager.toast('Başlık ve içerik zorunludur!', 'error');
+
+    const tag = document.getElementById('fTag').value;
+    const pinned = document.getElementById('fPinned').checked;
+    const mediaInput = document.getElementById('fMediaFile').files[0];
+
+    uiManager.showLoader('Post hazırlanıyor...');
+    try {
+      let mediaUrl = "";
+
+      if (mediaInput) {
+        uiManager.showLoader('Medya Yükleniyor...');
+        const folder = mediaInput.type.startsWith('video/') ? 'feed_videos' : 'feed_images';
+        const mData = await appData.uploadFileToStorage(mediaInput, folder);
+        mediaUrl = mData.url;
+      }
+
+      const payload = {
+        title: title,
+        content: content,
+        tag: tag,
+        pinned: pinned,
+        media_url: mediaUrl,
+        author: "Evo Admin", // Dinamik yapılabilir
+        avatar_url: "evo_logo.png"
+      };
+
+      const { error } = await sb.from('feed_posts').insert(payload);
+      if (error) throw error;
+
+      uiManager.toast('Post paylaşıldı!');
+      document.getElementById('fTitle').value = '';
+      document.getElementById('fContent').value = '';
+      document.getElementById('fPinned').checked = false;
+      document.getElementById('fMediaFile').value = '';
+      uiManager.updateFileName(document.getElementById('fMediaFile'), 'fMediaName');
+      
+      appData.fetchAll();
+
+    } catch (e) {
+      uiManager.toast('Hata: ' + e.message, 'error');
+    }
+    uiManager.hideLoader();
+  },
+
+  deleteFeed: async (id) => {
+    if(!confirm('Bu postu silmek istiyor musun?')) return;
+    uiManager.showLoader('Siliniyor...');
+    try {
+      const { error } = await sb.from('feed_posts').delete().eq('id', id);
+      if (error) throw error;
+      uiManager.toast('Post silindi.');
+      appData.fetchAll();
+    } catch (e) {
+      uiManager.toast('Silme hatası', 'error');
+    }
+    uiManager.hideLoader();
+  },
+
+  openEditFeed: (id) => {
+    const post = STATE.feeds.find(f => f.id === id);
+    if(!post) return;
+    document.getElementById('editFeedId').value = post.id;
+    document.getElementById('efTitle').value = post.title || '';
+    document.getElementById('efContent').value = post.content || '';
+    document.getElementById('efPinned').checked = !!post.pinned;
+    uiManager.openModal('editFeedModal');
+  },
+
+  saveEditFeed: async () => {
+    const id = document.getElementById('editFeedId').value;
+    const title = document.getElementById('efTitle').value.trim();
+    const content = document.getElementById('efContent').value.trim();
+    const pinned = document.getElementById('efPinned').checked;
+
+    if(!title || !content) return uiManager.toast('Başlık ve içerik gerekli', 'error');
+
+    uiManager.showLoader('Güncelleniyor...');
+    try {
+      const { error } = await sb.from('feed_posts').update({
+        title: title, content: content, pinned: pinned
+      }).eq('id', id);
+      if (error) throw error;
+
+      uiManager.toast('Post güncellendi');
+      uiManager.closeModal('editFeedModal');
+      appData.fetchAll();
+    } catch (e) {
+      uiManager.toast('Hata: ' + e.message, 'error');
+    }
+    uiManager.hideLoader();
+  }
+};
+
+// ==========================================
+// RENDER ENGINE (HTML OLUŞTURUCU)
+// ==========================================
+const renderEngine = {
+  renderModels: () => {
+    const list = document.getElementById('modelsList');
+    list.innerHTML = '';
+    
+    if(STATE.models.length === 0) {
+      list.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 20px;">Henüz model eklenmedi.</div>';
       return;
     }
-    models.forEach(m=>{
-      const div = document.createElement("div");
-      div.className = "item";
-      const thumb = (m.thumbUrl && String(m.thumbUrl).trim()) ? m.thumbUrl : "https://via.placeholder.com/520x300/0b1020/ffffff?text=EVO+MODEL";
-      const link = m.link || m.fileUrl || "#";
-      const linkLabel = m.fileUrl ? "Dosya" : "Link";
-      const extra = m.fileUrl ? `<div class="item-meta" style="margin-top:4px;"><a href="${m.fileUrl}" target="_blank" rel="noopener">İndir</a> ${m.fileName ? `• ${escapeHtml(m.fileName)}` : ""} ${m.fileSize ? `• ${escapeHtml(m.fileSize)}` : ""}</div>` : "";
+
+    STATE.models.forEach(m => {
+      const thumb = m.thumb_url ? m.thumb_url : 'https://via.placeholder.com/100?text=No+Img';
+      const fileBadge = m.file_url ? `<span class="item-badge" style="background:#dcfce7; color:#16a34a;"><i class="fa-solid fa-download"></i> İndirilebilir Dosya</span>` : '';
+      const linkBadge = m.roblox_link ? `<span class="item-badge"><i class="fa-solid fa-link"></i> Dış Link</span>` : '';
+      
+      const div = document.createElement('div');
+      div.className = 'item';
       div.innerHTML = `
-        <div class="thumb"><img src="${thumb}" onerror="this.src='https://via.placeholder.com/520x300/0b1020/ffffff?text=EVO+MODEL'"></div>
-        <div style="min-width:0;">
-          <div class="item-title">${escapeHtml(m.title)}</div>
-          <div class="item-meta">${escapeHtml(m.note || "Free Model")}</div>
-          <div class="item-meta" style="margin-top:4px;"><a href="${link}" target="_blank" rel="noopener">${linkLabel}</a></div>
-          ${extra}
+        <div class="item-thumb"><img src="${utils.escapeHTML(thumb)}" onerror="this.src='https://via.placeholder.com/100?text=Error'"></div>
+        <div class="item-info">
+          <div class="item-title">${utils.escapeHTML(m.title)} ${m.pinned ? '<i class="fa-solid fa-thumbtack text-accent"></i>' : ''}</div>
+          <div class="item-meta">${utils.escapeHTML(m.note || 'Genel Model')} • ${new Date(m.created_at).toLocaleDateString()}</div>
+          <div style="margin-top: 5px;">${fileBadge} ${linkBadge}</div>
         </div>
         <div class="item-actions">
-          <button class="mini del" onclick="deleteModel('${m.id}')"><i class="fa-solid fa-trash"></i></button>
+          <button class="btn-icon btn-edit" title="Düzenle" onclick="appData.openEditModel('${m.id}')"><i class="fa-solid fa-pen"></i></button>
+          <button class="btn-icon btn-del" title="Sil" onclick="appData.deleteModel('${m.id}')"><i class="fa-solid fa-trash"></i></button>
         </div>
       `;
       list.appendChild(div);
     });
-  }
+  },
 
-  // ===== Feed =====
-  function getFeed(){
-    const arr = safeJsonParse(localStorage.getItem(FEED_KEY) || "[]", []);
-    return Array.isArray(arr) ? arr : [];
-  }
-  function setFeed(arr){
-    localStorage.setItem(FEED_KEY, JSON.stringify(arr));
-  }
+  renderFeeds: () => {
+    const list = document.getElementById('feedList');
+    list.innerHTML = '';
 
-  async function addFeed(){
-    const title = $("fTitle").value.trim();
-    const content = $("fContent").value.trim();
-    if(!title || !content){
-      alert("Başlık ve içerik zorunlu.");
+    if(STATE.feeds.length === 0) {
+      list.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 20px;">Henüz duyuru eklenmedi.</div>';
       return;
     }
-    const tag = $("fTag").value;
-    let mediaUrl = $("fMedia").value.trim();
-    const musicUrl = ($("fMusic")?.value || "").trim();
-    const pinned = $("fPinned").checked;
 
-    const mediaFile = $("fMediaFile")?.files?.[0] || null;
+    STATE.feeds.forEach(f => {
+      let icon = 'fa-bullhorn';
+      let color = 'var(--accent)';
+      if(f.tag === 'update') { icon = 'fa-arrow-up-right-dots'; color = 'var(--success)'; }
+      if(f.tag === 'leak') { icon = 'fa-user-secret'; color = 'var(--danger)'; }
 
-    try{
-      if(sb){
-        if(mediaFile){
-          const folder = (mediaFile.type || "").startsWith("video/") ? "feed_videos" : "feed_images";
-          const up = await uploadToBucket("assets", mediaFile, folder);
-          mediaUrl = up.publicUrl;
-        }
+      const pinBadge = f.pinned ? `<span class="item-badge" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-thumbtack"></i> Başa Tutturuldu</span>` : '';
+      const mediaBadge = f.media_url ? `<span class="item-badge"><i class="fa-solid fa-photo-film"></i> Medya Var</span>` : '';
 
-        const payload = {
-          title,
-          content,
-          tag,
-          media_url: mediaUrl || "",
-          music_url: musicUrl || "",
-          pinned,
-          author: "Evo Studios",
-          avatar_url: "evo_logo.png"
-        };
-        const { error } = await sb.from("feed_posts").insert(payload);
-        if(error) throw error;
-
-        await sbSyncDown();
-      } else {
-        const feed = getFeed();
-        feed.push({
-          id: "p_" + Date.now(),
-          title, content, tag, mediaUrl, musicUrl, pinned,
-          createdAt: Date.now(),
-          author: "Evo Studios",
-          avatarUrl: "evo_logo.png"
-        });
-        setFeed(feed);
-      }
-
-      $("fTitle").value=""; $("fContent").value=""; $("fMedia").value=""; $("fPinned").checked=false;
-      if($("fMusic")) $("fMusic").value="";
-      if($("fMediaFile")) $("fMediaFile").value="";
-      renderFeed();
-      alert("Post eklendi.");
-    }catch(e){
-      console.log(e);
-      alert("Post eklenemedi: " + (e?.message || e));
-    }
-  }
-  window.addFeed = addFeed;
-
-  function deleteFeed(id){
-    const feed = getFeed().filter(p => p.id !== id);
-    setFeed(feed);
-    renderFeed();
-  }
-  window.deleteFeed = deleteFeed;
-
-  function clearFeedConfirm(){
-    if(!confirm("Feed temizlensin mi?")) return;
-    localStorage.removeItem(FEED_KEY);
-    renderFeed();
-  }
-  window.clearFeedConfirm = clearFeedConfirm;
-
-  function renderFeed(){
-    const list = $("feedList");
-    const feed = getFeed().slice().sort((a,b)=>{
-      const ap = a.pinned ? 1:0;
-      const bp = b.pinned ? 1:0;
-      if(ap!==bp) return bp-ap;
-      return (b.createdAt||0)-(a.createdAt||0);
-    });
-    list.innerHTML="";
-    if(!feed.length){
-      list.innerHTML = '<div class="muted">Henüz post yok. Yukarıdan ekle.</div>';
-      return;
-    }
-    feed.forEach(p=>{
-      const div = document.createElement("div");
-      div.className="item";
-      const tag = p.tag || "info";
-      const icon = tag==="update" ? "fa-rotate" : (tag==="leak" ? "fa-bug" : "fa-bullhorn");
+      const div = document.createElement('div');
+      div.className = 'item';
       div.innerHTML = `
-        <div class="thumb"><i class="fa-solid ${icon}" style="color:#fff;"></i></div>
-        <div style="min-width:0;">
-          <div class="item-title">${escapeHtml(p.title)} ${p.pinned ? '<span class="item-meta" style="margin-left:8px;">(PIN)</span>' : ''}</div>
-          <div class="item-meta">${new Date(p.createdAt||Date.now()).toLocaleString()}</div>
-          <div class="item-meta" style="margin-top:6px; white-space:pre-wrap;">${escapeHtml(p.content)}</div>
-          ${p.mediaUrl ? `<div class="item-meta" style="margin-top:6px;"><a href="${p.mediaUrl}" target="_blank" rel="noopener">Medya</a></div>` : ""}
+        <div class="item-thumb" style="background: ${color};"><i class="fa-solid ${icon}"></i></div>
+        <div class="item-info">
+          <div class="item-title">${utils.escapeHTML(f.title)}</div>
+          <div class="item-meta">${new Date(f.created_at).toLocaleString()}</div>
+          <div style="margin-top: 5px;">${pinBadge} ${mediaBadge}</div>
         </div>
         <div class="item-actions">
-          <button class="mini del" onclick="deleteFeed('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+          <button class="btn-icon btn-edit" title="Düzenle" onclick="appData.openEditFeed('${m.id}' /* HATA DÜZELTMESİ AŞAĞIDA: f.id olmalı */)"><i class="fa-solid fa-pen"></i></button>
+          <button class="btn-icon btn-del" title="Sil" onclick="appData.deleteFeed('${f.id}')"><i class="fa-solid fa-trash"></i></button>
         </div>
       `;
+      // Ufak typo düzeltmesi için HTML stringini yeniliyorum:
+      div.querySelector('.btn-edit').setAttribute('onclick', `appData.openEditFeed('${f.id}')`);
       list.appendChild(div);
     });
   }
+};
 
-  // ===== Export / Import =====
-  function exportAll(){
-    const blob = new Blob([JSON.stringify({
-      profile: safeJsonParse(localStorage.getItem(PROFILE_KEY) || "null", null),
-      models: getModels(),
-      feed: getFeed()
-    }, null, 2)], {type:"application/json"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "evo_dashboard_backup.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-  window.exportAll = exportAll;
+// ==========================================
+// INITIALIZATION
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+  // Enter tuşu ile giriş yapma
+  document.getElementById('loginPass').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') appAuth.login();
+  });
+  
+  // Başlangıçta oturum kontrolü
+  appAuth.checkSession();
+});
 
-  function importAll(ev){
-    const file = ev.target.files && ev.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      const data = safeJsonParse(reader.result, null);
-      if(!data){ alert("JSON okunamadı."); return; }
-
-      if(data.profile) localStorage.setItem(PROFILE_KEY, JSON.stringify(data.profile));
-      if(Array.isArray(data.models)) localStorage.setItem(MODELS_KEY, JSON.stringify(data.models));
-      if(Array.isArray(data.feed)) localStorage.setItem(FEED_KEY, JSON.stringify(data.feed));
-
-      alert("İçe aktarıldı. Siteyi yenilersen görünür.");
-      boot();
-    };
-    reader.readAsText(file);
-    ev.target.value = "";
-  }
-  window.importAll = importAll;
-
-  // ===== Supabase sync down =====
-  async function sbSyncDown(){
-    if(!sb) return;
-
-    const { data: m, error: me } = await sb.from("models").select("*").order("created_at", { ascending:false });
-    if(!me){
-      const mapped = (m||[]).map(r=>({
-        id: r.id,
-        title: r.title,
-        link: r.roblox_link||"",
-        thumbUrl: r.thumb_url||"",
-        note: r.note||"",
-        fileUrl: r.file_url||"",
-        fileName: r.file_name||"",
-        fileSize: r.file_size||"",
-        createdAt: r.created_at ? new Date(r.created_at).getTime() : Date.now()
-      }));
-      localStorage.setItem(MODELS_KEY, JSON.stringify(mapped));
-    }
-
-    const { data: f, error: fe } = await sb.from("feed_posts").select("*").order("created_at", { ascending:false });
-    if(!fe){
-      const mapped = (f||[]).map(r=>({
-        id:r.id,
-        title:r.title,
-        content:r.content,
-        tag:r.tag||"info",
-        mediaUrl:r.media_url||"",
-        musicUrl:r.music_url||"",
-        pinned:!!r.pinned,
-        createdAt: r.created_at ? new Date(r.created_at).getTime() : Date.now(),
-        author:r.author||"Evo Studios",
-        avatarUrl:r.avatar_url||"evo_logo.png"
-      }));
-      localStorage.setItem(FEED_KEY, JSON.stringify(mapped));
-    }
-  }
-
-  async function boot(){
-    if(sb){
-      try{ await sbSyncDown(); }catch(e){ console.log(e); }
-    }
-    loadProfile();
-    renderModels();
-    renderFeed();
-  }
-
-  // ===== Init =====
-  function wireEvents(){
-    $("logoutBtn").addEventListener("click", logout);
-
-    // Enter ile giriş
-    ["emailInput","passInput"].forEach(id=>{
-      const el = $(id);
-      if(!el) return;
-      el.addEventListener("keydown", (e)=>{ if(e.key==="Enter") login(); });
-    });
-  }
-
-  (async () => {
-    wireEvents();
-
-    if(sb){
-      try{
-        const { data } = await sb.auth.getSession();
-        if(data?.session){
-          setAuthed(true);
-        }
-      }catch(e){
-        console.log(e);
-      }
-    }
-
-    if(isAuthed()){
-      show("dash");
-      await boot();
-    }else{
-      show("login");
-    }
-  })();
-})();
 </script>
 </body>
 </html>
