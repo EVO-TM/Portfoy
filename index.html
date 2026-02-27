@@ -11,7 +11,7 @@
     <meta property="og:image" content="evo_logo.png">
 
     <!-- FONTLAR & İKONLAR -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;700;900&family=Courier+New:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;700;900&family=Courier+New:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <!-- SUPABASE -->
@@ -47,21 +47,21 @@
             position: relative;
         }
 
-        /* --- KARTON & BANT EFEKTLERİ (CARDBOARD THEME) --- */
+        /* --- KARTON & BANT EFEKTLERİ --- */
         .cardboard-bg {
             background-color: var(--cardboard);
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.12'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
             border: 4px solid var(--cardboard-dark);
-            box-shadow: 10px 10px 0 rgba(0,0,0,0.15), inset 0 0 20px rgba(0,0,0,0.05);
+            box-shadow: 12px 12px 0 rgba(0,0,0,0.15), inset 0 0 25px rgba(0,0,0,0.08);
             border-radius: 15px;
             position: relative;
         }
         
         .masking-tape {
             position: absolute;
-            background: rgba(255, 255, 255, 0.4);
-            border-left: 2px dashed rgba(255,255,255,0.6);
-            border-right: 2px dashed rgba(255,255,255,0.6);
+            background: rgba(255, 255, 255, 0.45);
+            border-left: 2px dashed rgba(255,255,255,0.7);
+            border-right: 2px dashed rgba(255,255,255,0.7);
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             backdrop-filter: blur(2px);
             z-index: 10;
@@ -73,9 +73,9 @@
         .layer-mid { height: 300px; opacity: 0.7; bottom: -20px; z-index: 1; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23121a3a' fill-opacity='1' d='M0,320L60,240L120,320L180,200L240,320L300,220L360,320L420,180L480,320L540,230L600,320L660,190L720,320L780,210L840,320L900,170L960,320L1020,230L1080,320L1140,200L1200,320L1260,220L1320,320L1380,250L1440,320L1440,320L0,320Z'%3E%3C/path%3E%3C/svg%3E"); background-size: cover; background-repeat: repeat-x; }
 
         /* --- ANİMASYONLAR --- */
-        @keyframes popIn { 0% { transform: scale(0.9) translateY(30px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
+        @keyframes popIn { 0% { transform: scale(0.9) translateY(40px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes floating { 0%, 100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-10px) rotate(1deg); } }
+        @keyframes floating { 0%, 100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-12px) rotate(1.5deg); } }
         @keyframes blinkLive { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
         /* --- UI ELEMENTS --- */
@@ -83,11 +83,17 @@
         .lang-btn { border: 2px solid transparent; background: none; padding: 5px 12px; font-weight: 900; font-size: 14px; cursor: pointer; border-radius: 8px; transition: 0.2s; color: var(--ink); font-family: 'Courier New', monospace; }
         .lang-btn.active { background: var(--s-yellow); border-color: var(--ink); box-shadow: 2px 2px 0 var(--ink); }
 
-        /* --- LOADER FIX --- */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1e2430; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease; }
+        /* --- LOADER (KESİN ÇÖZÜM) --- */
+        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1e2430; z-index: 99999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease, visibility 0.5s ease; }
         .spinner { width: 60px; height: 60px; border: 6px solid rgba(255,255,255,0.1); border-top-color: var(--cardboard); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
         .loading-text { color: var(--cardboard); font-family: 'Courier New', monospace; font-size: 24px; font-weight: 900; letter-spacing: 4px; animation: blinkLive 1.5s infinite; }
-        .loader-hidden { opacity: 0; pointer-events: none; }
+        .loader-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        /* --- LIGHTBOX (GÖRSEL BÜYÜTME) --- */
+        #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100000; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(5px); }
+        #lightbox.active { opacity: 1; pointer-events: auto; }
+        #lightbox img { max-width: 90%; max-height: 90%; border: 4px solid #fff; border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); transform: scale(0.9); transition: 0.3s; }
+        #lightbox.active img { transform: scale(1); }
 
         /* --- CONTENT WRAPPER --- */
         .stage { width: 100%; max-width: 1100px; height: 85vh; position: relative; display: flex; justify-content: center; align-items: center; z-index: 20; }
@@ -97,22 +103,10 @@
         /* =========================================
            HOME TAB (KARTON TEMALI)
            ========================================= */
-        .home-box {
-            width: 100%; max-width: 600px; padding: 50px 30px;
-            display: flex; flex-direction: column; align-items: center;
-            animation: floating 6s ease-in-out infinite;
-        }
-        
-        .polaroid-frame {
-            background: #fff; padding: 15px 15px 40px 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3); border-radius: 4px; 
-            transform: rotate(-3deg); width: 280px; position: relative;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid #ddd;
-        }
+        .home-box { width: 100%; max-width: 600px; padding: 50px 30px; display: flex; flex-direction: column; align-items: center; animation: floating 6s ease-in-out infinite; }
+        .polaroid-frame { background: #fff; padding: 15px 15px 40px 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); border-radius: 4px; transform: rotate(-3deg); width: 280px; position: relative; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border: 1px solid #ddd; }
         .polaroid-frame:hover { transform: rotate(0deg) scale(1.05); z-index: 30; }
         .polaroid-frame img { width: 100%; border-radius: 2px; border: 1px solid #eee; }
-        
         .home-title { font-size: 72px; color: #fff; margin: 30px 0 10px 0; line-height: 0.9; text-align: center; letter-spacing: -2px; text-shadow: 4px 4px 0 var(--ink); transform: rotate(-2deg); }
         .home-subtitle { background: var(--s-yellow); color: var(--ink); font-weight: 900; font-size: 18px; padding: 8px 20px; border: 3px solid var(--ink); border-radius: 8px; box-shadow: 4px 4px 0 var(--ink); transform: rotate(2deg); margin-bottom: 30px; font-family: 'Courier New', monospace; }
 
@@ -136,20 +130,26 @@
         .ref-name { font-weight: 900; font-size: 26px; text-align: center; margin-top: 15px; }
 
         /* =========================================
-           EVO STUDIOS (YENİ SEKME)
+           EVO STUDIOS (LOGO FİXLENDİ)
            ========================================= */
         .studio-folder { width: 100%; max-width: 800px; padding: 40px; }
-        .studio-logo-area { text-align: center; margin-bottom: 30px; }
-        .studio-logo-area i { font-size: 60px; color: var(--ink); background: var(--snow); padding: 20px; border-radius: 50%; border: 4px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); }
+        .studio-logo-area { text-align: center; margin-bottom: 30px; position: relative; }
+        .evo-logo-img { width: 140px; height: 140px; object-fit: cover; border-radius: 20px; border: 4px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); background: #fff; transition: 0.3s; transform: rotate(-2deg); }
+        .evo-logo-img:hover { transform: rotate(0deg) scale(1.05); }
         .studio-text { font-family: 'Courier New', monospace; font-size: 18px; font-weight: bold; color: #3d342b; text-align: center; line-height: 1.8; }
         .studio-team { display: flex; justify-content: center; gap: 20px; margin-top: 30px; flex-wrap: wrap; }
-        .team-badge { background: var(--ink); color: #fff; padding: 10px 20px; border-radius: 8px; font-weight: 900; border: 2px dashed #fff; transform: rotate(calc(-3deg + 6deg * var(--rand))); }
+        .team-badge { background: var(--ink); color: #fff; padding: 10px 20px; border-radius: 8px; font-weight: 900; border: 2px dashed #fff; transform: rotate(calc(-3deg + 6deg * var(--rand))); box-shadow: 4px 4px 0 rgba(0,0,0,0.2); }
 
         /* =========================================
-           FREE MODELS & GÜÇLÜ BUTONLAR
+           FREE MODELS & ARAMA MOTORU
            ========================================= */
         .models-panel { width: 100%; max-width: 950px; padding: 20px; height: 75vh; display: flex; flex-direction: column; }
-        .models-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 4px dashed var(--cardboard-dark); padding-bottom: 15px; }
+        .models-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 4px dashed var(--cardboard-dark); padding-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        
+        .search-bar { display: flex; background: #fff; border: 3px solid var(--ink); border-radius: 8px; overflow: hidden; box-shadow: 4px 4px 0 rgba(0,0,0,0.1); }
+        .search-bar input { border: none; padding: 10px 15px; outline: none; font-family: 'Courier New', monospace; font-weight: bold; width: 200px; }
+        .search-bar button { background: var(--s-yellow); border: none; border-left: 3px solid var(--ink); padding: 0 15px; cursor: pointer; color: var(--ink); font-weight: bold; }
+
         .models-grid { display: flex; gap: 20px; flex-wrap: wrap; overflow-y: auto; padding: 10px; justify-content: center; }
         .models-grid::-webkit-scrollbar { width: 8px; }
         .models-grid::-webkit-scrollbar-thumb { background: var(--cardboard-dark); border-radius: 10px; }
@@ -157,22 +157,22 @@
         .model-card { width: 280px; background: #fff; border: 4px solid var(--ink); border-radius: 12px; overflow: hidden; box-shadow: 6px 6px 0 var(--ink); transition: 0.2s; display: flex; flex-direction: column; transform: rotate(-1deg); }
         .model-card:nth-child(even) { transform: rotate(1deg); }
         .model-card:hover { transform: scale(1.02) translateY(-5px); box-shadow: 10px 10px 0 var(--ink); z-index: 5; }
-        .model-thumb { width: 100%; height: 160px; background: #2d3436; overflow: hidden; border-bottom: 4px solid var(--ink); }
+        .model-thumb { width: 100%; height: 160px; background: #2d3436; overflow: hidden; border-bottom: 4px solid var(--ink); position: relative; }
         .model-thumb img { width: 100%; height: 100%; object-fit: cover; }
         .model-body { padding: 15px; flex: 1; display: flex; flex-direction: column; }
         .model-name { font-weight: 900; font-size: 20px; margin-bottom: 5px; }
         .model-meta { font-family: 'Courier New', monospace; font-weight: bold; font-size: 13px; color: #666; margin-bottom: 15px; flex: 1; }
         
-        .btn-action { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 900; text-decoration: none; padding: 12px; border-radius: 8px; border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); transition: 0.1s; margin-top: 8px; color: var(--ink); }
+        .btn-action { display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 900; text-decoration: none; padding: 12px; border-radius: 8px; border: 3px solid var(--ink); box-shadow: 3px 3px 0 var(--ink); transition: 0.1s; margin-top: 8px; color: var(--ink); cursor: pointer; }
         .btn-action:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
         .btn-dl { background: var(--s-green); color: #fff; }
         .btn-rbx { background: #3498db; color: #fff; }
 
         /* =========================================
-           HABERLER (FEED) - DÜZELTİLDİ
+           HABERLER (FEED) - VİDEO & ZAMAN ENTEGRE
            ========================================= */
         .news-container { width: 100%; max-width: 750px; height: 80vh; display: flex; flex-direction: column; padding: 20px; }
-        .news-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 4px dashed var(--cardboard-dark); padding-bottom: 15px; margin-bottom: 15px; }
+        .news-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 4px dashed var(--cardboard-dark); padding-bottom: 15px; margin-bottom: 15px; flex-wrap: wrap; gap:10px; }
         .nh-title { font-size: 32px; font-weight: 900; font-family: 'Courier New', monospace; color: var(--ink); }
         
         .news-filters { display: flex; gap: 10px; }
@@ -185,20 +185,29 @@
         
         .news-card { background: #fff; border: 4px solid var(--ink); border-radius: 12px; padding: 20px; position: relative; box-shadow: 8px 8px 0 rgba(0,0,0,0.15); transform: rotate(0.5deg); }
         .news-card.pinned { background: #fff9c4; border-color: var(--s-yellow); box-shadow: 8px 8px 0 var(--s-yellow); transform: rotate(-1deg); }
-        .nc-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        
+        .nc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
         .nc-tag { background: var(--ink); color: #fff; padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 12px; font-family: 'Courier New'; }
+        .nc-time { font-family: 'Courier New', monospace; font-size: 12px; color: #777; font-weight: bold; margin-top: 5px; display: block; }
+        
         .nc-title { font-size: 22px; font-weight: 900; margin: 0 0 10px 0; }
         .nc-desc { font-size: 15px; color: #444; line-height: 1.5; font-family: 'Inter', sans-serif; font-weight: 500;}
-        .nc-media { width: 100%; max-height: 300px; object-fit: cover; border: 3px solid var(--ink); border-radius: 8px; margin-top: 15px; }
+        
+        .nc-media-wrapper { margin-top: 15px; position: relative; border: 3px solid var(--ink); border-radius: 8px; overflow: hidden; background: #000; display: flex; justify-content: center; }
+        .nc-media { width: 100%; max-height: 350px; object-fit: contain; display: block; }
+        .nc-media.img { cursor: zoom-in; }
+        
+        /* Gönderi Etkileşim Butonları (Like) */
+        .nc-actions { margin-top: 15px; padding-top: 15px; border-top: 2px dashed #ddd; display: flex; gap: 10px; }
+        .like-btn { background: #f4f4f4; border: 2px solid #ddd; padding: 6px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.2s; font-family: 'Courier New'; color: #666; }
+        .like-btn.liked { background: #ffeaa7; border-color: var(--s-yellow); color: #d35400; }
+        .like-btn:hover { transform: translateY(-2px); border-color: var(--ink); }
 
         /* =========================================
            NAV DOCK (MENÜ)
            ========================================= */
         .nav-dock-wrapper { position: fixed; bottom: 30px; left: 0; width: 100%; display: flex; justify-content: center; z-index: 1000; pointer-events: none; }
-        .nav-dock { 
-            pointer-events: auto; padding: 15px 20px; display: flex; gap: 15px; 
-            transform: rotate(-1deg); align-items: center; justify-content: center;
-        }
+        .nav-dock { pointer-events: auto; padding: 15px 20px; display: flex; gap: 15px; transform: rotate(-1deg); align-items: center; justify-content: center; }
         .nav-btn { width: 60px; height: 60px; border-radius: 12px; background: #fff; border: 4px solid var(--ink); font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); transition: 0.2s; box-shadow: 0 6px 0 var(--ink); }
         .nav-btn:hover { transform: translateY(-5px); background: var(--cardboard-light); }
         .nav-btn.active { transform: translateY(-8px); background: var(--s-yellow); box-shadow: 0 10px 0 var(--ink); }
@@ -209,6 +218,7 @@
             .nav-btn { width: 50px; height: 50px; font-size: 20px; border-width: 3px; }
             .home-title { font-size: 50px; }
             .model-card { width: 100%; }
+            .models-header { flex-direction: column; align-items: center; }
         }
     </style>
 </head>
@@ -224,10 +234,15 @@
         <button class="lang-btn" id="btn-en" onclick="changeLanguage('en')">EN</button>
     </div>
 
-    <!-- YÜKLEME EKRANI (FİXLENDİ) -->
+    <!-- YÜKLEME EKRANI -->
     <div id="loader">
         <div class="spinner"></div>
         <div class="loading-text">EVO STUDIOS</div>
+    </div>
+
+    <!-- LIGHTBOX (FOTOĞRAF BÜYÜTME) -->
+    <div id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="Full Screen">
     </div>
 
     <!-- ANA MENÜ (NAV DOCK) -->
@@ -248,7 +263,6 @@
         <div id="home" class="page-section active">
             <div class="home-box cardboard-bg">
                 <div class="masking-tape" style="top:-15px; left:30%; transform:rotate(-3deg); width: 120px; height: 40px; background: rgba(231, 76, 60, 0.6);"></div>
-                
                 <div class="polaroid-frame">
                     <img src="maskot.png" alt="Mascot" onerror="this.src='https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png'">
                 </div>
@@ -277,6 +291,7 @@
                 <div>
                     <div class="ref-avatar-card">
                         <div class="masking-tape" style="top:-20px; left:50%; transform:translateX(-50%); width: 100px; height: 40px;"></div>
+                        <!-- ROBLOX AVATAR FIX -->
                         <div class="ref-photo-frame"><img id="my-avatar" src="https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png" alt="Avatar"></div>
                         <div class="ref-name">EVO</div>
                     </div>
@@ -284,12 +299,13 @@
             </div>
         </div>
 
-        <!-- === EVO STUDIOS (YENİ SEKME) === -->
+        <!-- === EVO STUDIOS === -->
         <div id="studio" class="page-section">
             <div class="studio-folder cardboard-bg">
                 <div class="masking-tape" style="top:-20px; right:40px; transform:rotate(5deg); width: 100px; height: 35px; background: rgba(52, 152, 219, 0.6);"></div>
                 <div class="studio-logo-area">
-                    <i class="fa-solid fa-shield-halved"></i>
+                    <!-- EVO LOGO FIX -->
+                    <img src="evo_logo.png" alt="Evo Logo" class="evo-logo-img" onerror="this.src='https://via.placeholder.com/150/1e2430/ffffff?text=EVO'">
                     <h2 style="font-size: 40px; margin: 15px 0 0 0; font-weight: 900; color: var(--ink);">EVO STUDIOS</h2>
                 </div>
                 <p class="studio-text" data-t="studio_desc">
@@ -308,9 +324,13 @@
             <div class="models-panel cardboard-bg">
                 <div class="models-header">
                     <h2 style="margin:0; font-size:30px; font-weight:900;"><i class="fa-solid fa-box-open"></i> <span data-t="free_models_title">Free Models</span></h2>
+                    <!-- ARAMA MOTORU EKLENDİ -->
+                    <div class="search-bar">
+                        <input type="text" id="modelSearch" placeholder="Model Ara..." onkeyup="searchModels()">
+                        <button><i class="fa-solid fa-search"></i></button>
+                    </div>
                 </div>
                 <div id="models-grid" class="models-grid">
-                    <!-- Dinamik Modeller Buraya Gelecek -->
                     <div style="text-align:center; font-family:'Courier New'; font-weight:bold; width: 100%;">Yükleniyor...</div>
                 </div>
             </div>
@@ -328,7 +348,6 @@
                     </div>
                 </div>
                 <div id="news-feed" class="news-scroll-area">
-                    <!-- Dinamik Haberler Buraya Gelecek -->
                     <div style="text-align:center; font-family:'Courier New'; font-weight:bold;">Yükleniyor...</div>
                 </div>
             </div>
@@ -338,7 +357,7 @@
 
     <script>
         // ==========================================
-        // SUPABASE YAPILANDIRMASI (ADMİNDEKİ İLE AYNI)
+        // SUPABASE YAPILANDIRMASI
         // ==========================================
         const SUPABASE_URL = "https://ixvovmragysxwbcspixo.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4dm92bXJhZ3lzeHdiY3NwaXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxNzg3NDMsImV4cCI6MjA4Nzc1NDc0M30.mIMKSz5Jaxxm355NfMWYwP76GFlEQMaifkuyeNSIkPs";
@@ -352,22 +371,72 @@
         let currentLang = localStorage.getItem('siteLang') || 'tr';
 
         // ==========================================
-        // YÜKLEME EKRANI (LOAING SCREEN FIX)
+        // ROBLOX AVATAR ÇEKİCİ (CORS FIXLİ)
+        // ==========================================
+        async function fetchRobloxAvatar() {
+            try {
+                const ROBLOX_ID = '1992693538';
+                const url = `https://thumbnails.roblox.com/v1/users/avatar?userIds=${ROBLOX_ID}&size=420x420&format=Png&isCircular=false`;
+                const proxyUrl = 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url);
+                
+                const res = await fetch(proxyUrl);
+                const data = await res.json();
+                
+                if (data && data.data && data.data[0] && data.data[0].imageUrl) {
+                    document.getElementById('my-avatar').src = data.data[0].imageUrl;
+                }
+            } catch (err) {
+                console.error("Roblox avatarı çekilemedi, default resim kullanılacak.", err);
+            }
+        }
+
+        // ==========================================
+        // ZAMAN FORMATLAYICI (1 Saat Önce vs.)
+        // ==========================================
+        function timeAgo(dateString) {
+            if(!dateString) return "";
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHrs = Math.floor(diffMins / 60);
+            const diffDays = Math.floor(diffHrs / 24);
+
+            if (diffMins < 1) return currentLang === 'tr' ? 'Az önce' : 'Just now';
+            if (diffMins < 60) return currentLang === 'tr' ? `${diffMins} dakika önce` : `${diffMins} mins ago`;
+            if (diffHrs < 24) return currentLang === 'tr' ? `${diffHrs} saat önce` : `${diffHrs} hours ago`;
+            if (diffDays < 7) return currentLang === 'tr' ? `${diffDays} gün önce` : `${diffDays} days ago`;
+            
+            return date.toLocaleDateString();
+        }
+
+        // ==========================================
+        // LIGHTBOX KONTROLLERİ
+        // ==========================================
+        function openLightbox(url) {
+            document.getElementById('lightbox-img').src = url;
+            document.getElementById('lightbox').classList.add('active');
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            setTimeout(() => { document.getElementById('lightbox-img').src = ''; }, 300);
+        }
+
+        // ==========================================
+        // YÜKLEME EKRANI
         // ==========================================
         function removeLoader() {
             const loader = document.getElementById('loader');
-            if (loader && !loader.classList.contains('loader-hidden')) {
+            if (loader) {
                 loader.classList.add('loader-hidden');
-                // CSS transition bittikten sonra tamamen gizle
                 setTimeout(() => { loader.style.display = 'none'; }, 600);
             }
         }
-        // Sayfa tam yüklendiğinde veya en kötü 2.5 saniye sonra kapatmayı garantiye al
         window.addEventListener('load', () => { setTimeout(removeLoader, 1000); });
-        setTimeout(removeLoader, 3000);
+        setTimeout(removeLoader, 3000); // Failsafe
 
         // ==========================================
-        // NAVİGASYON (MENÜ GEÇİŞLERİ)
+        // NAVİGASYON (MENÜ)
         // ==========================================
         const navBtns = document.querySelectorAll('.nav-btn');
         const sections = document.querySelectorAll('.page-section');
@@ -375,69 +444,59 @@
         navBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const targetId = btn.getAttribute('data-target');
-                
-                // Aktif buton değişimi
                 navBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                
-                // Aktif sekme değişimi
                 sections.forEach(s => s.classList.remove('active'));
                 document.getElementById(targetId).classList.add('active');
             });
         });
 
         // ==========================================
-        // VERİ ÇEKME İŞLEMLERİ (SUPABASE DIRECT)
+        // VERİ ÇEKME (SUPABASE)
         // ==========================================
         async function fetchAllData() {
             try {
-                // 1. Modelleri Çek
-                const { data: models, error: mErr } = await sb.from('models').select('*').order('created_at', { ascending: false });
-                if (!mErr && models) {
-                    globalModelsData = models;
-                    renderModels();
-                }
+                // Modeller
+                const { data: models } = await sb.from('models').select('*').order('created_at', { ascending: false });
+                if (models) { globalModelsData = models; renderModels(); }
 
-                // 2. Feed'i (Haberleri) Çek
-                const { data: feeds, error: fErr } = await sb.from('feed_posts').select('*').order('pinned', { ascending: false }).order('created_at', { ascending: false });
-                if (!fErr && feeds) {
-                    globalNewsData = feeds;
-                    renderNews('all');
-                }
+                // Haberler
+                const { data: feeds } = await sb.from('feed_posts').select('*').order('pinned', { ascending: false }).order('created_at', { ascending: false });
+                if (feeds) { globalNewsData = feeds; renderNews('all'); }
             } catch (err) {
-                console.error("Veri çekilirken hata oluştu:", err);
+                console.error("Veri hatası:", err);
             } finally {
-                removeLoader(); // Veriler inince loader'ı kesin kapat
+                removeLoader();
             }
         }
 
         // ==========================================
-        // RENDER: FREE MODELS (İndirme ve Link Fixli)
+        // RENDER: FREE MODELS (Arama Entegreli)
         // ==========================================
-        function renderModels() {
+        function renderModels(searchQuery = '') {
             const grid = document.getElementById('models-grid');
             grid.innerHTML = '';
 
-            if (globalModelsData.length === 0) {
-                grid.innerHTML = '<div style="font-family:Courier New; font-weight:bold; margin-top:20px;">Henüz model eklenmedi.</div>';
+            const filteredData = globalModelsData.filter(m => {
+                if(!searchQuery) return true;
+                return m.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                       (m.note && m.note.toLowerCase().includes(searchQuery.toLowerCase()));
+            });
+
+            if (filteredData.length === 0) {
+                grid.innerHTML = '<div style="font-family:Courier New; font-weight:bold; margin-top:20px; width:100%; text-align:center;">Sonuç bulunamadı.</div>';
                 return;
             }
 
-            globalModelsData.forEach(m => {
+            filteredData.forEach(m => {
                 const thumb = m.thumb_url || 'https://via.placeholder.com/500x300/2b303b/ffffff?text=MODEL';
                 const hasFile = m.file_url && m.file_url.trim() !== "";
                 const hasLink = m.roblox_link && m.roblox_link.trim() !== "";
 
                 let buttonsHtml = '';
-                if (hasFile) {
-                    buttonsHtml += `<a href="${m.file_url}" target="_blank" class="btn-action btn-dl" download><i class="fa-solid fa-download"></i> İndir</a>`;
-                }
-                if (hasLink) {
-                    buttonsHtml += `<a href="${m.roblox_link}" target="_blank" class="btn-action btn-rbx"><i class="fa-solid fa-link"></i> Roblox'ta Al</a>`;
-                }
-                if (!hasFile && !hasLink) {
-                    buttonsHtml += `<div class="btn-action" style="opacity:0.5; cursor:not-allowed;"><i class="fa-solid fa-ban"></i> Link Yok</div>`;
-                }
+                if (hasFile) buttonsHtml += `<a href="${m.file_url}" target="_blank" class="btn-action btn-dl" download><i class="fa-solid fa-download"></i> İndir</a>`;
+                if (hasLink) buttonsHtml += `<a href="${m.roblox_link}" target="_blank" class="btn-action btn-rbx"><i class="fa-solid fa-link"></i> Roblox'ta Al</a>`;
+                if (!hasFile && !hasLink) buttonsHtml += `<div class="btn-action" style="opacity:0.5; cursor:not-allowed;"><i class="fa-solid fa-ban"></i> Link Yok</div>`;
 
                 const card = document.createElement('div');
                 card.className = 'model-card';
@@ -453,8 +512,13 @@
             });
         }
 
+        function searchModels() {
+            const val = document.getElementById('modelSearch').value;
+            renderModels(val);
+        }
+
         // ==========================================
-        // RENDER: HABERLER (FEED)
+        // RENDER: HABERLER (VİDEO, SAAT, BEĞENİ EKLENDİ)
         // ==========================================
         function renderNews(filterType) {
             const feed = document.getElementById('news-feed');
@@ -474,12 +538,20 @@
                 const isPinned = item.pinned ? 'pinned' : '';
                 const pinIcon = item.pinned ? '<i class="fa-solid fa-thumbtack" style="color:var(--s-red); margin-right:5px;"></i>' : '';
                 
+                // Medya Kontrolü (Video vs Resim)
                 let mediaHtml = '';
                 if (item.media_url) {
-                    if (item.media_url.endsWith('.mp4') || item.media_url.endsWith('.webm')) {
-                        mediaHtml = `<video class="nc-media" src="${item.media_url}" controls></video>`;
+                    const isVideo = item.media_url.match(/\.(mp4|webm|mov)$/i);
+                    if (isVideo) {
+                        mediaHtml = `
+                        <div class="nc-media-wrapper">
+                            <video class="nc-media" src="${item.media_url}" controls playsinline preload="metadata"></video>
+                        </div>`;
                     } else {
-                        mediaHtml = `<img class="nc-media" src="${item.media_url}" alt="Medya">`;
+                        mediaHtml = `
+                        <div class="nc-media-wrapper">
+                            <img class="nc-media img" src="${item.media_url}" alt="Medya" onclick="openLightbox('${item.media_url}')">
+                        </div>`;
                     }
                 }
 
@@ -487,16 +559,30 @@
                 if(item.tag === 'update') tagColor = '#00b894';
                 if(item.tag === 'leak') tagColor = '#e74c3c';
 
+                // Beğeni Durumu (Local Storage)
+                const likeKey = `like_${item.id}`;
+                const isLiked = localStorage.getItem(likeKey) === 'true';
+                const likeClass = isLiked ? 'liked' : '';
+                const likeIcon = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+
                 const card = document.createElement('div');
                 card.className = `news-card ${isPinned}`;
                 card.innerHTML = `
                     <div class="nc-header">
-                        <div style="font-weight:900; font-family:'Courier New';">${pinIcon} EVO STUDIOS</div>
+                        <div>
+                            <div style="font-weight:900; font-family:'Courier New'; font-size:18px;">${pinIcon} EVO STUDIOS</div>
+                            <span class="nc-time"><i class="fa-regular fa-clock"></i> ${timeAgo(item.created_at)}</span>
+                        </div>
                         <div class="nc-tag" style="background:${tagColor};">${item.tag ? item.tag.toUpperCase() : 'INFO'}</div>
                     </div>
                     <h3 class="nc-title">${item.title}</h3>
                     <div class="nc-desc">${item.content.replace(/\n/g, '<br>')}</div>
                     ${mediaHtml}
+                    <div class="nc-actions">
+                        <button class="like-btn ${likeClass}" onclick="toggleLike(this, '${item.id}')">
+                            <i class="${likeIcon}"></i> Beğen
+                        </button>
+                    </div>
                 `;
                 feed.appendChild(card);
             });
@@ -506,6 +592,22 @@
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btnElem.classList.add('active');
             renderNews(type);
+        }
+
+        // Gönderi Beğenme (Local Storage ile çalışır)
+        function toggleLike(btn, postId) {
+            const key = `like_${postId}`;
+            const isLiked = localStorage.getItem(key) === 'true';
+            
+            if (isLiked) {
+                localStorage.removeItem(key);
+                btn.classList.remove('liked');
+                btn.innerHTML = `<i class="fa-regular fa-heart"></i> Beğen`;
+            } else {
+                localStorage.setItem(key, 'true');
+                btn.classList.add('liked');
+                btn.innerHTML = `<i class="fa-solid fa-heart"></i> Beğenildi`;
+            }
         }
 
         // ==========================================
@@ -549,10 +651,19 @@
                     el.innerHTML = langData[lang][key];
                 }
             });
+
+            // Feed içindeki zaman formatını güncellemek için baştan renderla
+            if(globalNewsData.length > 0) {
+                const activeFilterBtn = document.querySelector('.filter-btn.active');
+                if(activeFilterBtn) activeFilterBtn.click();
+            }
         }
 
-        // Sayfa yüklendiğinde sistemi başlat
+        // ==========================================
+        // BAŞLATICI
+        // ==========================================
         changeLanguage(currentLang);
+        fetchRobloxAvatar();
         fetchAllData();
 
     </script>
