@@ -3,202 +3,228 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Evo Studios | Admin Secure Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <title>Evo | Cardboard Dashboard</title>
+  <link rel="icon" type="image/png" href="evo_logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
+    /* =========================================
+       CARDBOARD & NEOBRUTALISM THEME
+       ========================================= */
     :root {
-      --bg-dark: #0f172a;
-      --bg-panel: #1e293b;
-      --bg-card: #ffffff;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --accent: #6366f1;
-      --accent-hover: #4f46e5;
-      --success: #10b981;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --border: #e2e8f0;
-      --radius-lg: 20px;
-      --radius-md: 12px;
-      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      --paper-bg: #e6daca;
+      --cardboard-light: #f4e8d8;
+      --cardboard-main: #e2cfae;
+      --cardboard-dark: #c9af88;
+      --ink: #2b1f1a;
+      --ink-light: #524036;
+      --marker-red: #ff4b4b;
+      --marker-green: #10b981;
+      --marker-blue: #3b82f6;
+      --marker-yellow: #f59e0b;
+      --tape-bg: rgba(245, 245, 220, 0.85);
+      
+      --border-thick: 3px solid var(--ink);
+      --border-thin: 2px solid var(--ink);
+      --shadow-solid: 6px 6px 0px var(--ink);
+      --shadow-hover: 2px 2px 0px var(--ink);
+      --radius: 8px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg-dark);
-      color: var(--text-main);
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: var(--paper-bg);
+      /* Subtle noise/paper texture effect */
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+      color: var(--ink);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       padding: 20px;
-      background-image: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent 40%),
-                        radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.1), transparent 40%);
     }
 
-    /* Typography */
-    h1, h2, h3 { font-family: 'Outfit', sans-serif; font-weight: 800; color: var(--text-main); }
-    
-    /* Layout */
+    h1, h2, h3 { font-family: 'Outfit', sans-serif; font-weight: 900; letter-spacing: -0.5px; }
+
+    /* LAYOUT */
     .container { width: 100%; max-width: 1200px; }
-    
+
     .panel {
-      background: #f8fafc;
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      min-height: 90vh;
+      background: var(--cardboard-light);
+      border: var(--border-thick);
+      border-radius: var(--radius);
+      box-shadow: 12px 12px 0px var(--ink);
+      display: flex; flex-direction: column;
+      min-height: 90vh; position: relative;
     }
 
     .topbar {
-      background: #ffffff;
+      background: var(--cardboard-main);
       padding: 20px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: var(--border-thick);
     }
 
-    .brand { font-size: 24px; display: flex; align-items: center; gap: 10px; }
-    .brand i { color: var(--accent); }
+    .brand { font-size: 26px; font-weight: 900; display: flex; align-items: center; gap: 10px; font-family: 'Outfit', sans-serif; }
+    .brand i { color: var(--marker-red); }
 
     .content { padding: 30px; flex: 1; overflow-y: auto; }
-    
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 25px; }
-    @media(max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 30px; }
 
-    /* Cards */
+    /* CARDBOARD CARDS WITH MASKING TAPE */
     .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 25px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      background: var(--cardboard-light);
+      border: var(--border-thick);
+      border-radius: var(--radius);
+      padding: 30px 25px 25px;
+      box-shadow: var(--shadow-solid);
       position: relative;
     }
     
-    .card-header { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px dashed var(--border); }
-    .card-header p { color: var(--text-muted); font-size: 13px; margin-top: 5px; }
+    .tape {
+      position: absolute;
+      top: -12px; left: 50%;
+      transform: translateX(-50%) rotate(-2deg);
+      width: 120px; height: 28px;
+      background: var(--tape-bg);
+      border: 1px dashed rgba(0,0,0,0.2);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 10; backdrop-filter: blur(2px);
+    }
+    .card:nth-child(even) .tape { transform: translateX(-50%) rotate(3deg); }
 
-    /* Forms */
+    .card-header { margin-bottom: 20px; border-bottom: 2px dashed var(--ink-light); padding-bottom: 10px; }
+    .card-header p { color: var(--ink-light); font-size: 13px; font-weight: 600; margin-top: 5px; }
+
+    /* FORMS & INPUTS */
     .form-group { margin-bottom: 15px; }
-    label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px; color: #334155; }
+    label { display: block; font-weight: 700; font-size: 14px; margin-bottom: 8px; color: var(--ink); }
     
     input[type="text"], input[type="password"], select, textarea {
-      width: 100%; padding: 12px 15px; border: 2px solid var(--border);
-      border-radius: var(--radius-md); font-family: 'Inter', sans-serif;
-      font-size: 14px; transition: 0.2s; outline: none; background: #f8fafc;
+      width: 100%; padding: 12px 15px;
+      background: #fff;
+      border: var(--border-thin);
+      border-radius: var(--radius);
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px; font-weight: 600;
+      color: var(--ink);
+      box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
+      outline: none; transition: 0.1s;
     }
-    input:focus, textarea:focus, select:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+    input:focus, textarea:focus, select:focus {
+      box-shadow: var(--shadow-solid); transform: translate(-2px, -2px); background: #fffcf5;
+    }
     textarea { min-height: 100px; resize: vertical; }
 
-    /* File Input Styling */
+    /* FILE UPLOAD (Marker Style) */
     .file-upload {
-      border: 2px dashed var(--border); border-radius: var(--radius-md);
-      padding: 15px; text-align: center; cursor: pointer; transition: 0.2s;
-      background: #f8fafc; position: relative; overflow: hidden;
+      border: 3px dashed var(--ink);
+      border-radius: var(--radius);
+      padding: 15px; text-align: center; cursor: pointer;
+      background: rgba(255,255,255,0.5);
+      position: relative; overflow: hidden; transition: 0.2s; font-weight: 700;
     }
-    .file-upload:hover { border-color: var(--accent); background: #e0e7ff; }
-    .file-upload input[type="file"] {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      opacity: 0; cursor: pointer;
-    }
-    .file-name-display { font-size: 12px; color: var(--accent); font-weight: 600; margin-top: 5px; word-break: break-all;}
+    .file-upload:hover { background: var(--cardboard-main); }
+    .file-upload input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+    .file-name-display { font-size: 12px; color: var(--marker-blue); font-weight: 800; margin-top: 8px; word-break: break-all; }
 
-    /* Buttons */
+    /* BUTTONS */
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      padding: 10px 18px; border-radius: var(--radius-md); font-weight: 600;
-      font-size: 14px; cursor: pointer; border: none; transition: all 0.2s; text-decoration: none;
+      padding: 12px 20px; border: var(--border-thick); border-radius: var(--radius);
+      font-weight: 800; font-size: 15px; cursor: pointer;
+      box-shadow: var(--shadow-solid);
+      transition: all 0.1s ease-in-out; text-decoration: none; color: var(--ink);
     }
-    .btn-primary { background: var(--accent); color: white; box-shadow: 0 4px 10px rgba(99,102,241,0.3); }
-    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); }
-    .btn-danger { background: #fee2e2; color: var(--danger); }
-    .btn-danger:hover { background: #fecaca; }
-    .btn-outline { border: 2px solid var(--border); background: transparent; color: var(--text-main); }
-    .btn-outline:hover { background: #f1f5f9; }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .btn:active { box-shadow: 0px 0px 0px var(--ink); transform: translate(6px, 6px); }
+    
+    .btn-primary { background: var(--marker-yellow); }
+    .btn-primary:hover { background: #fbbf24; }
+    .btn-danger { background: var(--marker-red); color: white; }
+    .btn-danger:hover { background: #ef4444; }
+    .btn-outline { background: #fff; }
+    .btn-outline:hover { background: var(--cardboard-main); }
+    .btn-row { display: flex; gap: 15px; margin-top: 15px; }
 
-    .btn-row { display: flex; gap: 10px; margin-top: 20px; }
-
-    /* Lists & Items */
-    .list-container { margin-top: 20px; max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 5px; }
-    .list-container::-webkit-scrollbar { width: 6px; }
-    .list-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    /* LISTS & ITEMS */
+    .list-container { margin-top: 25px; max-height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; padding-right: 10px; }
+    .list-container::-webkit-scrollbar { width: 8px; }
+    .list-container::-webkit-scrollbar-thumb { background: var(--ink); border-radius: 4px; }
 
     .item {
-      display: flex; gap: 15px; background: #f8fafc; border: 1px solid var(--border);
-      border-radius: var(--radius-md); padding: 12px; align-items: center; transition: 0.2s;
+      display: flex; gap: 15px; background: #fff;
+      border: var(--border-thin); border-radius: var(--radius);
+      padding: 15px; align-items: flex-start;
+      box-shadow: 3px 3px 0px rgba(0,0,0,0.1);
     }
-    .item:hover { border-color: #cbd5e1; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-    
     .item-thumb {
-      width: 60px; height: 60px; border-radius: 8px; background: var(--bg-dark);
-      flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center;
+      width: 70px; height: 70px; border-radius: var(--radius);
+      background: var(--ink); flex-shrink: 0; overflow: hidden;
+      display: flex; align-items: center; justify-content: center; border: 2px solid var(--ink);
     }
     .item-thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .item-thumb i { font-size: 24px; color: white; }
+    .item-thumb i { font-size: 28px; color: var(--cardboard-light); }
     
     .item-info { flex: 1; min-width: 0; }
-    .item-title { font-weight: 700; font-size: 15px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .item-meta { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-    .item-badge { display: inline-block; padding: 2px 8px; background: #e0e7ff; color: var(--accent); border-radius: 20px; font-size: 11px; font-weight: 700; margin-left: 5px; }
+    .item-title { font-weight: 800; font-size: 16px; color: var(--ink); }
+    .item-meta { font-size: 12px; color: var(--ink-light); margin-top: 4px; font-weight: 600; }
+    .item-badge { display: inline-block; padding: 4px 8px; background: var(--cardboard-main); border: 2px solid var(--ink); border-radius: 4px; font-size: 11px; font-weight: 800; margin-top: 6px; }
 
-    .item-actions { display: flex; gap: 8px; }
-    .btn-icon { width: 32px; height: 32px; border-radius: 8px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-    .btn-edit { background: #e0f2fe; color: #0284c7; }
-    .btn-edit:hover { background: #bae6fd; }
-    .btn-del { background: #fee2e2; color: #ef4444; }
-    .btn-del:hover { background: #fecaca; }
+    .item-actions { display: flex; gap: 8px; flex-direction: column; }
+    .btn-icon { width: 36px; height: 36px; border: var(--border-thin); border-radius: var(--radius); background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: 0.1s; box-shadow: 2px 2px 0px var(--ink); }
+    .btn-icon:active { box-shadow: 0 0 0 var(--ink); transform: translate(2px, 2px); }
+    .btn-edit { color: var(--marker-blue); }
+    .btn-del { color: var(--marker-red); }
 
-    /* Login Screen */
-    .login-wrapper { display: flex; align-items: center; justify-content: center; height: 100%; padding: 20px; }
-    .login-box { width: 100%; max-width: 400px; text-align: center; }
-    .login-icon { font-size: 48px; color: var(--accent); margin-bottom: 20px; }
+    /* LOGIN SCREEN */
+    .login-wrapper { display: flex; align-items: center; justify-content: center; height: 100%; }
+    .login-box { width: 100%; max-width: 420px; text-align: center; }
+    .login-icon { font-size: 56px; color: var(--ink); margin-bottom: 10px; }
 
-    /* Loading Overlay */
+    /* LOADER & TOASTS */
     .loader-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(255,255,255,0.8); backdrop-filter: blur(4px);
+      background: rgba(230, 218, 202, 0.9); backdrop-filter: blur(4px);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       z-index: 9999; display: none;
     }
-    .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--accent); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+    .spinner { border: 5px solid var(--cardboard-dark); border-top: 5px solid var(--ink); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* Toast Notification */
     #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px; }
     .toast {
-      background: white; border-left: 4px solid var(--accent); padding: 15px 20px;
-      border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-      display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px;
+      background: #fff; border: var(--border-thick); padding: 15px 20px;
+      border-radius: var(--radius); box-shadow: var(--shadow-solid);
+      display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 14px;
       animation: slideIn 0.3s forwards;
     }
-    .toast.error { border-color: var(--danger); color: var(--danger); }
-    .toast.success { border-color: var(--success); color: var(--success); }
     @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-    /* Modal */
+    /* MODAL */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
+      background: rgba(43, 31, 26, 0.8); backdrop-filter: blur(3px);
       display: flex; align-items: center; justify-content: center;
-      z-index: 1000; opacity: 0; pointer-events: none; transition: 0.3s;
+      z-index: 1000; opacity: 0; pointer-events: none; transition: 0.2s;
     }
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
     .modal-content {
-      background: white; width: 100%; max-width: 500px; border-radius: var(--radius-lg);
-      padding: 30px; transform: translateY(20px); transition: 0.3s; box-shadow: var(--shadow);
+      background: var(--cardboard-light); width: 100%; max-width: 500px;
+      border: var(--border-thick); border-radius: var(--radius);
+      padding: 30px; transform: translateY(20px); transition: 0.2s; box-shadow: 10px 10px 0px #000;
+      position: relative;
     }
     .modal-overlay.active .modal-content { transform: translateY(0); }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px dashed var(--ink); padding-bottom: 10px; }
+    .modal-close { background: none; border: none; font-size: 24px; font-weight: 900; cursor: pointer; color: var(--ink); }
+
+    /* Profile Split */
+    .split { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
+    .avatarPreview { width: 80px; height: 80px; border-radius: var(--radius); border: var(--border-thin); overflow: hidden; background: #fff; flex: 0 0 auto; box-shadow: 3px 3px 0px rgba(0,0,0,0.1); }
+    .avatarPreview img { width: 100%; height: 100%; object-fit: cover; }
   </style>
 </head>
 <body>
@@ -206,7 +232,7 @@
   <!-- LOADING OVERLAY -->
   <div class="loader-overlay" id="globalLoader">
     <div class="spinner"></div>
-    <h3 style="margin-top: 15px; color: var(--accent);" id="loaderText">İşleniyor...</h3>
+    <h3 style="margin-top: 20px; font-weight: 900;" id="loaderText">Paketleniyor...</h3>
   </div>
 
   <!-- TOAST CONTAINER -->
@@ -217,9 +243,9 @@
       
       <!-- TOPBAR -->
       <div class="topbar">
-        <div class="brand"><i class="fa-solid fa-shield-halved"></i> EVO Admin Space</div>
-        <div>
-          <a class="btn btn-outline" href="index.html" target="_blank"><i class="fa-solid fa-globe"></i> Siteyi Gör</a>
+        <div class="brand"><i class="fa-solid fa-box-open"></i> EVO CARDBOARD</div>
+        <div style="display: flex; gap: 10px;">
+          <a class="btn btn-outline" href="index.html" target="_blank"><i class="fa-solid fa-globe"></i> Siteye Git</a>
           <button class="btn btn-danger" id="logoutBtn" style="display:none;" onclick="appAuth.logout()"><i class="fa-solid fa-right-from-bracket"></i> Çıkış</button>
         </div>
       </div>
@@ -228,19 +254,20 @@
       <div class="content" id="loginView">
         <div class="login-wrapper">
           <div class="card login-box">
-            <div class="login-icon"><i class="fa-solid fa-user-lock"></i></div>
-            <h2>Güvenli Giriş</h2>
-            <p style="color:var(--text-muted); font-size:14px; margin: 10px 0 20px;">Sadece yetkili personeller içindir.</p>
+            <div class="tape"></div>
+            <div class="login-icon"><i class="fa-solid fa-user-ninja"></i></div>
+            <h2>Yetkili Girişi</h2>
+            <p style="color:var(--ink-light); font-size:14px; font-weight:600; margin: 10px 0 20px;">Sadece Admin Yetkisi Olanlar</p>
             
             <div class="form-group" style="text-align: left;">
-              <label>Admin E-Mail</label>
+              <label>Kullanıcı E-Mail</label>
               <input type="text" id="loginEmail" placeholder="admin@evostudios.com">
             </div>
             <div class="form-group" style="text-align: left;">
-              <label>Şifre</label>
+              <label>Kasa Şifresi</label>
               <input type="password" id="loginPass" placeholder="••••••••">
             </div>
-            <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="appAuth.login()">Giriş Yap <i class="fa-solid fa-arrow-right"></i></button>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 10px;" onclick="appAuth.login()">KİLİDİ AÇ <i class="fa-solid fa-key"></i></button>
           </div>
         </div>
       </div>
@@ -249,11 +276,59 @@
       <div class="content" id="dashView" style="display:none;">
         <div class="grid">
 
+          <!-- PROFILE CARD -->
+          <div class="card">
+            <div class="tape"></div>
+            <div class="card-header">
+              <h2><i class="fa-solid fa-id-card text-accent"></i> Profil Ayarları</h2>
+              <p>Site "About" kısmında görünecek kimlik bilgilerin.</p>
+            </div>
+            
+            <div class="split" style="margin-bottom: 15px;">
+              <div class="avatarPreview"><img id="avatarPreview" src="evo_logo.png" alt="Avatar"></div>
+              <div style="flex:1; min-width:200px;">
+                <label>Görünen İsim</label>
+                <input type="text" id="pName" placeholder="Örn: EVO" />
+                <label style="margin-top:10px;">Kullanıcı Adı</label>
+                <input type="text" id="pHandle" placeholder="Örn: @EvoStudios" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Avatar URL</label>
+              <input type="text" id="pAvatar" placeholder="https://..." oninput="document.getElementById('avatarPreview').src=this.value || 'evo_logo.png';" />
+            </div>
+            <div class="btn-row">
+              <button class="btn btn-primary" style="flex:1;" onclick="appData.saveProfile()"><i class="fa-solid fa-floppy-disk"></i> Profili Kaydet</button>
+            </div>
+          </div>
+
+          <!-- SYSTEM NOTES / EXPORT -->
+          <div class="card">
+            <div class="tape"></div>
+            <div class="card-header">
+              <h2><i class="fa-solid fa-truck-ramp-box"></i> Kargo & Yedekleme</h2>
+              <p>Sistemin genel ayarları ve veri yedeklemeleri.</p>
+            </div>
+            <p style="font-size: 13px; font-weight: 600; color: var(--ink-light); margin-bottom: 15px; line-height: 1.5;">
+              <i class="fa-solid fa-shield-halved"></i> <b>Güvenlik Aktif:</b> Supabase V2 sistemi çalışıyor. <br>
+              Dosyalar otomatik olarak <b>'evo'</b> bucket'ına depolanır. Sızıntı koruması devrede.
+            </p>
+            
+            <div class="btn-row" style="flex-wrap: wrap;">
+              <button class="btn btn-outline" onclick="appData.exportBackup()"><i class="fa-solid fa-box-archive"></i> Tüm Veriyi İndir (Yedek)</button>
+              <label class="btn btn-outline" style="cursor:pointer; flex:1; text-align: center;">
+                <i class="fa-solid fa-file-import"></i> Yedek Yükle
+                <input type="file" accept="application/json" style="display:none" onchange="appData.importBackup(event)" />
+              </label>
+            </div>
+          </div>
+
           <!-- MODELS MANAGER -->
           <div class="card">
+            <div class="tape"></div>
             <div class="card-header">
-              <h2><i class="fa-solid fa-cube text-accent"></i> Model Yönetimi</h2>
-              <p>Siteye ücretsiz model ve dosya ekleyin.</p>
+              <h2><i class="fa-solid fa-cubes"></i> Ücretsiz Modeller</h2>
+              <p>Oyuncular için paylaşılacak yeni kutular.</p>
             </div>
             
             <div class="form-group">
@@ -263,15 +338,15 @@
 
             <div style="display: flex; gap: 15px;">
               <div class="form-group" style="flex:1;">
-                <label>Görsel (Thumbnail) Seç</label>
+                <label>Görsel Seç</label>
                 <div class="file-upload">
-                  <i class="fa-solid fa-image"></i> PC'den Seç
+                  <i class="fa-solid fa-camera"></i> PC'den Seç
                   <input type="file" id="mThumbFile" accept="image/png, image/jpeg, image/webp" onchange="uiManager.updateFileName(this, 'mThumbName')">
                   <div class="file-name-display" id="mThumbName">Seçilmedi</div>
                 </div>
               </div>
               <div class="form-group" style="flex:1;">
-                <label>Model Dosyası (.rbxm, .zip)</label>
+                <label>Dosya (.rbxm, .zip)</label>
                 <div class="file-upload">
                   <i class="fa-solid fa-file-zipper"></i> PC'den Seç
                   <input type="file" id="mFile" onchange="uiManager.updateFileName(this, 'mFileName')">
@@ -281,28 +356,27 @@
             </div>
 
             <div class="form-group">
-              <label>Alternatif Link (Opsiyonel - Dosya yüklenmezse kullanılır)</label>
+              <label>Dış Link (Dosya yoksa)</label>
               <input type="text" id="mLink" placeholder="https://create.roblox.com/...">
             </div>
 
             <div class="form-group">
-              <label>Kısa Not / Etiket</label>
-              <input type="text" id="mNote" placeholder="Örn: Part Based, Scripted">
+              <label>Etiket / Kısa Not</label>
+              <input type="text" id="mNote" placeholder="Örn: Scriptli, Part Based">
             </div>
 
-            <button class="btn btn-primary" style="width:100%" onclick="appData.addModel()"><i class="fa-solid fa-plus"></i> Modeli Yayınla</button>
+            <button class="btn btn-primary" style="width:100%" onclick="appData.addModel()"><i class="fa-solid fa-plus"></i> Modeli Kutula (Yayınla)</button>
 
             <!-- Models List -->
-            <div class="list-container" id="modelsList">
-              <!-- Rendered via JS -->
-            </div>
+            <div class="list-container" id="modelsList"></div>
           </div>
 
           <!-- FEED MANAGER -->
           <div class="card">
+            <div class="tape"></div>
             <div class="card-header">
-              <h2><i class="fa-solid fa-rss" style="color:var(--warning)"></i> Feed & Duyurular</h2>
-              <p>Oyunculara yenilikleri ve sızıntıları duyurun.</p>
+              <h2><i class="fa-solid fa-bullhorn"></i> Duyuru Panosu</h2>
+              <p>Kullanıcılara gösterilecek haber ve sızıntılar.</p>
             </div>
 
             <div class="form-group">
@@ -311,13 +385,13 @@
             </div>
 
             <div class="form-group">
-              <label>İçerik (Zorunlu)</label>
-              <textarea id="fContent" placeholder="Duyuru detaylarını buraya yazın..."></textarea>
+              <label>Detaylar (Zorunlu)</label>
+              <textarea id="fContent" placeholder="Büyük haberi buraya yaz..."></textarea>
             </div>
 
             <div style="display: flex; gap: 15px;">
               <div class="form-group" style="flex:1;">
-                <label>Kategori (Etiket)</label>
+                <label>Kategori</label>
                 <select id="fTag">
                   <option value="info">Info / Haber</option>
                   <option value="update">Güncelleme</option>
@@ -325,7 +399,7 @@
                 </select>
               </div>
               <div class="form-group" style="flex:1;">
-                <label>Görsel/Video Yükle</label>
+                <label>Medya Ekle</label>
                 <div class="file-upload">
                   <i class="fa-solid fa-photo-film"></i> PC'den Seç
                   <input type="file" id="fMediaFile" accept="image/*, video/mp4" onchange="uiManager.updateFileName(this, 'fMediaName')">
@@ -335,16 +409,14 @@
             </div>
 
             <div class="form-group" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-              <input type="checkbox" id="fPinned" style="width: 20px; height: 20px; cursor: pointer;">
-              <label style="margin:0; cursor: pointer;" for="fPinned">Bu postu en başa tuttur (Pinned)</label>
+              <input type="checkbox" id="fPinned" style="width: 20px; height: 20px; cursor: pointer; accent-color: var(--ink);">
+              <label style="margin:0; cursor: pointer;" for="fPinned">Bunu tahtanın en üstüne iğnele</label>
             </div>
 
-            <button class="btn btn-primary" style="width:100%" onclick="appData.addFeed()"><i class="fa-solid fa-paper-plane"></i> Post Paylaş</button>
+            <button class="btn btn-primary" style="width:100%" onclick="appData.addFeed()"><i class="fa-solid fa-thumbtack"></i> Panoya As</button>
 
             <!-- Feed List -->
-            <div class="list-container" id="feedList">
-              <!-- Rendered via JS -->
-            </div>
+            <div class="list-container" id="feedList"></div>
           </div>
 
         </div>
@@ -355,6 +427,7 @@
   <!-- EDIT MODEL MODAL -->
   <div class="modal-overlay" id="editModelModal">
     <div class="modal-content">
+      <div class="tape"></div>
       <div class="modal-header">
         <h3>Modeli Düzenle</h3>
         <button class="modal-close" onclick="uiManager.closeModal('editModelModal')"><i class="fa-solid fa-xmark"></i></button>
@@ -365,24 +438,24 @@
         <input type="text" id="emTitle">
       </div>
       <div class="form-group">
-        <label>Not</label>
+        <label>Etiket</label>
         <input type="text" id="emNote">
       </div>
       <div class="form-group">
-        <label>Dış Link (Varsa)</label>
+        <label>Dış Link</label>
         <input type="text" id="emLink">
       </div>
       <div class="btn-row">
         <button class="btn btn-primary" onclick="appData.saveEditModel()" style="flex:1;">Kaydet</button>
         <button class="btn btn-outline" onclick="uiManager.closeModal('editModelModal')" style="flex:1;">İptal</button>
       </div>
-      <p style="font-size: 11px; color:gray; margin-top:10px;">*Not: Dosyaları değiştirmek için modeli silip tekrar yüklemeniz önerilir.</p>
     </div>
   </div>
 
   <!-- EDIT FEED MODAL -->
   <div class="modal-overlay" id="editFeedModal">
     <div class="modal-content">
+      <div class="tape"></div>
       <div class="modal-header">
         <h3>Postu Düzenle</h3>
         <button class="modal-close" onclick="uiManager.closeModal('editFeedModal')"><i class="fa-solid fa-xmark"></i></button>
@@ -397,8 +470,8 @@
         <textarea id="efContent"></textarea>
       </div>
       <div class="form-group" style="display: flex; gap: 10px; align-items:center;">
-        <input type="checkbox" id="efPinned" style="width: 18px; height: 18px;">
-        <label style="margin:0;">Başa Tuttur</label>
+        <input type="checkbox" id="efPinned" style="width: 20px; height: 20px; accent-color: var(--ink);">
+        <label style="margin:0;">En Üste İğnele</label>
       </div>
       <div class="btn-row">
         <button class="btn btn-primary" onclick="appData.saveEditFeed()" style="flex:1;">Kaydet</button>
@@ -409,467 +482,306 @@
 
 <script>
 /**
- * EVO DASHBOARD V2.0 - SECURE & REFACTORED
- * Geliştirici: AI
+ * EVO DASHBOARD - CARDBOARD EDITION
+ * Tamamen güvenli, XSS korumalı, Supabase V2 tabanlı.
  */
 
-// ==========================================
-// CONFIG & SUPABASE (BURAYI KENDİ BİLGİLERİNLE DOLDUR)
-// ==========================================
 const CONFIG = {
   SUPABASE_URL: "https://ixvovmragysxwbcspixo.supabase.co",
   SUPABASE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4dm92bXJhZ3lzeHdiY3NwaXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxNzg3NDMsImV4cCI6MjA4Nzc1NDc0M30.mIMKSz5Jaxxm355NfMWYwP76GFlEQMaifkuyeNSIkPs",
-  BUCKET_NAME: "evo" // Supabase Storage içindeki public bucket adın
+  BUCKET_NAME: "evo", // İstenildiği gibi "evo" bucket'ı
+  PROFILE_KEY: "evo_profile_v1" // Profilin sitede bozulmaması için eski key
 };
 
 const sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
 
-// State Management
-let STATE = {
-  models: [],
-  feeds: []
-};
+let STATE = { models: [], feeds: [] };
 
-// ==========================================
-// UTILITY FUNCTIONS (GÜVENLİK VE ARAÇLAR)
-// ==========================================
+// --- UTILITIES ---
 const utils = {
-  // XSS Koruması: Ekrana basılan her veriyi temizler
-  escapeHTML: (str) => {
-    if (!str) return "";
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+  escapeHTML: (str) => String(str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"),
+  formatBytes: (bytes) => {
+    if (!+bytes) return '0 B';
+    const k = 1024, i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${['B', 'KB', 'MB', 'GB'][i]}`;
   },
-  
-  // Dosya boyutu hesaplama
-  formatBytes: (bytes, decimals = 2) => {
-    if (!+bytes) return '0 Bytes';
-    const k = 1024, dm = decimals < 0 ? 0 : decimals;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-  },
-
-  // Rastgele dosya ismi üretici (Overwrite engellemek için)
-  generateFileName: (originalName) => {
-    const ext = originalName.split('.').pop();
-    const safeName = originalName.replace(/[^a-zA-Z0-9]/g, "").substring(0, 15);
-    return `${Date.now()}_${Math.random().toString(36).substring(2,8)}_${safeName}.${ext}`;
-  }
+  generateFileName: (name) => `${Date.now()}_${Math.random().toString(36).substr(2,6)}_${name.replace(/[^a-zA-Z0-9.-]/g, "")}`
 };
 
-// ==========================================
-// UI MANAGER (Bildirimler, Loader, Modallar)
-// ==========================================
+// --- UI MANAGER ---
 const uiManager = {
-  showLoader: (text = "İşleniyor...") => {
-    document.getElementById('loaderText').innerText = text;
-    document.getElementById('globalLoader').style.display = 'flex';
+  showLoader: (text) => { document.getElementById('loaderText').innerText = text; document.getElementById('globalLoader').style.display = 'flex'; },
+  hideLoader: () => { document.getElementById('globalLoader').style.display = 'none'; },
+  toast: (msg, type = "success") => {
+    const cont = document.getElementById('toast-container');
+    const t = document.createElement('div');
+    t.className = `toast`;
+    t.style.borderLeftColor = type === 'success' ? 'var(--marker-green)' : 'var(--marker-red)';
+    t.innerHTML = `<i class="fa-solid ${type==='success'?'fa-circle-check':'fa-triangle-exclamation'}" style="color:${type==='success'?'var(--marker-green)':'var(--marker-red)'}; font-size:18px;"></i> <span>${utils.escapeHTML(msg)}</span>`;
+    cont.appendChild(t);
+    setTimeout(() => { t.style.opacity='0'; setTimeout(()=>t.remove(),300); }, 3500);
   },
-  hideLoader: () => {
-    document.getElementById('globalLoader').style.display = 'none';
+  switchView: (v) => {
+    document.getElementById('loginView').style.display = v === 'login' ? 'block' : 'none';
+    document.getElementById('dashView').style.display = v === 'dash' ? 'block' : 'none';
+    document.getElementById('logoutBtn').style.display = v === 'dash' ? 'block' : 'none';
   },
-  toast: (message, type = "success") => {
-    const container = document.getElementById('toast-container');
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-check-circle' : 'fa-circle-exclamation'}"></i> ${utils.escapeHTML(message)}`;
-    container.appendChild(toast);
-    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 4000);
-  },
-  switchView: (view) => {
-    document.getElementById('loginView').style.display = view === 'login' ? 'block' : 'none';
-    document.getElementById('dashView').style.display = view === 'dash' ? 'block' : 'none';
-    document.getElementById('logoutBtn').style.display = view === 'dash' ? 'inline-flex' : 'none';
-  },
-  updateFileName: (inputElem, displayId) => {
-    const display = document.getElementById(displayId);
-    if (inputElem.files && inputElem.files[0]) {
-      display.innerText = inputElem.files[0].name;
-      display.style.color = 'var(--success)';
-    } else {
-      display.innerText = "Seçilmedi";
-      display.style.color = 'var(--accent)';
-    }
+  updateFileName: (inp, did) => {
+    const d = document.getElementById(did);
+    if(inp.files[0]){ d.innerText = inp.files[0].name; d.style.color='var(--marker-green)'; }
+    else { d.innerText = "Seçilmedi"; d.style.color='var(--marker-blue)'; }
   },
   openModal: (id) => document.getElementById(id).classList.add('active'),
   closeModal: (id) => document.getElementById(id).classList.remove('active'),
-  clearInputs: (containerId) => {
-    const container = document.getElementById(containerId) || document;
-    container.querySelectorAll('input[type="text"], input[type="file"], textarea').forEach(el => el.value = '');
-    container.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
-    container.querySelectorAll('.file-name-display').forEach(el => { el.innerText = "Seçilmedi"; el.style.color = 'var(--accent)'; });
+  clearInputs: (id) => {
+    const c = document.getElementById(id);
+    c.querySelectorAll('input[type="text"], input[type="file"], textarea').forEach(e=>e.value='');
+    c.querySelectorAll('input[type="checkbox"]').forEach(e=>e.checked=false);
+    c.querySelectorAll('.file-name-display').forEach(e=>{e.innerText="Seçilmedi"; e.style.color='var(--marker-blue)';});
   }
 };
 
-// ==========================================
-// AUTHENTICATION LOGIC (Supabase Auth)
-// ==========================================
+// --- AUTH ---
 const appAuth = {
   checkSession: async () => {
     const { data: { session } } = await sb.auth.getSession();
-    if (session) {
-      uiManager.switchView('dash');
-      appData.fetchAll(); // Verileri yükle
-    } else {
-      uiManager.switchView('login');
-    }
+    if (session) { uiManager.switchView('dash'); appData.initDash(); } 
+    else { uiManager.switchView('login'); }
   },
   login: async () => {
     const email = document.getElementById('loginEmail').value.trim();
     const pass = document.getElementById('loginPass').value;
+    if(!email || !pass) return uiManager.toast('Bilgileri eksik girdin.', 'error');
     
-    if (!email || !pass) return uiManager.toast('E-mail ve şifre zorunludur.', 'error');
-    
-    uiManager.showLoader('Giriş yapılıyor...');
-    const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+    uiManager.showLoader('Kilidi açılıyor...');
+    const { error } = await sb.auth.signInWithPassword({ email, password: pass });
     uiManager.hideLoader();
 
-    if (error) {
-      uiManager.toast('Hatalı giriş: ' + error.message, 'error');
-    } else {
-      uiManager.toast('Başarıyla giriş yapıldı!');
-      document.getElementById('loginPass').value = '';
-      uiManager.switchView('dash');
-      appData.fetchAll();
-    }
+    if(error) uiManager.toast('Hatalı giriş: ' + error.message, 'error');
+    else { uiManager.toast('Kasa açıldı!'); document.getElementById('loginPass').value=''; uiManager.switchView('dash'); appData.initDash(); }
   },
-  logout: async () => {
-    await sb.auth.signOut();
-    uiManager.switchView('login');
-    uiManager.toast('Çıkış yapıldı.');
-  }
+  logout: async () => { await sb.auth.signOut(); uiManager.switchView('login'); uiManager.toast('Çıkış yapıldı.'); }
 };
 
-// ==========================================
-// DATA & STORAGE LOGIC (Supabase CRUD)
-// ==========================================
+// --- DATA ---
 const appData = {
-  
-  // YARDIMCI: Dosya Yükleme Motoru
-  uploadFileToStorage: async (file, folderName) => {
-    if (!file) return null;
-    const newName = utils.generateFileName(file.name);
-    const path = `${folderName}/${newName}`;
-    
-    const { data, error } = await sb.storage.from(CONFIG.BUCKET_NAME).upload(path, file);
-    if (error) throw error;
-    
-    const { data: urlData } = sb.storage.from(CONFIG.BUCKET_NAME).getPublicUrl(path);
-    return { url: urlData.publicUrl, path: path, name: file.name, size: file.size };
+  initDash: () => { appData.loadProfile(); appData.fetchAll(); },
+
+  // PROFILE SYSTEM (Korumalı Eski Sistem)
+  loadProfile: () => {
+    try {
+      const p = JSON.parse(localStorage.getItem(CONFIG.PROFILE_KEY)) || {};
+      document.getElementById("pName").value = p.displayName || "EVO";
+      document.getElementById("pHandle").value = p.handle || "@EvoStudios";
+      document.getElementById("pAvatar").value = p.avatarUrl || "";
+      document.getElementById("avatarPreview").src = p.avatarUrl || "evo_logo.png";
+    } catch(e){}
+  },
+  saveProfile: () => {
+    const payload = {
+      displayName: document.getElementById("pName").value.trim(),
+      handle: document.getElementById("pHandle").value.trim(),
+      avatarUrl: document.getElementById("pAvatar").value.trim()
+    };
+    localStorage.setItem(CONFIG.PROFILE_KEY, JSON.stringify(payload));
+    uiManager.toast("Kimlik güncellendi!");
   },
 
-  // Tüm Verileri Çek ve Ekrana Bas
-  fetchAll: async () => {
-    uiManager.showLoader('Veriler sekronize ediliyor...');
-    try {
-      // Modelleri Çek
-      const { data: mData, error: mErr } = await sb.from('models').select('*').order('created_at', { ascending: false });
-      if (mErr) throw mErr;
-      STATE.models = mData || [];
-      renderEngine.renderModels();
+  // BACKUP SYSTEM
+  exportBackup: () => {
+    const data = { profile: JSON.parse(localStorage.getItem(CONFIG.PROFILE_KEY)), models: STATE.models, feeds: STATE.feeds };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `evo_backup_${Date.now()}.json`; a.click();
+    URL.revokeObjectURL(url);
+    uiManager.toast("Yedek indirildi.");
+  },
+  importBackup: async (e) => {
+    const file = e.target.files[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        const data = JSON.parse(reader.result);
+        if(data.profile) localStorage.setItem(CONFIG.PROFILE_KEY, JSON.stringify(data.profile));
+        uiManager.toast("Veri aktarıldı, profili kontrol et."); appData.loadProfile();
+      } catch(err) { uiManager.toast("Bozuk JSON dosyası.", "error"); }
+    };
+    reader.readAsText(file); e.target.value = "";
+  },
 
-      // Feedleri Çek
-      const { data: fData, error: fErr } = await sb.from('feed_posts').select('*').order('pinned', { ascending: false }).order('created_at', { ascending: false });
-      if (fErr) throw fErr;
-      STATE.feeds = fData || [];
-      renderEngine.renderFeeds();
-      
-    } catch (e) {
-      uiManager.toast('Veri çekme hatası: ' + e.message, 'error');
-    }
+  // STORAGE UPLOAD
+  uploadFile: async (file, folder) => {
+    if(!file) return null;
+    const path = `${folder}/${utils.generateFileName(file.name)}`;
+    const { error } = await sb.storage.from(CONFIG.BUCKET_NAME).upload(path, file);
+    if(error) throw error;
+    const { data } = sb.storage.from(CONFIG.BUCKET_NAME).getPublicUrl(path);
+    return { url: data.publicUrl, name: file.name, size: file.size };
+  },
+
+  // FETCH ALL
+  fetchAll: async () => {
+    uiManager.showLoader('Kutular sayılıyor...');
+    try {
+      const [mRes, fRes] = await Promise.all([
+        sb.from('models').select('*').order('created_at', { ascending: false }),
+        sb.from('feed_posts').select('*').order('pinned', { ascending: false }).order('created_at', { ascending: false })
+      ]);
+      if(mRes.error) throw mRes.error; if(fRes.error) throw fRes.error;
+      STATE.models = mRes.data || []; STATE.feeds = fRes.data || [];
+      renderEngine.models(); renderEngine.feeds();
+    } catch (e) { uiManager.toast('Veri hatası: ' + e.message, 'error'); }
     uiManager.hideLoader();
   },
 
-  // --- MODELS ---
+  // MODELS
   addModel: async () => {
     const title = document.getElementById('mTitle').value.trim();
-    if (!title) return uiManager.toast('Model adı zorunludur!', 'error');
-
-    const fileInput = document.getElementById('mFile').files[0];
-    const thumbInput = document.getElementById('mThumbFile').files[0];
-    const link = document.getElementById('mLink').value.trim();
-    const note = document.getElementById('mNote').value.trim();
-
-    uiManager.showLoader('Dosyalar yükleniyor ve model ekleniyor...');
+    if(!title) return uiManager.toast('İsim yazmalısın!', 'error');
+    
+    uiManager.showLoader('Koli bantlanıyor...');
     try {
-      let thumbUrl = "", fileUrl = "", fileName = "", fileSize = "";
-
-      if (thumbInput) {
-        uiManager.showLoader('Görsel Yükleniyor...');
-        const tData = await appData.uploadFileToStorage(thumbInput, 'model_thumbs');
-        thumbUrl = tData.url;
-      }
+      let tUrl="", fUrl="", fName="", fSize="";
+      const tFile = document.getElementById('mThumbFile').files[0];
+      const mFile = document.getElementById('mFile').files[0];
       
-      if (fileInput) {
-        uiManager.showLoader('Model Dosyası Yükleniyor...');
-        const fData = await appData.uploadFileToStorage(fileInput, 'model_files');
-        fileUrl = fData.url;
-        fileName = fData.name;
-        fileSize = utils.formatBytes(fData.size);
+      if(tFile) tUrl = (await appData.uploadFile(tFile, 'model_thumbs')).url;
+      if(mFile) {
+        const up = await appData.uploadFile(mFile, 'model_files');
+        fUrl = up.url; fName = up.name; fSize = utils.formatBytes(up.size);
       }
 
-      const payload = {
-        title: title,
-        note: note || "Free Model",
-        roblox_link: link,
-        thumb_url: thumbUrl,
-        file_url: fileUrl,
-        file_name: fileName,
-        file_size: fileSize
-      };
-
-      const { error } = await sb.from('models').insert(payload);
-      if (error) throw error;
-
-      uiManager.toast('Model başarıyla eklendi!');
-      uiManager.clearInputs('dashView'); // Sadece ilgili alanı temizlemek için geliştirilebilir
-      appData.fetchAll(); // Listeyi yenile
-
-    } catch (e) {
-      uiManager.toast('Hata: ' + e.message, 'error');
-    }
+      await sb.from('models').insert({
+        title, note: document.getElementById('mNote').value.trim() || 'Free Model',
+        roblox_link: document.getElementById('mLink').value.trim(),
+        thumb_url: tUrl, file_url: fUrl, file_name: fName, file_size: fSize
+      });
+      uiManager.toast('Model paylaşıldı!'); uiManager.clearInputs('mTitle'.parentElement); appData.fetchAll();
+    } catch(e) { uiManager.toast('Hata: '+e.message, 'error'); }
     uiManager.hideLoader();
   },
-
   deleteModel: async (id) => {
-    if(!confirm('Bu modeli kalıcı olarak silmek istiyor musun?')) return;
-    uiManager.showLoader('Siliniyor...');
-    try {
-      const { error } = await sb.from('models').delete().eq('id', id);
-      if (error) throw error;
-      uiManager.toast('Model silindi.');
-      appData.fetchAll();
-    } catch (e) {
-      uiManager.toast('Silme hatası: ' + e.message, 'error');
-    }
-    uiManager.hideLoader();
+    if(!confirm('Çöpe atılsın mı?')) return;
+    uiManager.showLoader('İmha ediliyor...');
+    await sb.from('models').delete().eq('id', id);
+    uiManager.toast('Silindi.'); appData.fetchAll();
   },
-
   openEditModel: (id) => {
-    const model = STATE.models.find(m => m.id === id);
-    if(!model) return;
-    document.getElementById('editModelId').value = model.id;
-    document.getElementById('emTitle').value = model.title || '';
-    document.getElementById('emNote').value = model.note || '';
-    document.getElementById('emLink').value = model.roblox_link || '';
+    const m = STATE.models.find(x => x.id === id); if(!m) return;
+    document.getElementById('editModelId').value = m.id;
+    document.getElementById('emTitle').value = m.title||'';
+    document.getElementById('emNote').value = m.note||'';
+    document.getElementById('emLink').value = m.roblox_link||'';
     uiManager.openModal('editModelModal');
   },
-
   saveEditModel: async () => {
-    const id = document.getElementById('editModelId').value;
-    const title = document.getElementById('emTitle').value.trim();
-    const note = document.getElementById('emNote').value.trim();
-    const link = document.getElementById('emLink').value.trim();
-
-    if(!title) return uiManager.toast('Başlık boş olamaz', 'error');
-
     uiManager.showLoader('Güncelleniyor...');
-    try {
-      const { error } = await sb.from('models').update({
-        title: title, note: note, roblox_link: link
-      }).eq('id', id);
-      if (error) throw error;
-
-      uiManager.toast('Model güncellendi');
-      uiManager.closeModal('editModelModal');
-      appData.fetchAll();
-    } catch (e) {
-      uiManager.toast('Güncelleme hatası', 'error');
-    }
-    uiManager.hideLoader();
+    await sb.from('models').update({
+      title: document.getElementById('emTitle').value.trim(),
+      note: document.getElementById('emNote').value.trim(),
+      roblox_link: document.getElementById('emLink').value.trim()
+    }).eq('id', document.getElementById('editModelId').value);
+    uiManager.toast('Güncellendi'); uiManager.closeModal('editModelModal'); appData.fetchAll();
   },
 
-  // --- FEEDS ---
+  // FEEDS
   addFeed: async () => {
     const title = document.getElementById('fTitle').value.trim();
     const content = document.getElementById('fContent').value.trim();
-    if (!title || !content) return uiManager.toast('Başlık ve içerik zorunludur!', 'error');
+    if(!title || !content) return uiManager.toast('Başlık ve yazı eksik!', 'error');
 
-    const tag = document.getElementById('fTag').value;
-    const pinned = document.getElementById('fPinned').checked;
-    const mediaInput = document.getElementById('fMediaFile').files[0];
-
-    uiManager.showLoader('Post hazırlanıyor...');
+    uiManager.showLoader('Panoya asılıyor...');
     try {
-      let mediaUrl = "";
+      let mUrl=""; const mFile = document.getElementById('fMediaFile').files[0];
+      if(mFile) mUrl = (await appData.uploadFile(mFile, mFile.type.startsWith('video/')?'feed_videos':'feed_images')).url;
 
-      if (mediaInput) {
-        uiManager.showLoader('Medya Yükleniyor...');
-        const folder = mediaInput.type.startsWith('video/') ? 'feed_videos' : 'feed_images';
-        const mData = await appData.uploadFileToStorage(mediaInput, folder);
-        mediaUrl = mData.url;
-      }
-
-      const payload = {
-        title: title,
-        content: content,
-        tag: tag,
-        pinned: pinned,
-        media_url: mediaUrl,
-        author: "Evo Admin", // Dinamik yapılabilir
-        avatar_url: "evo_logo.png"
-      };
-
-      const { error } = await sb.from('feed_posts').insert(payload);
-      if (error) throw error;
-
-      uiManager.toast('Post paylaşıldı!');
-      document.getElementById('fTitle').value = '';
-      document.getElementById('fContent').value = '';
-      document.getElementById('fPinned').checked = false;
-      document.getElementById('fMediaFile').value = '';
-      uiManager.updateFileName(document.getElementById('fMediaFile'), 'fMediaName');
-      
-      appData.fetchAll();
-
-    } catch (e) {
-      uiManager.toast('Hata: ' + e.message, 'error');
-    }
+      await sb.from('feed_posts').insert({
+        title, content, tag: document.getElementById('fTag').value,
+        pinned: document.getElementById('fPinned').checked, media_url: mUrl,
+        author: "Admin", avatar_url: "evo_logo.png"
+      });
+      uiManager.toast('Post paylaşıldı!'); uiManager.clearInputs('fTitle'.parentElement); appData.fetchAll();
+    } catch(e) { uiManager.toast('Hata: '+e.message, 'error'); }
     uiManager.hideLoader();
   },
-
   deleteFeed: async (id) => {
-    if(!confirm('Bu postu silmek istiyor musun?')) return;
-    uiManager.showLoader('Siliniyor...');
-    try {
-      const { error } = await sb.from('feed_posts').delete().eq('id', id);
-      if (error) throw error;
-      uiManager.toast('Post silindi.');
-      appData.fetchAll();
-    } catch (e) {
-      uiManager.toast('Silme hatası', 'error');
-    }
-    uiManager.hideLoader();
+    if(!confirm('Postu yırtıp atalım mı?')) return;
+    uiManager.showLoader('Yırtılıyor...');
+    await sb.from('feed_posts').delete().eq('id', id);
+    uiManager.toast('Yok edildi.'); appData.fetchAll();
   },
-
   openEditFeed: (id) => {
-    const post = STATE.feeds.find(f => f.id === id);
-    if(!post) return;
-    document.getElementById('editFeedId').value = post.id;
-    document.getElementById('efTitle').value = post.title || '';
-    document.getElementById('efContent').value = post.content || '';
-    document.getElementById('efPinned').checked = !!post.pinned;
+    const f = STATE.feeds.find(x => x.id === id); if(!f) return;
+    document.getElementById('editFeedId').value = f.id;
+    document.getElementById('efTitle').value = f.title||'';
+    document.getElementById('efContent').value = f.content||'';
+    document.getElementById('efPinned').checked = !!f.pinned;
     uiManager.openModal('editFeedModal');
   },
-
   saveEditFeed: async () => {
-    const id = document.getElementById('editFeedId').value;
-    const title = document.getElementById('efTitle').value.trim();
-    const content = document.getElementById('efContent').value.trim();
-    const pinned = document.getElementById('efPinned').checked;
-
-    if(!title || !content) return uiManager.toast('Başlık ve içerik gerekli', 'error');
-
     uiManager.showLoader('Güncelleniyor...');
-    try {
-      const { error } = await sb.from('feed_posts').update({
-        title: title, content: content, pinned: pinned
-      }).eq('id', id);
-      if (error) throw error;
-
-      uiManager.toast('Post güncellendi');
-      uiManager.closeModal('editFeedModal');
-      appData.fetchAll();
-    } catch (e) {
-      uiManager.toast('Hata: ' + e.message, 'error');
-    }
-    uiManager.hideLoader();
+    await sb.from('feed_posts').update({
+      title: document.getElementById('efTitle').value.trim(),
+      content: document.getElementById('efContent').value.trim(),
+      pinned: document.getElementById('efPinned').checked
+    }).eq('id', document.getElementById('editFeedId').value);
+    uiManager.toast('Güncellendi'); uiManager.closeModal('editFeedModal'); appData.fetchAll();
   }
 };
 
-// ==========================================
-// RENDER ENGINE (HTML OLUŞTURUCU)
-// ==========================================
+// --- RENDER ENGINE ---
 const renderEngine = {
-  renderModels: () => {
-    const list = document.getElementById('modelsList');
-    list.innerHTML = '';
+  models: () => {
+    const list = document.getElementById('modelsList'); list.innerHTML = '';
+    if(!STATE.models.length) return list.innerHTML = '<div style="font-weight:700; opacity:0.5;">Model kutusu boş.</div>';
     
-    if(STATE.models.length === 0) {
-      list.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 20px;">Henüz model eklenmedi.</div>';
-      return;
-    }
-
     STATE.models.forEach(m => {
-      const thumb = m.thumb_url ? m.thumb_url : 'https://via.placeholder.com/100?text=No+Img';
-      const fileBadge = m.file_url ? `<span class="item-badge" style="background:#dcfce7; color:#16a34a;"><i class="fa-solid fa-download"></i> İndirilebilir Dosya</span>` : '';
-      const linkBadge = m.roblox_link ? `<span class="item-badge"><i class="fa-solid fa-link"></i> Dış Link</span>` : '';
-      
-      const div = document.createElement('div');
-      div.className = 'item';
-      div.innerHTML = `
-        <div class="item-thumb"><img src="${utils.escapeHTML(thumb)}" onerror="this.src='https://via.placeholder.com/100?text=Error'"></div>
-        <div class="item-info">
-          <div class="item-title">${utils.escapeHTML(m.title)} ${m.pinned ? '<i class="fa-solid fa-thumbtack text-accent"></i>' : ''}</div>
-          <div class="item-meta">${utils.escapeHTML(m.note || 'Genel Model')} • ${new Date(m.created_at).toLocaleDateString()}</div>
-          <div style="margin-top: 5px;">${fileBadge} ${linkBadge}</div>
-        </div>
-        <div class="item-actions">
-          <button class="btn-icon btn-edit" title="Düzenle" onclick="appData.openEditModel('${m.id}')"><i class="fa-solid fa-pen"></i></button>
-          <button class="btn-icon btn-del" title="Sil" onclick="appData.deleteModel('${m.id}')"><i class="fa-solid fa-trash"></i></button>
-        </div>
-      `;
-      list.appendChild(div);
+      const t = m.thumb_url || 'https://via.placeholder.com/100/2b1f1a/ffffff?text=X';
+      list.innerHTML += `
+        <div class="item">
+          <div class="item-thumb"><img src="${utils.escapeHTML(t)}" onerror="this.src='https://via.placeholder.com/100'"></div>
+          <div class="item-info">
+            <div class="item-title">${utils.escapeHTML(m.title)}</div>
+            <div class="item-meta">${utils.escapeHTML(m.note||'Model')} • ${new Date(m.created_at).toLocaleDateString()}</div>
+            ${m.file_url ? `<div class="item-badge"><i class="fa-solid fa-file-zipper"></i> ${utils.escapeHTML(m.file_name||'Dosya')} (${utils.escapeHTML(m.file_size)})</div>` : ''}
+            ${m.roblox_link ? `<div class="item-badge" style="background:var(--tape-bg);"><i class="fa-solid fa-link"></i> Roblox Linki</div>` : ''}
+          </div>
+          <div class="item-actions">
+            <button class="btn-icon btn-edit" onclick="appData.openEditModel('${m.id}')"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn-icon btn-del" onclick="appData.deleteModel('${m.id}')"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>`;
     });
   },
-
-  renderFeeds: () => {
-    const list = document.getElementById('feedList');
-    list.innerHTML = '';
-
-    if(STATE.feeds.length === 0) {
-      list.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding: 20px;">Henüz duyuru eklenmedi.</div>';
-      return;
-    }
+  feeds: () => {
+    const list = document.getElementById('feedList'); list.innerHTML = '';
+    if(!STATE.feeds.length) return list.innerHTML = '<div style="font-weight:700; opacity:0.5;">Pano bomboş.</div>';
 
     STATE.feeds.forEach(f => {
-      let icon = 'fa-bullhorn';
-      let color = 'var(--accent)';
-      if(f.tag === 'update') { icon = 'fa-arrow-up-right-dots'; color = 'var(--success)'; }
-      if(f.tag === 'leak') { icon = 'fa-user-secret'; color = 'var(--danger)'; }
-
-      const pinBadge = f.pinned ? `<span class="item-badge" style="background:#fef3c7; color:#d97706;"><i class="fa-solid fa-thumbtack"></i> Başa Tutturuldu</span>` : '';
-      const mediaBadge = f.media_url ? `<span class="item-badge"><i class="fa-solid fa-photo-film"></i> Medya Var</span>` : '';
-
-      const div = document.createElement('div');
-      div.className = 'item';
-      div.innerHTML = `
-        <div class="item-thumb" style="background: ${color};"><i class="fa-solid ${icon}"></i></div>
-        <div class="item-info">
-          <div class="item-title">${utils.escapeHTML(f.title)}</div>
-          <div class="item-meta">${new Date(f.created_at).toLocaleString()}</div>
-          <div style="margin-top: 5px;">${pinBadge} ${mediaBadge}</div>
-        </div>
-        <div class="item-actions">
-          <button class="btn-icon btn-edit" title="Düzenle" onclick="appData.openEditFeed('${m.id}' /* HATA DÜZELTMESİ AŞAĞIDA: f.id olmalı */)"><i class="fa-solid fa-pen"></i></button>
-          <button class="btn-icon btn-del" title="Sil" onclick="appData.deleteFeed('${f.id}')"><i class="fa-solid fa-trash"></i></button>
-        </div>
-      `;
-      // Ufak typo düzeltmesi için HTML stringini yeniliyorum:
-      div.querySelector('.btn-edit').setAttribute('onclick', `appData.openEditFeed('${f.id}')`);
-      list.appendChild(div);
+      const icon = f.tag==='update' ? 'fa-bolt text-warning' : (f.tag==='leak' ? 'fa-eye text-danger' : 'fa-bullhorn');
+      list.innerHTML += `
+        <div class="item">
+          <div class="item-thumb" style="background:#fff;"><i class="fa-solid ${icon}" style="color:var(--ink);"></i></div>
+          <div class="item-info">
+            <div class="item-title">${utils.escapeHTML(f.title)}</div>
+            <div class="item-meta">${new Date(f.created_at).toLocaleString()}</div>
+            ${f.pinned ? `<div class="item-badge" style="background:var(--marker-yellow); border:none; color:#fff;"><i class="fa-solid fa-thumbtack"></i> İğneli</div>` : ''}
+            ${f.media_url ? `<div class="item-badge"><i class="fa-solid fa-photo-film"></i> Medya Var</div>` : ''}
+          </div>
+          <div class="item-actions">
+            <button class="btn-icon btn-edit" onclick="appData.openEditFeed('${f.id}')"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn-icon btn-del" onclick="appData.deleteFeed('${f.id}')"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>`;
     });
   }
 };
 
-// ==========================================
-// INITIALIZATION
-// ==========================================
+// Start
 document.addEventListener('DOMContentLoaded', () => {
-  // Enter tuşu ile giriş yapma
-  document.getElementById('loginPass').addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') appAuth.login();
-  });
-  
-  // Başlangıçta oturum kontrolü
+  document.getElementById('loginPass').addEventListener('keypress', e => e.key === 'Enter' && appAuth.login());
   appAuth.checkSession();
 });
-
 </script>
 </body>
 </html>
