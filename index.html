@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Evo Studios | Winter Portfolio</title>
+    <title>Evo Studios | Portfolio</title>
     
     <!-- SİTE LOGOSU -->
     <link rel="icon" type="image/png" href="evo_logo.png">
@@ -11,27 +11,29 @@
     <meta property="og:image" content="evo_logo.png">
 
     <!-- FONTLAR & İKONLAR -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;700;900&family=Courier+New:wght@700&family=Mountains+of+Christmas:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;700;900&family=Courier+New:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style>
         :root {
-            /* Kış Teması Renk Paleti */
-            --bg-sky-top: #1a2a3a; 
-            --bg-sky-bottom: #4a6fa5;
-            --ink: #2d3436;
-            --cardboard: #e6dcc6;
-            --accent: #e74c3c;
+            /* Tema Renk Paleti */
+            --bg-sky-top: #0b1020;
+            --bg-sky-bottom: #1b2a6b;
+            --ink: #1e2430;
+            --cardboard: #efe6d4;
+            --accent: #6c5ce7;
             --s-yellow: #f1c40f;
-            --s-green: #27ae60;
+            --s-green: #00b894;
             --snow: #ffffff;
-            --glow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
+            --glow: 0 0 14px rgba(108, 92, 231, 0.55), 0 0 30px rgba(0, 184, 148, 0.25);
         }
 
         /* --- TEMEL AYARLAR --- */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
-            background: radial-gradient(circle at bottom, var(--bg-sky-bottom), var(--bg-sky-top));
+            background: radial-gradient(1200px circle at 20% 20%, rgba(108,92,231,0.25), transparent 55%),
+            radial-gradient(900px circle at 80% 30%, rgba(0,184,148,0.18), transparent 55%),
+            linear-gradient(180deg, var(--bg-sky-top), var(--bg-sky-bottom));
             font-family: 'Outfit', sans-serif;
             color: var(--ink);
             margin: 0; padding: 0;
@@ -41,161 +43,26 @@
             position: relative;
         }
 
-        /* --- YENİLENMİŞ YILBAŞI IŞIKLARI (DAHA ESTETİK) --- */
-        .christmas-lights-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 120px; z-index: 50;
-            pointer-events: none;
-            display: flex; justify-content: center;
-            overflow: visible;
-        }
-        
-        /* Kablo (Sarkık Görünüm) */
-        .light-wire {
-            position: absolute; top: -40px; left: -5%; width: 110%; height: 100px;
-            border-bottom: 4px solid #1a1a1a;
-            border-radius: 50%;
-            z-index: 49;
-            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
-        }
-
-        /* Ampul Kutusu */
-        .light-bulb-box {
-            position: absolute;
-            top: 58px; /* Kablo hizası */
-            z-index: 50;
-            display: flex; flex-direction: column; align-items: center;
-            transform-origin: top center;
-            animation: swingLight 3s ease-in-out infinite alternate;
-        }
-
-        /* Soket */
-        .bulb-socket {
-            width: 12px; height: 10px; background: #2d3436;
-            border-radius: 2px;
-            margin-bottom: -2px; z-index: 2;
-        }
-
-        /* Işık Kısmı */
-        .bulb-glass {
-            width: 16px; height: 26px;
-            border-radius: 50% 50% 40% 40%;
-            background: #ccc;
-            opacity: 0.9;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-            transition: all 0.3s;
-            animation: flash 1.5s infinite alternate;
-        }
-
-        @keyframes swingLight {
-            0% { transform: rotate(3deg); }
-            100% { transform: rotate(-3deg); }
-        }
-
-        @keyframes flash {
-            0% { opacity: 0.6; transform: scale(0.95); filter: brightness(0.8); }
-            100% { opacity: 1; transform: scale(1.1); filter: brightness(1.8); box-shadow: 0 0 30px currentColor; }
-        }
-
-        /* Renk Varyasyonları */
-        .lb-red .bulb-glass { background-color: #ff4757; color: #ff4757; animation-delay: 0s; }
-        .lb-green .bulb-glass { background-color: #2ed573; color: #2ed573; animation-delay: 0.5s; }
-        .lb-blue .bulb-glass { background-color: #1e90ff; color: #1e90ff; animation-delay: 1s; }
-        .lb-gold .bulb-glass { background-color: #ffa502; color: #ffa502; animation-delay: 1.5s; }
-        .lb-purple .bulb-glass { background-color: #8e44ad; color: #8e44ad; animation-delay: 0.2s; }
-
-        /* --- BACKGROUND KATMANLARI (PARALLAX & KAR) --- */
-        .snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 30; overflow: hidden; } 
-        
-        .snowflake {
-            position: absolute; top: -20px; background: white; border-radius: 50%; opacity: 0.9;
-            box-shadow: 0 0 8px rgba(255,255,255,0.9);
-            animation: fall linear infinite, sway 3s ease-in-out infinite alternate;
-        }
-        
-        @keyframes fall {
-            0% { transform: translateY(-10vh); opacity: 1; }
-            100% { transform: translateY(110vh); opacity: 0.3; }
-        }
-        
-        /* Kar Rüzgar Efekti */
-        @keyframes sway {
-            0% { margin-left: -10px; }
-            100% { margin-left: 10px; }
-        }
-
+        /* --- BACKGROUND KATMANLARI (PARALLAX) --- */
         .forest-layer {
             position: fixed; bottom: 0; left: 0; width: 100%;
             pointer-events: none; 
         }
         .layer-back {
             height: 400px; opacity: 0.4; filter: blur(2px); z-index: 0;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23102a43' fill-opacity='1' d='M0,320L40,280L80,320L120,240L160,320L200,260L240,320L280,220L320,320L360,250L400,320L440,200L480,320L520,270L560,320L600,230L640,320L680,260L720,320L760,210L800,320L840,250L880,320L920,190L960,320L1000,260L1040,320L1080,230L1120,320L1160,270L1200,320L1240,220L1280,320L1320,250L1360,320L1400,280L1440,320L1440,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%230b1020' fill-opacity='1' d='M0,320L40,280L80,320L120,240L160,320L200,260L240,320L280,220L320,320L360,250L400,320L440,200L480,320L520,270L560,320L600,230L640,320L680,260L720,320L760,210L800,320L840,250L880,320L920,190L960,320L1000,260L1040,320L1080,230L1120,320L1160,270L1200,320L1240,220L1280,320L1320,250L1360,320L1400,280L1440,320L1440,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
             background-size: cover; background-repeat: repeat-x;
         }
         .layer-mid {
             height: 300px; opacity: 0.7; bottom: -20px; z-index: 1;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23243b55' fill-opacity='1' d='M0,320L60,240L120,320L180,200L240,320L300,220L360,320L420,180L480,320L540,230L600,320L660,190L720,320L780,210L840,320L900,170L960,320L1020,230L1080,320L1140,200L1200,320L1260,220L1320,320L1380,250L1440,320L1440,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23121a3a' fill-opacity='1' d='M0,320L60,240L120,320L180,200L240,320L300,220L360,320L420,180L480,320L540,230L600,320L660,190L720,320L780,210L840,320L900,170L960,320L1020,230L1080,320L1140,200L1200,320L1260,220L1320,320L1380,250L1440,320L1440,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
             background-size: cover; background-repeat: repeat-x;
         }
         .layer-front {
             height: 250px; opacity: 1; bottom: -50px; z-index: 4; /* Santa'nın arkasında kalsın istiyorsan z-index düşmeli, önünde olsun istiyorsan artmalı. Şu an Santa 2. */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='treeGrad' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' style='stop-color:%23143042;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%230b1e2b;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M50,300 L150,100 L250,300 M150,100 L150,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M150,100 L100,200 L200,200 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M300,300 L400,50 L500,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M400,50 L340,180 L460,180 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M550,300 L650,120 L750,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M800,300 L900,80 L1000,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M900,80 L840,200 L960,200 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M1050,300 L1125,150 L1200,300' fill='url(%23treeGrad)'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='none'%3E%3Cdefs%3E%3ClinearGradient id='treeGrad' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' style='stop-color:%230b1020;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23121a3a;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M50,300 L150,100 L250,300 M150,100 L150,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M150,100 L100,200 L200,200 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M300,300 L400,50 L500,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M400,50 L340,180 L460,180 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M550,300 L650,120 L750,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M800,300 L900,80 L1000,300' fill='url(%23treeGrad)'/%3E%3Cpath d='M900,80 L840,200 L960,200 Z' fill='%23ecf0f1' opacity='0.3'/%3E%3Cpath d='M1050,300 L1125,150 L1200,300' fill='url(%23treeGrad)'/%3E%3C/svg%3E");
             background-size: auto 100%;
         }
-
-        /* --- SANTA & GIFT ANIMASYONU (DÜZELTİLDİ) --- */
-        .santa-wrapper {
-            position: fixed; top: 12%; right: -350px;
-            width: 280px; height: auto;
-            z-index: 3; /* Ağaçların (4) hemen arkasında, arka planın önünde */
-            pointer-events: none;
-            opacity: 1 !important; /* Hayalet sorununu çözmek için full opacity */
-            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.6)); /* Gölge eklendi */
-        }
-        
-        .santa-sleigh img { 
-            width: 100%; 
-            display: block;
-            transform: rotate(-5deg);
-            /* Sledge Sallanma Efekti */
-            animation: sleighWobble 2s ease-in-out infinite alternate;
-        }
-        
-        .falling-gift {
-            position: fixed; top: 20%; left: 50%;
-            width: 60px; height: 60px;
-            background-image: url('gift.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            z-index: 5; /* En önde */
-            opacity: 0;
-            pointer-events: none;
-            filter: drop-shadow(0 0 10px gold);
-        }
-
-        @keyframes sleighWobble {
-            0% { transform: rotate(-6deg) translateY(0); }
-            100% { transform: rotate(-4deg) translateY(-5px); }
-        }
-
-        @keyframes santaFly {
-            0% { right: -350px; transform: translateY(0); }
-            20% { transform: translateY(30px); }
-            40% { transform: translateY(-20px); }
-            60% { transform: translateY(20px); }
-            80% { transform: translateY(-10px); }
-            100% { right: 120vw; transform: translateY(0); }
-        }
-        
-        @keyframes dropGift {
-            0% { top: 20%; opacity: 0; transform: scale(0.1) rotate(0deg); }
-            10% { opacity: 1; transform: scale(1.2) rotate(45deg); }
-            20% { transform: scale(1) rotate(90deg); }
-            100% { top: 110%; opacity: 1; transform: rotate(1080deg); }
-        }
-
-        .santa-animate { animation: santaFly 10s linear forwards; }
-        .gift-animate { animation: dropGift 4s ease-in forwards; }
 
         /* --- ANİMASYONLAR (GENEL) --- */
         @keyframes popIn { 0% { transform: scale(0.8) translateY(20px); opacity: 0; } 60% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
@@ -233,10 +100,10 @@
         .winter-box {
             width: 480px;
             min-height: 580px;
-            background-color: #eee0d1; 
+            background-color: rgba(255,255,255,0.92); 
             background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
             border-radius: 25px; 
-            border: 6px solid #d4c2aa;
+            border: 6px solid rgba(30,36,48,0.18);
             position: relative;
             display: flex;
             flex-direction: column;
@@ -247,21 +114,6 @@
                 inset 0 0 60px rgba(255,245,230,0.5); 
             transform-style: preserve-3d;
             animation: softFloat 6s ease-in-out infinite;
-        }
-
-        /* --- DÜZELTİLMİŞ KAR BİRİKİNTİSİ --- */
-        .box-snow-top {
-            position: absolute; 
-            top: -2px; /* Daha aşağı çekildi, havada kalmasın diye */
-            left: -8px; 
-            right: -8px; 
-            height: 70px;
-            background: #fff;
-            mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 30' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 L100,0 L100,10 C90,20 85,10 80,25 C75,10 70,20 60,15 C50,25 40,10 30,20 C20,10 10,25 0,10 Z' fill='black'/%3E%3C/svg%3E");
-            -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 30' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,0 L100,0 L100,10 C90,20 85,10 80,25 C75,10 70,20 60,15 C50,25 40,10 30,20 C20,10 10,25 0,10 Z' fill='black'/%3E%3C/svg%3E");
-            mask-size: 100% 100%; -webkit-mask-size: 100% 100%;
-            z-index: 20;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); /* Gölge belirginleştirildi */
         }
 
         .polaroid-frame {
@@ -296,15 +148,16 @@
         }
 
         .home-title {
-            font-family: 'Mountains of Christmas', cursive; 
-            font-weight: 700;
-            font-size: 64px;
-            color: #c0392b;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 62px;
+            color: #ffffff;
             margin: 30px 0 0 0;
-            line-height: 0.9;
+            line-height: 0.95;
             text-align: center;
-            text-shadow: 2px 2px 0px #fff, 4px 4px 0px rgba(0,0,0,0.1);
-            transform: rotate(-2deg);
+            letter-spacing: -1px;
+            text-shadow: 0 10px 35px rgba(0,0,0,0.35);
+            transform: rotate(-1deg);
         }
 
         .home-subtitle {
@@ -388,6 +241,40 @@
         .simple-card { background: #fff; border: 3px solid var(--ink); border-radius: 20px; padding: 40px; width: 100%; max-width: 600px; box-shadow: 10px 10px 0 rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; text-align: center; }
         .creator-store-link { background: linear-gradient(135deg, #0984e3, #6c5ce7); color: white; padding: 20px; width: 100%; margin-top: 20px; border-radius: 15px; text-decoration: none; border: 3px solid var(--ink); display: flex; align-items: center; justify-content: center; gap: 15px; font-size: 20px; font-weight: bold; transition: transform 0.2s, box-shadow 0.2s; }
         .creator-store-link:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4); }
+
+        /* --- SUBTABS & MODELS --- */
+        .subtab-row { width: 100%; display: flex; gap: 12px; margin-top: 18px; flex-wrap: wrap; }
+        .subtab-btn { flex: 1; min-width: 220px; background: linear-gradient(135deg, #0984e3, #6c5ce7); color: white; padding: 16px 18px; border-radius: 15px; text-decoration: none; border: 3px solid var(--ink); display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 18px; font-weight: 800; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        .subtab-btn:hover { transform: translateY(-4px); box-shadow: 0 12px 22px rgba(108, 92, 231, 0.25); }
+        .subtab-btn.secondary { background: linear-gradient(135deg, #00b894, #6c5ce7); }
+        .hint-box { width: 100%; margin-top: 16px; padding: 12px 14px; border-radius: 14px; border: 2px dashed rgba(30,36,48,0.25); background: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 10px; color: #3b4454; font-weight: 700; }
+
+        .models-panel { width: 100%; max-width: 900px; background: rgba(255,255,255,0.88); border: 4px solid rgba(30,36,48,0.18); border-radius: 22px; box-shadow: 15px 15px 0 rgba(0,0,0,0.08), 0 25px 60px rgba(0,0,0,0.22); overflow: hidden; }
+        .models-header { padding: 16px 18px; background: linear-gradient(135deg, rgba(108,92,231,0.12), rgba(0,184,148,0.10)); border-bottom: 2px dashed rgba(30,36,48,0.18); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .models-title { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 20px; color: #1e2430; }
+        .models-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+        .mini-btn { background: #fff; border: 2px solid rgba(30,36,48,0.22); border-radius: 14px; padding: 10px 12px; font-weight: 900; cursor: pointer; text-decoration: none; color: #1e2430; display: inline-flex; align-items: center; gap: 8px; box-shadow: 3px 3px 0 rgba(0,0,0,0.08); transition: 0.15s; }
+        .mini-btn:hover { transform: translateY(-2px); box-shadow: 6px 6px 0 rgba(0,0,0,0.10); }
+
+        .models-grid { padding: 18px; display: flex; gap: 16px; flex-wrap: wrap; justify-content: flex-start; max-height: 72vh; overflow: auto; }
+        .models-grid::-webkit-scrollbar { height: 10px; width: 10px; }
+        .models-grid::-webkit-scrollbar-thumb { background: rgba(30,36,48,0.25); border-radius: 10px; }
+
+        .model-card { width: 260px; background: #ffffff; border: 3px solid rgba(30,36,48,0.20); border-radius: 18px; overflow: hidden; box-shadow: 10px 10px 0 rgba(0,0,0,0.08); transition: 0.18s; position: relative; }
+        .model-card:hover { transform: translateY(-4px); box-shadow: 14px 14px 0 rgba(0,0,0,0.10); }
+        .model-thumb { width: 100%; height: 150px; background: #0b1020; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .model-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .model-body { padding: 14px 14px 16px 14px; }
+        .model-name { font-weight: 900; font-size: 18px; color: #1e2430; margin: 0 0 8px 0; line-height: 1.1; }
+        .model-meta { font-family: 'Inter', sans-serif; font-size: 12px; color: #6b7280; margin-bottom: 12px; }
+        .model-btn { display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #6c5ce7, #00b894); color: white; text-decoration: none; font-weight: 900; border-radius: 14px; padding: 10px 12px; border: 2px solid rgba(30,36,48,0.15); width: 100%; justify-content: center; }
+        .model-badge { position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.9); border: 2px solid rgba(30,36,48,0.18); border-radius: 999px; padding: 6px 10px; font-weight: 900; font-size: 11px; display: inline-flex; align-items: center; gap: 6px; }
+
+        .models-empty { padding: 40px 18px 50px 18px; text-align: center; }
+        .models-empty-emoji { font-size: 54px; }
+        .models-empty-title { font-weight: 900; font-size: 20px; margin-top: 10px; color: #1e2430; }
+        .models-empty-desc { color: #5c6472; font-weight: 700; margin-top: 6px; }
+
 
         /* Haberler CSS */
         .news-container { background-color: #d1b48c; background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h21.5v21.5h-1.5z' fill='%23c2a681' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E"); border: 10px solid #5d4e42; border-radius: 12px; width: 100%; max-width: 700px; height: 80vh; display: flex; flex-direction: column; box-shadow: 5px 5px 20px rgba(0,0,0,0.3); position: relative; overflow: hidden; font-family: 'Courier New', monospace; }
@@ -527,12 +414,7 @@
 </head>
 <body>
 
-    <!-- YENİLENMİŞ YILBAŞI IŞIKLARI (DAHA ESTETİK VE PARLAK) -->
-    <div class="christmas-lights-container">
-        <div class="light-wire"></div>
-        <!-- Sol Taraf -->
-        <div class="light-bulb-box lb-red" style="left: 10%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
-        <div class="light-bulb-box lb-gold" style="left: 20%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
+    <div class="light-bulb-box lb-gold" style="left: 20%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
         <div class="light-bulb-box lb-green" style="left: 30%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
         <div class="light-bulb-box lb-blue" style="left: 40%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
         <!-- Orta -->
@@ -543,19 +425,6 @@
         <div class="light-bulb-box lb-green" style="left: 80%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
         <div class="light-bulb-box lb-blue" style="left: 90%;"><div class="bulb-socket"></div><div class="bulb-glass"></div></div>
     </div>
-
-    <!-- SANTA ANIMATION CONTAINER (HAYALET SORUNU DÜZELTİLDİ) -->
-    <div id="santa-container" class="santa-wrapper">
-        <div class="santa-sleigh">
-            <!-- Net, arka plansız bir Santa Kızak görseli kullanıldı -->
-            <img src="https://i.ibb.co/m8N895D/santa-sleigh-silhouette-christmas-design-vector-23620986-removebg-preview.png" alt="Santa Claus">
-        </div>
-    </div>
-    <!-- HEDİYE CONTAINER -->
-    <div id="gift-container" class="falling-gift"></div>
-
-    <!-- KAR YAĞIŞI EFEKTİ -->
-    <div class="snow-container" id="snow-container"></div>
 
     <!-- ARKAPLAN KATMANLI ORMAN (PARALLAX) -->
     <div class="forest-layer layer-back"></div>
@@ -622,8 +491,7 @@
             <div class="home-scene-wrapper">
                 <div class="winter-box" id="tiltCard">
                     <!-- Kutu Dekorları: DÜZELTİLMİŞ KAR HİZALAMASI -->
-                    <div class="box-snow-top"></div>
-                    <div class="deco-sticker ds-1">🎄</div>
+<div class="deco-sticker ds-1">✨</div>
                     <div class="deco-sticker ds-2"><i class="fa-solid fa-star"></i></div>
                     
                     <!-- Fotoğraf (Yumuşak Köşeli) -->
@@ -691,15 +559,50 @@
             </div>
         </div>
 
-        <!-- === FREE MODELS === -->
+        <!-- === ESERLERIM === -->
         <div id="free" class="page-section">
             <div class="simple-card">
-                <div style="font-size: 50px; color: var(--s-green); margin-bottom: 20px;"><i class="fa-solid fa-cubes"></i></div>
+                <div style="font-size: 54px; color: var(--accent); margin-bottom: 18px;"><i class="fa-solid fa-cubes"></i></div>
                 <h2 style="margin:0; font-size:32px;" data-t="my_creations">Benim Eserlerim</h2>
                 <p style="color:#666; margin-top:10px;" data-t="creations_desc">Roblox projelerin için hazırladığım ücretsiz modelleri ve özel assetleri buradan bulabilirsin.</p>
-                <a href="https://create.roblox.com/store/list/LINKINI_YAZ" target="_blank" class="creator-store-link">
-                    <i class="fa-solid fa-store"></i> <span data-t="store_btn">Creator Store</span>
-                </a>
+
+                <div class="subtab-row">
+                    <a href="https://create.roblox.com/store/list/LINKINI_YAZ" target="_blank" class="subtab-btn">
+                        <i class="fa-solid fa-store"></i> <span data-t="store_btn">Creator Store</span>
+                    </a>
+                    <button class="subtab-btn secondary" onclick="switchTab('models')">
+                        <i class="fa-solid fa-gift"></i> <span data-t="free_models_btn">Free Models</span>
+                    </button>
+                </div>
+
+                <div class="hint-box">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span data-t="models_hint">Modelleri ben ekliyorum. Yeni bir model geldiğinde burada otomatik görünür.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- === FREE MODELS LIST === -->
+        <div id="models" class="page-section">
+            <div class="models-panel">
+                <div class="models-header">
+                    <div class="models-title">
+                        <i class="fa-solid fa-gift"></i>
+                        <span data-t="free_models_title">Free Models</span>
+                    </div>
+                    <div class="models-actions">
+                        <button class="mini-btn" onclick="switchTab('free')"><i class="fa-solid fa-arrow-left"></i> <span data-t="back_btn">Geri</span></button>
+                        <a class="mini-btn" href="dashboard.html" target="_blank"><i class="fa-solid fa-lock"></i> Dashboard</a>
+                    </div>
+                </div>
+
+                <div id="models-grid" class="models-grid"></div>
+
+                <div id="models-empty" class="models-empty" style="display:none;">
+                    <div class="models-empty-emoji">📦</div>
+                    <div class="models-empty-title" data-t="no_models">Henüz model eklenmedi.</div>
+                    <div class="models-empty-desc" data-t="no_models_desc">Dashboard'dan eklediğin anda burada listelenir.</div>
+                </div>
             </div>
         </div>
 
@@ -716,9 +619,9 @@
                     </p>
                     <div class="cb-socials">
                         <a href="https://discord.gg/95hcq9HVfn" target="_blank" class="social-sticker"><i class="fa-brands fa-discord"></i></a>
-                        <a href="https://x.com/EvoEvostudios" target="_blank" class="social-sticker"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="https://x.com/EvoStudiosT" target="_blank" class="social-sticker"><i class="fa-brands fa-x-twitter"></i></a>
                         <a href="https://www.youtube.com/@EVO_Studio" target="_blank" class="social-sticker"><i class="fa-brands fa-youtube"></i></a>
-                        <a href="https://www.roblox.com/groups/GRUP_ID_YAZ" target="_blank" class="social-sticker"><i class="fa-solid fa-users-rectangle"></i></a>
+                        <a href="https://www.roblox.com/tr/communities/420774781/EVO-STUD-OS#!/about" target="_blank" class="social-sticker"><i class="fa-solid fa-users-rectangle"></i></a>
                     </div>
                 </div>
                 <div class="cb-avatar-wrapper">
@@ -749,57 +652,99 @@
         const CACHE_KEY = 'evo_news_cache_v7'; 
         const CACHE_TIME = 15 * 60 * 1000; 
         let searchTimeout = null;
+        // ===== LOCAL STORAGE (MODELS / FEED / PROFILE) =====
+        const MODELS_KEY = 'evo_models_v1';
+        const FEED_LOCAL_KEY = 'evo_feed_v1';
+        const PROFILE_KEY = 'evo_profile_v1';
 
-        // KAR EFEKTİ GENERATOR
-        function createSnowflakes() {
-            const snowContainer = document.getElementById('snow-container');
-            const count = 50; 
-            for(let i=0; i<count; i++) {
-                const flake = document.createElement('div');
-                flake.classList.add('snowflake');
-                const size = Math.random() * 5 + 2;
-                flake.style.width = `${size}px`;
-                flake.style.height = `${size}px`;
-                flake.style.left = `${Math.random() * 100}vw`;
-                flake.style.animationDuration = `${Math.random() * 3 + 2}s`;
-                flake.style.animationDelay = `${Math.random() * 5}s`;
-                flake.style.opacity = Math.random();
-                snowContainer.appendChild(flake);
-            }
-        }
-        createSnowflakes();
-
-        // SANTA ANIMASYON MANTIĞI
-        function triggerSanta() {
-            const santa = document.getElementById('santa-container');
-            const gift = document.getElementById('gift-container');
-            
-            // Animasyon classlarını temizle ve yeniden tetikle (Reflow)
-            santa.classList.remove('santa-animate');
-            gift.classList.remove('gift-animate');
-            void santa.offsetWidth; // Trigger reflow
-
-            santa.classList.add('santa-animate');
-            
-            // Santa ekranın ortasına gelince hediye düşsün (yaklaşık 4 saniye sonra)
-            setTimeout(() => {
-                gift.classList.add('gift-animate');
-            }, 3000);
+        function safeJsonParse(str, fallback) {
+            try { return JSON.parse(str); } catch(e) { return fallback; }
         }
 
-        // Santa'yı rastgele aralıklarla geçir (10sn - 30sn arası)
-        function scheduleNextSanta() {
-            const delay = Math.random() * 20000 + 15000; // 15-35 saniye arası
-            setTimeout(() => {
-                triggerSanta();
-                scheduleNextSanta();
-            }, delay);
+        function getLocalModels() {
+            const arr = safeJsonParse(localStorage.getItem(MODELS_KEY) || '[]', []);
+            return Array.isArray(arr) ? arr : [];
         }
-        // Sayfa açıldıktan kısa süre sonra ilk geçişi yap
-        setTimeout(triggerSanta, 3000);
-        scheduleNextSanta();
 
+        function renderModels() {
+            const grid = document.getElementById('models-grid');
+            const empty = document.getElementById('models-empty');
+            if (!grid || !empty) return;
 
+            const models = getLocalModels();
+            grid.innerHTML = '';
+            if (!models.length) { empty.style.display = 'block'; return; }
+            empty.style.display = 'none';
+
+            models
+                .slice()
+                .sort((a,b) => (b.createdAt||0) - (a.createdAt||0))
+                .forEach((m, idx) => {
+                    const card = document.createElement('div');
+                    card.className = 'model-card';
+                    const thumb = (m.thumbUrl && String(m.thumbUrl).trim()) ? m.thumbUrl : 'https://via.placeholder.com/520x300/0b1020/ffffff?text=EVO+MODEL';
+                    const title = (m.title || 'Untitled Model');
+                    const link = (m.link || '#');
+                    const note = (m.note || 'Free Model');
+
+                    card.innerHTML = `
+                        <div class="model-badge"><i class="fa-solid fa-box"></i> #${idx+1}</div>
+                        <div class="model-thumb"><img src="${thumb}" alt="${title}" onerror="this.src='https://via.placeholder.com/520x300/0b1020/ffffff?text=EVO+MODEL'"></div>
+                        <div class="model-body">
+                            <div class="model-name">${escapeHtml(title)}</div>
+                            <div class="model-meta">${escapeHtml(note)}</div>
+                            <a class="model-btn" href="${link}" target="_blank" rel="noopener">
+                                <i class="fa-brands fa-roblox"></i> Roblox Link
+                            </a>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+        }
+
+        function escapeHtml(str) {
+            return String(str ?? '')
+                .replaceAll('&','&amp;')
+                .replaceAll('<','&lt;')
+                .replaceAll('>','&gt;')
+                .replaceAll('"','&quot;')
+                .replaceAll("'",'&#039;');
+        }
+
+        function getLocalFeed() {
+            const arr = safeJsonParse(localStorage.getItem(FEED_LOCAL_KEY) || '[]', []);
+            return Array.isArray(arr) ? arr : [];
+        }
+
+        function mergeLocalFeedIntoGlobal() {
+            const localItems = getLocalFeed().map(p => ({
+                id: p.id || ('local_' + (p.createdAt || Date.now())),
+                baslik: p.title || 'Post',
+                icerik: p.content || '',
+                etiket: p.tag || 'info',
+                medya: p.mediaUrl || '',
+                tarih: p.createdAt ? new Date(p.createdAt).toLocaleString() : '',
+                yazar: p.author || 'Evo Studios',
+                avatar: p.avatarUrl || 'evo_logo.png',
+                pinned: p.pinned ? 'yes' : 'no'
+            }));
+            // localItems'ı en başa koy (pinned önceliği ayrıca sort ile korunuyor)
+            globalNewsData = localItems.concat(globalNewsData || []);
+        }
+
+        function applyProfileOverrides() {
+            const p = safeJsonParse(localStorage.getItem(PROFILE_KEY) || 'null', null);
+            if (!p) return;
+
+            // About card
+            const nameEl = document.querySelector('.ref-name');
+            const handleEl = document.getElementById('rbx-user');
+            const avatarEl = document.getElementById('my-avatar');
+
+            if (nameEl && p.displayName) nameEl.textContent = p.displayName;
+            if (handleEl && p.handle) handleEl.textContent = p.handle.startsWith('@') ? p.handle : ('@' + p.handle);
+            if (avatarEl && p.avatarUrl) avatarEl.src = p.avatarUrl;
+        }
         const langData = {
             tr: {
                 home_subtitle: "Ultimate Roblox Development",
@@ -810,7 +755,13 @@
                 my_creations: "Benim Eserlerim", creations_desc: "Roblox projelerin için hazırladığım ücretsiz modelleri ve özel assetleri buradan bulabilirsin.",
                 store_btn: "Creator Store", hello: "MERHABA, BEN",
                 bio_1: "Roblox platformunda sıradan fikirleri", bio_2: "olağanüstü deneyimlere", bio_3: "dönüştürüyorum.",
-                bio_4: "Profesyonel Scripter & UI Designer olarak,", bio_5: "Evo Studios çatısı altında hayal gücünün sınırlarını zorluyorum."
+                bio_4: "Profesyonel Scripter & UI Designer olarak,", bio_5: "Evo Studios çatısı altında hayal gücünün sınırlarını zorluyorum.",
+                free_models_btn: "Free Models",
+                free_models_title: "Free Models",
+                back_btn: "Geri",
+                models_hint: "Modelleri ben ekliyorum. Yeni bir model geldiğinde burada otomatik görünür.",
+                no_models: "Henüz model eklenmedi.",
+                no_models_desc: "Dashboard'dan eklediğin anda burada listelenir."
             },
             en: {
                 home_subtitle: "Ultimate Roblox Development",
@@ -864,6 +815,9 @@
             sections.forEach(s => s.classList.remove('active'));
             const activeSec = document.getElementById(id);
             if(activeSec) activeSec.classList.add('active');
+
+            // Dynamic pages
+            if (id === 'models') renderModels();
         }
 
         // --- SPOTIFY PARSING ---
@@ -899,7 +853,10 @@
             if(cached) {
                 const parsed = JSON.parse(cached);
                 if(Date.now() - parsed.timestamp < CACHE_TIME) {
-                    globalNewsData = parsed.data; renderNewsBatch('all'); return;
+                    globalNewsData = parsed.data;
+                    mergeLocalFeedIntoGlobal();
+                    renderNewsBatch('all');
+                    return;
                 }
             }
             if(globalNewsData.length === 0) {
@@ -912,6 +869,7 @@
                     const json = await res.json();
                     if(json.contents) {
                         globalNewsData = JSON.parse(json.contents).reverse();
+                        mergeLocalFeedIntoGlobal();
                         saveAndRender();
                         return;
                     }
@@ -923,6 +881,7 @@
                 const res2 = await fetch(proxyUrl2);
                 if(res2.ok) {
                     globalNewsData = (await res2.json()).reverse();
+                    mergeLocalFeedIntoGlobal();
                     saveAndRender();
                     return;
                 }
@@ -1125,7 +1084,9 @@
             }
         }
 
+        applyProfileOverrides();
         fetchRobloxData();
+        renderModels();
     </script>
 </body>
 </html>
