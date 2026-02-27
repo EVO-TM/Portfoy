@@ -38,7 +38,6 @@
     body {
       font-family: 'Space Grotesk', sans-serif;
       background-color: var(--paper-bg);
-      /* Subtle noise/paper texture effect */
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
       color: var(--ink);
       min-height: 100vh;
@@ -324,7 +323,7 @@
           </div>
 
           <!-- MODELS MANAGER -->
-          <div class="card">
+          <div class="card" id="modelAddCard"> <!-- ID eklendi (Hata için fix) -->
             <div class="tape"></div>
             <div class="card-header">
               <h2><i class="fa-solid fa-cubes"></i> Ücretsiz Modeller</h2>
@@ -372,7 +371,7 @@
           </div>
 
           <!-- FEED MANAGER -->
-          <div class="card">
+          <div class="card" id="feedAddCard"> <!-- ID eklendi (Hata için fix) -->
             <div class="tape"></div>
             <div class="card-header">
               <h2><i class="fa-solid fa-bullhorn"></i> Duyuru Panosu</h2>
@@ -489,8 +488,8 @@
 const CONFIG = {
   SUPABASE_URL: "https://ixvovmragysxwbcspixo.supabase.co",
   SUPABASE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4dm92bXJhZ3lzeHdiY3NwaXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxNzg3NDMsImV4cCI6MjA4Nzc1NDc0M30.mIMKSz5Jaxxm355NfMWYwP76GFlEQMaifkuyeNSIkPs",
-  BUCKET_NAME: "evo", // İstenildiği gibi "evo" bucket'ı
-  PROFILE_KEY: "evo_profile_v1" // Profilin sitede bozulmaması için eski key
+  BUCKET_NAME: "evo", 
+  PROFILE_KEY: "evo_profile_v1" 
 };
 
 const sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
@@ -533,8 +532,11 @@ const uiManager = {
   },
   openModal: (id) => document.getElementById(id).classList.add('active'),
   closeModal: (id) => document.getElementById(id).classList.remove('active'),
+  
+  // FIX EKLENEN KISIM: document.getElementById null dönerse işlem yapmaz. (Crash koruması)
   clearInputs: (id) => {
     const c = document.getElementById(id);
+    if (!c) return; 
     c.querySelectorAll('input[type="text"], input[type="file"], textarea').forEach(e=>e.value='');
     c.querySelectorAll('input[type="checkbox"]').forEach(e=>e.checked=false);
     c.querySelectorAll('.file-name-display').forEach(e=>{e.innerText="Seçilmedi"; e.style.color='var(--marker-blue)';});
@@ -567,7 +569,7 @@ const appAuth = {
 const appData = {
   initDash: () => { appData.loadProfile(); appData.fetchAll(); },
 
-  // PROFILE SYSTEM (Korumalı Eski Sistem)
+  // PROFILE SYSTEM
   loadProfile: () => {
     try {
       const p = JSON.parse(localStorage.getItem(CONFIG.PROFILE_KEY)) || {};
@@ -656,7 +658,9 @@ const appData = {
         roblox_link: document.getElementById('mLink').value.trim(),
         thumb_url: tUrl, file_url: fUrl, file_name: fName, file_size: fSize
       });
-      uiManager.toast('Model paylaşıldı!'); uiManager.clearInputs('mTitle'.parentElement); appData.fetchAll();
+      uiManager.toast('Model paylaşıldı!'); 
+      uiManager.clearInputs('modelAddCard'); // FIX EKLENEN KISIM
+      appData.fetchAll();
     } catch(e) { uiManager.toast('Hata: '+e.message, 'error'); }
     uiManager.hideLoader();
   },
@@ -700,7 +704,9 @@ const appData = {
         pinned: document.getElementById('fPinned').checked, media_url: mUrl,
         author: "Admin", avatar_url: "evo_logo.png"
       });
-      uiManager.toast('Post paylaşıldı!'); uiManager.clearInputs('fTitle'.parentElement); appData.fetchAll();
+      uiManager.toast('Post paylaşıldı!'); 
+      uiManager.clearInputs('feedAddCard'); // FIX EKLENEN KISIM
+      appData.fetchAll();
     } catch(e) { uiManager.toast('Hata: '+e.message, 'error'); }
     uiManager.hideLoader();
   },
