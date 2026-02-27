@@ -13,6 +13,7 @@
     <!-- FONTLAR & İKONLAR -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;700;900&family=Courier+New:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
         :root {
@@ -238,7 +239,7 @@
         .play-big-btn { display: block; width: 100%; background: #00b894; color: white; padding: 15px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 18px; margin-top: 15px; border: 3px solid var(--ink); box-shadow: 0 5px 0 var(--ink); transition: 0.1s; }
         .play-big-btn:hover { transform: translateY(2px); box-shadow: 0 3px 0 var(--ink); filter: brightness(1.1); }
         
-        .simple-card { background: #fff; border: 3px solid var(--ink); border-radius: 20px; padding: 40px; width: 100%; max-width: 600px; box-shadow: 10px 10px 0 rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .simple-card { background: rgba(255,255,255,0.90); border: 3px solid rgba(30,36,48,0.22); border-radius: 22px; padding: 42px; width: 100%; max-width: 620px; box-shadow: 18px 18px 0 rgba(0,0,0,0.07), 0 25px 60px rgba(0,0,0,0.22); display: flex; flex-direction: column; align-items: center; text-align: center; backdrop-filter: blur(10px); }
         .creator-store-link { background: linear-gradient(135deg, #0984e3, #6c5ce7); color: white; padding: 20px; width: 100%; margin-top: 20px; border-radius: 15px; text-decoration: none; border: 3px solid var(--ink); display: flex; align-items: center; justify-content: center; gap: 15px; font-size: 20px; font-weight: bold; transition: transform 0.2s, box-shadow 0.2s; }
         .creator-store-link:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4); }
 
@@ -567,10 +568,7 @@
                 <p style="color:#666; margin-top:10px;" data-t="creations_desc">Roblox projelerin için hazırladığım ücretsiz modelleri ve özel assetleri buradan bulabilirsin.</p>
 
                 <div class="subtab-row">
-                    <a href="https://create.roblox.com/store/list/LINKINI_YAZ" target="_blank" class="subtab-btn">
-                        <i class="fa-solid fa-store"></i> <span data-t="store_btn">Creator Store</span>
-                    </a>
-                    <button class="subtab-btn secondary" onclick="switchTab('models')">
+<button class="subtab-btn secondary" onclick="switchTab('models')">
                         <i class="fa-solid fa-gift"></i> <span data-t="free_models_btn">Free Models</span>
                     </button>
                 </div>
@@ -592,8 +590,7 @@
                     </div>
                     <div class="models-actions">
                         <button class="mini-btn" onclick="switchTab('free')"><i class="fa-solid fa-arrow-left"></i> <span data-t="back_btn">Geri</span></button>
-                        <a class="mini-btn" href="dashboard.html" target="_blank"><i class="fa-solid fa-lock"></i> Dashboard</a>
-                    </div>
+</div>
                 </div>
 
                 <div id="models-grid" class="models-grid"></div>
@@ -644,7 +641,80 @@
     <script>
         const ROBLOX_ID = '1992693538'; 
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxgaVePszb9zvXaxccgPw0yzYo9Ul8CEzGGlVrd92Ha6CtkUbg67aO9dTL5XuxacBZ3/exec';
-        let avatarUrl = "https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png";
+        
+        // ===== SUPABASE (opsiyonel ama önerilir) =====
+        // NOT: Anon key public olur; güvenliği RLS ile sağlarsın (dashboard girişli kullanıcı yazabilir).
+        // Supabase projen: Settings -> API
+        const SUPABASE_URL = "";        // <-- buraya yapıştır
+        const SUPABASE_ANON_KEY = "";   // <-- buraya yapıştır
+        const USE_SUPABASE = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
+
+        const sb = USE_SUPABASE ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+        async function sbFetchModelsToLocal(){
+            if(!sb) return false;
+            try{
+                const { data, error } = await sb.from("models").select("*").order("created_at", { ascending:false });
+                if(error) throw error;
+                const mapped = (data||[]).map(r => ({
+                    id: r.id,
+                    title: r.title,
+                    note: r.note,
+                    link: r.roblox_link || "",
+                    thumbUrl: r.thumb_url || "",
+                    fileUrl: r.file_url || "",
+                    fileName: r.file_name || "",
+                    fileSize: r.file_size || "",
+                    createdAt: r.created_at ? new Date(r.created_at).getTime() : Date.now()
+                }));
+                localStorage.setItem(MODELS_KEY, JSON.stringify(mapped));
+                return true;
+            }catch(e){ console.log("supabase models err", e); return false; }
+        }
+
+        async function sbFetchFeedToLocal(){
+            if(!sb) return false;
+            try{
+                const { data, error } = await sb.from("feed_posts").select("*").order("created_at", { ascending:false });
+                if(error) throw error;
+                const mapped = (data||[]).map(r => ({
+                    id: r.id,
+                    title: r.title,
+                    content: r.content,
+                    tag: r.tag || "info",
+                    mediaUrl: r.media_url || "",
+                    musicUrl: r.music_url || "",
+                    pinned: !!r.pinned,
+                    createdAt: r.created_at ? new Date(r.created_at).getTime() : Date.now(),
+                    author: r.author || "Evo Studios",
+                    avatarUrl: r.avatar_url || "evo_logo.png"
+                }));
+                localStorage.setItem(FEED_LOCAL_KEY, JSON.stringify(mapped));
+                return true;
+            }catch(e){ console.log("supabase feed err", e); return false; }
+        }
+
+        async function sbFetchProfileToLocal(){
+            if(!sb) return false;
+            try{
+                const { data, error } = await sb.from("site_profile").select("*").eq("id","main").maybeSingle();
+                if(error) throw error;
+                if(data){
+                    localStorage.setItem('evo_profile_v1', JSON.stringify({
+                        displayName: data.display_name || "EVO",
+                        handle: data.handle || "@EvoStudiosT",
+                        avatarUrl: data.avatar_url || ""
+                    }));
+                }
+                return true;
+            }catch(e){ console.log("supabase profile err", e); return false; }
+        }
+
+        async function syncFromSupabase(){
+            if(!sb) return;
+            await Promise.all([sbFetchModelsToLocal(), sbFetchFeedToLocal(), sbFetchProfileToLocal()]);
+        }
+let avatarUrl = "https://tr.rbxcdn.com/7fb209cf8866164d1d94eb38e3e4a320/420/420/Image/Png";
         let currentLang = localStorage.getItem('siteLang') || 'tr';
         let globalNewsData = []; 
         let renderedCount = 0;
@@ -682,10 +752,35 @@
                 .forEach((m, idx) => {
                     const card = document.createElement('div');
                     card.className = 'model-card';
+
                     const thumb = (m.thumbUrl && String(m.thumbUrl).trim()) ? m.thumbUrl : 'https://via.placeholder.com/520x300/0b1020/ffffff?text=EVO+MODEL';
                     const title = (m.title || 'Untitled Model');
-                    const link = (m.link || '#');
                     const note = (m.note || 'Free Model');
+
+                    const hasFile = !!(m.fileUrl && String(m.fileUrl).trim());
+                    const robloxLink = (m.link && String(m.link).trim()) ? m.link : '';
+
+                    const metaBits = [];
+                    if (m.fileName) metaBits.push(escapeHtml(m.fileName));
+                    if (m.fileSize) metaBits.push(escapeHtml(m.fileSize));
+                    const metaLine = metaBits.length ? ('<div class="model-meta" style="margin-top:6px;">' + metaBits.join(' • ') + '</div>') : '';
+
+                    const btns = [];
+                    if (hasFile) {
+                        btns.push(`<a class="model-btn" href="${m.fileUrl}" target="_blank" rel="noopener" download>
+                            <i class="fa-solid fa-download"></i> Download
+                        </a>`);
+                    }
+                    if (robloxLink) {
+                        btns.push(`<a class="model-btn" href="${robloxLink}" target="_blank" rel="noopener" style="margin-top:10px; background: linear-gradient(135deg, #0984e3, #6c5ce7);">
+                            <i class="fa-brands fa-roblox"></i> Roblox Link
+                        </a>`);
+                    }
+                    if (!btns.length) {
+                        btns.push(`<a class="model-btn" href="#" onclick="return false;" style="opacity:.7; cursor:not-allowed;">
+                            <i class="fa-solid fa-ban"></i> Link yok
+                        </a>`);
+                    }
 
                     card.innerHTML = `
                         <div class="model-badge"><i class="fa-solid fa-box"></i> #${idx+1}</div>
@@ -693,9 +788,8 @@
                         <div class="model-body">
                             <div class="model-name">${escapeHtml(title)}</div>
                             <div class="model-meta">${escapeHtml(note)}</div>
-                            <a class="model-btn" href="${link}" target="_blank" rel="noopener">
-                                <i class="fa-brands fa-roblox"></i> Roblox Link
-                            </a>
+                            ${metaLine}
+                            ${btns.join('')}
                         </div>
                     `;
                     grid.appendChild(card);
@@ -722,7 +816,8 @@
                 baslik: p.title || 'Post',
                 icerik: p.content || '',
                 etiket: p.tag || 'info',
-                medya: p.mediaUrl || '',
+                gorsel: p.mediaUrl || '',
+                music: p.musicUrl || '',
                 tarih: p.createdAt ? new Date(p.createdAt).toLocaleString() : '',
                 yazar: p.author || 'Evo Studios',
                 avatar: p.avatarUrl || 'evo_logo.png',
@@ -1084,9 +1179,12 @@
             }
         }
 
+        syncFromSupabase().finally(()=>{
         applyProfileOverrides();
         fetchRobloxData();
         renderModels();
+        try{ loadNewsFromSheet(); }catch(e){}
+        });
     </script>
 </body>
 </html>
