@@ -327,29 +327,56 @@
   </div>
 
 <script>
+/*
+  EVO Dashboard - fixed build
+  Fixes:
+  - Removed duplicated stray code blocks that were causing a syntax error (page looked frozen).
+  - Removed top-level 'await' by wrapping init in an async IIFE.
+*/
+(() => {
   // =========================
-  //  AYAR: ŞİFREYİ BURADAN DEĞİŞTİR
+  //  AYAR: ADMIN GİRİŞİ (CLIENT-SIDE)
+  //  Not: Gerçek güvenlik için sunucu tarafı login gerekir.
   // =========================
-  // =========================
-//  AYAR: ADMIN GİRİŞİ (CLIENT-SIDE)
-//  Not: Gerçek güvenlik için sunucu tarafı login gerekir.
-// =========================
-const ADMIN_USER = "evo"; // <-- bunu değiştir (küçük harf önerilir)
+  const ADMIN_USER = "evo"; // <-- bunu değiştir (küçük harf önerilir)
 
-// Şifreyi burada DÜZ METİN yazmıyoruz. SHA-256 hash karşılaştırması var.
-// Hash üretmek için tarayıcı konsolunda şunu çalıştır:
-//   await sha256("SENIN_YENI_SIFREN")
-const ADMIN_PASS_SHA256 = "80c6a995b0e35edfb8dced32237febd1dcca81e5ec91c649ec5215a652fcd89b"; // EVO_ADMIN_123
+  // Şifreyi burada DÜZ METİN yazmıyoruz. SHA-256 hash karşılaştırması var.
+  // Hash üretmek için tarayıcı konsolunda şunu çalıştır:
+  //   await sha256("SENIN_YENI_SIFREN")
+  const ADMIN_PASS_SHA256 = "80c6a995b0e35edfb8dced32237febd1dcca81e5ec91c649ec5215a652fcd89b"; // EVO_ADMIN_123
 
-  
   // ===== SUPABASE (ÖNERİLEN: gerçek güvenlik + cihazlar arası senkron) =====
   // Settings -> API: URL + anon key
-  const SUPABASE_URL = "https://ixvovmragysxwbcspixo.supabase.co";      // <-- buraya
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4dm92bXJhZ3lzeHdiY3NwaXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxNzg3NDMsImV4cCI6MjA4Nzc1NDc0M30.mIMKSz5Jaxxm355NfMWYwP76GFlEQMaifkuyeNSIkPs"; // <-- buraya
-  const ADMIN_EMAIL = "burakhusta@gmail.com";       // <-- sadece senin admin mailin (Supabase Auth'ta kayıtlı)
+  const SUPABASE_URL = "https://ixvovmragysxwbcspixo.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4dm92bXJhZ3lzeHdiY3NwaXhvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxNzg3NDMsImV4cCI6MjA4Nzc1NDc0M30.mIMKSz5Jaxxm355NfMWYwP76GFlEQMaifkuyeNSIkPs";
+  const ADMIN_EMAIL = "burakhusta@gmail.com"; // Supabase Auth'ta kayıtlı admin mail
   const USE_SUPABASE = !!(SUPABASE_URL && SUPABASE_ANON_KEY);
 
   const sb = USE_SUPABASE ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+  // ===== Keys =====
+  const AUTH_KEY = "evo_dash_auth_v1";
+  const AUTH_EXP_KEY = "evo_dash_auth_exp_v1";
+  const FAIL_KEY = "evo_dash_fail_v1";
+  const FAIL_UNTIL_KEY = "evo_dash_lock_until_v1";
+
+  const MODELS_KEY = "evo_models_v1";
+  const FEED_KEY = "evo_feed_v1";
+  const PROFILE_KEY = "evo_profile_v1";
+
+  // ===== Helpers =====
+  const $ = (id) => document.getElementById(id);
+
+  function safeJsonParse(str, fallback){
+    try{ return JSON.parse(str); }catch(e){ return fallback; }
+  }
+  function now(){ return Date.now(); }
+
+  async function sha256(text){
+    const enc = new TextEncoder().encode(text);
+    const buf = await crypto.subtle.digest("SHA-256", enc);
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+  }
 
   function bytesToHuman(bytes){
     const b = Number(bytes||0);
@@ -362,7 +389,6 @@ const ADMIN_PASS_SHA256 = "80c6a995b0e35edfb8dced32237febd1dcca81e5ec91c649ec521
 
   async function uploadToBucket(bucket, file, folder){
     if(!sb) throw new Error("Supabase kapalı");
-    const ext = (file.name.split(".").pop() || "bin").toLowerCase();
     const safeBase = file.name.replace(/[^a-zA-Z0-9._-]/g, "_").slice(0,60);
     const path = `${folder}/${Date.now()}_${Math.random().toString(16).slice(2)}_${safeBase}`;
     const { error } = await sb.storage.from(bucket).upload(path, file, { upsert:false, contentType:file.type || undefined });
@@ -371,92 +397,97 @@ const ADMIN_PASS_SHA256 = "80c6a995b0e35edfb8dced32237febd1dcca81e5ec91c649ec521
     return { publicUrl: data.publicUrl, path };
   }
 
-const AUTH_KEY = "evo_dash_auth_v1";
-  const MODELS_KEY = "evo_models_v1";
-  const FEED_KEY = "evo_feed_v1";
-  const PROFILE_KEY = "evo_profile_v1";
-
-  const $ = (id) => document.getElementById(id);
-
-  function safeJsonParse(str, fallback){
-    try{ return JSON.parse(str); }catch(e){ return fallback; }
+  function escapeHtml(str){
+    return String(str ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
   }
 
-  // ===== AUTH (hardening) =====
-const AUTH_EXP_KEY = "evo_dash_auth_exp_v1";
-const FAIL_KEY = "evo_dash_fail_v1";
-const FAIL_UNTIL_KEY = "evo_dash_lock_until_v1";
-
-async function sha256(text){
-  const enc = new TextEncoder().encode(text);
-  const buf = await crypto.subtle.digest("SHA-256", enc);
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
-}
-
-function now(){ return Date.now(); }
-
-function isLocked(){
-  const until = parseInt(localStorage.getItem(FAIL_UNTIL_KEY) || "0", 10);
-  return until && now() < until;
-}
-
-function lockSecondsLeft(){
-  const until = parseInt(localStorage.getItem(FAIL_UNTIL_KEY) || "0", 10);
-  if(!until) return 0;
-  return Math.ceil(Math.max(0, until - now())/1000);
-}
-
-function isAuthed(){
-  const token = sessionStorage.getItem(AUTH_KEY);
-  const exp = parseInt(sessionStorage.getItem(AUTH_EXP_KEY) || "0", 10);
-  return !!token && exp && now() < exp;
-}
-
-function setAuthed(val){
-  if(val){
-    // 8 saatlik session
-    sessionStorage.setItem(AUTH_KEY, Math.random().toString(36).slice(2) + "_" + now());
-    sessionStorage.setItem(AUTH_EXP_KEY, String(now() + 8*60*60*1000));
-  } else {
-    sessionStorage.removeItem(AUTH_KEY);
-    sessionStorage.removeItem(AUTH_EXP_KEY);
+  // ===== Auth =====
+  function isLocked(){
+    const until = parseInt(localStorage.getItem(FAIL_UNTIL_KEY) || "0", 10);
+    return until && now() < until;
   }
-}
-
-function show(view){
-  $("loginView").style.display = view === "login" ? "block" : "none";
-  $("dashView").style.display = view === "dash" ? "block" : "none";
-  $("logoutBtn").style.display = view === "dash" ? "inline-flex" : "none";
-}
-
-async function login(){
-  if(isLocked()){
-    alert("Çok deneme yaptın. " + lockSecondsLeft() + " saniye bekle.");
-    return;
+  function lockSecondsLeft(){
+    const until = parseInt(localStorage.getItem(FAIL_UNTIL_KEY) || "0", 10);
+    if(!until) return 0;
+    return Math.ceil(Math.max(0, until - now())/1000);
+  }
+  function isAuthed(){
+    const token = sessionStorage.getItem(AUTH_KEY);
+    const exp = parseInt(sessionStorage.getItem(AUTH_EXP_KEY) || "0", 10);
+    return !!token && exp && now() < exp;
+  }
+  function setAuthed(val){
+    if(val){
+      // 8 saatlik session
+      sessionStorage.setItem(AUTH_KEY, Math.random().toString(36).slice(2) + "_" + now());
+      sessionStorage.setItem(AUTH_EXP_KEY, String(now() + 8*60*60*1000));
+    } else {
+      sessionStorage.removeItem(AUTH_KEY);
+      sessionStorage.removeItem(AUTH_EXP_KEY);
+    }
   }
 
-  // 1) Supabase Auth (önerilen)
-  if(sb){
-    const email = ($("emailInput")?.value || "").trim().toLowerCase();
-    const pass = ($("passInput")?.value || "");
-    if(!email || !pass){ alert("E-mail ve şifre zorunlu."); return; }
-    if(ADMIN_EMAIL && email !== ADMIN_EMAIL.trim().toLowerCase()){
-      alert("Bu hesap admin değil.");
+  function show(view){
+    $("loginView").style.display = view === "login" ? "block" : "none";
+    $("dashView").style.display = view === "dash" ? "block" : "none";
+    $("logoutBtn").style.display = view === "dash" ? "inline-flex" : "none";
+  }
+
+  async function login(){
+    if(isLocked()){
+      alert("Çok deneme yaptın. " + lockSecondsLeft() + " saniye bekle.");
       return;
     }
-    try{
-      const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
-      if(error) throw error;
 
-      // oturum açık kaldıkça dashboard açık
-      setAuthed(true);
-      show("dash");
-      await boot();
+    // 1) Supabase Auth
+    if(sb){
+      const email = ($("emailInput")?.value || "").trim().toLowerCase();
+      const pass = ($("passInput")?.value || "");
+      if(!email || !pass){ alert("E-mail ve şifre zorunlu."); return; }
+      if(ADMIN_EMAIL && email !== ADMIN_EMAIL.trim().toLowerCase()){
+        alert("Bu hesap admin değil.");
+        return;
+      }
+      try{
+        const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+        if(error) throw error;
 
-      $("emailInput").value = "";
-      $("passInput").value = "";
+        setAuthed(true);
+        show("dash");
+        await boot();
+
+        $("emailInput").value = "";
+        $("passInput").value = "";
+        return;
+      }catch(e){
+        const fails = parseInt(localStorage.getItem(FAIL_KEY) || "0", 10) + 1;
+        localStorage.setItem(FAIL_KEY, String(fails));
+        if(fails >= 5){
+          const mins = Math.min(60, 5 * Math.ceil((fails-4)/2));
+          localStorage.setItem(FAIL_UNTIL_KEY, String(now() + mins*60*1000));
+        }
+        alert("Giriş yanlış.");
+        return;
+      }
+    }
+
+    // 2) Fallback: client-side hash
+    const user = ($("emailInput")?.value || "").trim().toLowerCase();
+    const pass = ($("passInput").value || "");
+    if(!user || !pass){
+      alert("Kullanıcı adı ve şifre zorunlu.");
       return;
-    }catch(e){
+    }
+    const passHash = await sha256(pass);
+    const okUser = user === String(ADMIN_USER).toLowerCase();
+    const okPass = passHash === String(ADMIN_PASS_SHA256).toLowerCase();
+
+    if(!(okUser && okPass)){
       const fails = parseInt(localStorage.getItem(FAIL_KEY) || "0", 10) + 1;
       localStorage.setItem(FAIL_KEY, String(fails));
       if(fails >= 5){
@@ -466,58 +497,31 @@ async function login(){
       alert("Giriş yanlış.");
       return;
     }
+
+    localStorage.removeItem(FAIL_KEY);
+    localStorage.removeItem(FAIL_UNTIL_KEY);
+
+    setAuthed(true);
+    show("dash");
+    await boot();
+
+    if($("emailInput")) $("emailInput").value = "";
+    $("passInput").value = "";
   }
 
-  // 2) Fallback: client-side hash
-  const user = ($("emailInput")?.value || "").trim().toLowerCase();
-  const pass = ($("passInput").value || "");
-  if(!user || !pass){
-    alert("Kullanıcı adı ve şifre zorunlu.");
-    return;
-  }
-  const passHash = await sha256(pass);
-  const okUser = user === String(ADMIN_USER).toLowerCase();
-  const okPass = passHash === String(ADMIN_PASS_SHA256).toLowerCase();
-
-  if(!(okUser && okPass)){
-    const fails = parseInt(localStorage.getItem(FAIL_KEY) || "0", 10) + 1;
-    localStorage.setItem(FAIL_KEY, String(fails));
-    if(fails >= 5){
-      const mins = Math.min(60, 5 * Math.ceil((fails-4)/2));
-      localStorage.setItem(FAIL_UNTIL_KEY, String(now() + mins*60*1000));
-    }
-    alert("Giriş yanlış.");
-    return;
+  async function logout(){
+    try{ if(sb) await sb.auth.signOut(); }catch(e){}
+    setAuthed(false);
+    show("login");
+    if($("emailInput")) $("emailInput").value = "";
+    $("passInput").value = "";
   }
 
-  localStorage.removeItem(FAIL_KEY);
-  localStorage.removeItem(FAIL_UNTIL_KEY);
+  // expose for inline onclick
+  window.login = login;
+  window.logout = logout;
 
-  setAuthed(true);
-  show("dash");
-  await boot();
-
-  if($("emailInput")) $("emailInput").value = "";
-  $("passInput").value = "";
-}
-
-async function logout(){
-  try{ if(sb) await sb.auth.signOut(); }catch(e){}
-  setAuthed(false);
-  show("login");
-  if($("emailInput")) $("emailInput").value = "";
-  $("passInput").value = "";
-}
-  $("logoutBtn").addEventListener("click", logout);
-
-  // Enter ile giriş
-  ["emailInput","passInput"].forEach(id=>{
-    const el = $(id);
-    if(!el) return;
-    el.addEventListener("keydown", (e)=>{ if(e.key==="Enter") login(); });
-  });
-
-  // ===== PROFILE =====
+  // ===== Profile =====
   function loadProfile(){
     const p = safeJsonParse(localStorage.getItem(PROFILE_KEY) || "null", null) || {};
     $("pName").value = p.displayName || "EVO";
@@ -537,8 +541,10 @@ async function logout(){
     localStorage.removeItem(PROFILE_KEY);
     loadProfile();
   }
+  window.saveProfile = saveProfile;
+  window.resetProfile = resetProfile;
 
-  // ===== MODELS =====
+  // ===== Models =====
   function getModels(){
     const arr = safeJsonParse(localStorage.getItem(MODELS_KEY) || "[]", []);
     return Array.isArray(arr) ? arr : [];
@@ -546,6 +552,7 @@ async function logout(){
   function setModels(arr){
     localStorage.setItem(MODELS_KEY, JSON.stringify(arr));
   }
+
   async function addModel(){
     const title = $("mTitle").value.trim();
     const link = $("mLink").value.trim();
@@ -564,7 +571,6 @@ async function logout(){
     const thumbFile = $("mThumbFile")?.files?.[0] || null;
 
     try{
-      // Supabase varsa dosyaları Storage'a yükle
       if(sb){
         if(file){
           const up = await uploadToBucket("assets", file, "models");
@@ -577,7 +583,6 @@ async function logout(){
           thumbUrl = upT.publicUrl;
         }
 
-        // DB insert
         const payload = {
           title,
           note: note || "Free Model",
@@ -590,10 +595,8 @@ async function logout(){
         const { error } = await sb.from("models").insert(payload);
         if(error) throw error;
 
-        // refresh
         await sbSyncDown();
       } else {
-        // LocalStorage fallback
         if(!link && !file){
           alert("Roblox linki veya model dosyası lazım.");
           return;
@@ -613,24 +616,22 @@ async function logout(){
       alert("Model eklenemedi: " + (e?.message || e));
     }
   }
-    const thumbUrl = $("mThumb").value.trim();
-    const note = $("mNote").value.trim();
-    const models = getModels();
-    models.push({ id: "m_" + Date.now(), title, link, thumbUrl, note, createdAt: Date.now() });
-    setModels(models);
-    $("mTitle").value = ""; $("mLink").value=""; $("mThumb").value=""; $("mNote").value="";
-    renderModels();
-  }
+  window.addModel = addModel;
+
   function deleteModel(id){
     const models = getModels().filter(m => m.id !== id);
     setModels(models);
     renderModels();
   }
+  window.deleteModel = deleteModel;
+
   function clearModelsConfirm(){
     if(!confirm("Tüm modeller silinsin mi?")) return;
     localStorage.removeItem(MODELS_KEY);
     renderModels();
   }
+  window.clearModelsConfirm = clearModelsConfirm;
+
   function renderModels(){
     const list = $("modelsList");
     const models = getModels().slice().sort((a,b)=> (b.createdAt||0)-(a.createdAt||0));
@@ -643,12 +644,16 @@ async function logout(){
       const div = document.createElement("div");
       div.className = "item";
       const thumb = (m.thumbUrl && String(m.thumbUrl).trim()) ? m.thumbUrl : "https://via.placeholder.com/520x300/0b1020/ffffff?text=EVO+MODEL";
+      const link = m.link || m.fileUrl || "#";
+      const linkLabel = m.fileUrl ? "Dosya" : "Link";
+      const extra = m.fileUrl ? `<div class="item-meta" style="margin-top:4px;"><a href="${m.fileUrl}" target="_blank" rel="noopener">İndir</a> ${m.fileName ? `• ${escapeHtml(m.fileName)}` : ""} ${m.fileSize ? `• ${escapeHtml(m.fileSize)}` : ""}</div>` : "";
       div.innerHTML = `
         <div class="thumb"><img src="${thumb}" onerror="this.src='https://via.placeholder.com/520x300/0b1020/ffffff?text=EVO+MODEL'"></div>
         <div style="min-width:0;">
           <div class="item-title">${escapeHtml(m.title)}</div>
           <div class="item-meta">${escapeHtml(m.note || "Free Model")}</div>
-          <div class="item-meta" style="margin-top:4px;"><a href="${m.link}" target="_blank" rel="noopener">Link</a></div>
+          <div class="item-meta" style="margin-top:4px;"><a href="${link}" target="_blank" rel="noopener">${linkLabel}</a></div>
+          ${extra}
         </div>
         <div class="item-actions">
           <button class="mini del" onclick="deleteModel('${m.id}')"><i class="fa-solid fa-trash"></i></button>
@@ -658,7 +663,7 @@ async function logout(){
     });
   }
 
-  // ===== FEED =====
+  // ===== Feed =====
   function getFeed(){
     const arr = safeJsonParse(localStorage.getItem(FEED_KEY) || "[]", []);
     return Array.isArray(arr) ? arr : [];
@@ -666,6 +671,7 @@ async function logout(){
   function setFeed(arr){
     localStorage.setItem(FEED_KEY, JSON.stringify(arr));
   }
+
   async function addFeed(){
     const title = $("fTitle").value.trim();
     const content = $("fContent").value.trim();
@@ -724,33 +730,22 @@ async function logout(){
       alert("Post eklenemedi: " + (e?.message || e));
     }
   }
-    const tag = $("fTag").value;
-    const mediaUrl = $("fMedia").value.trim();
-    const pinned = $("fPinned").checked;
+  window.addFeed = addFeed;
 
-    const feed = getFeed();
-    feed.push({
-      id: "p_" + Date.now(),
-      title, content, tag, mediaUrl, pinned,
-      createdAt: Date.now(),
-      author: "Evo Studios",
-      avatarUrl: "evo_logo.png"
-    });
-    setFeed(feed);
-
-    $("fTitle").value=""; $("fContent").value=""; $("fMedia").value=""; $("fPinned").checked=false;
-    renderFeed();
-  }
   function deleteFeed(id){
     const feed = getFeed().filter(p => p.id !== id);
     setFeed(feed);
     renderFeed();
   }
+  window.deleteFeed = deleteFeed;
+
   function clearFeedConfirm(){
     if(!confirm("Feed temizlensin mi?")) return;
     localStorage.removeItem(FEED_KEY);
     renderFeed();
   }
+  window.clearFeedConfirm = clearFeedConfirm;
+
   function renderFeed(){
     const list = $("feedList");
     const feed = getFeed().slice().sort((a,b)=>{
@@ -775,7 +770,7 @@ async function logout(){
           <div class="item-title">${escapeHtml(p.title)} ${p.pinned ? '<span class="item-meta" style="margin-left:8px;">(PIN)</span>' : ''}</div>
           <div class="item-meta">${new Date(p.createdAt||Date.now()).toLocaleString()}</div>
           <div class="item-meta" style="margin-top:6px; white-space:pre-wrap;">${escapeHtml(p.content)}</div>
-          ${p.mediaUrl ? `<div class="item-meta" style="margin-top:6px;"><a href="${p.mediaUrl}" target="_blank">Medya</a></div>` : ""}
+          ${p.mediaUrl ? `<div class="item-meta" style="margin-top:6px;"><a href="${p.mediaUrl}" target="_blank" rel="noopener">Medya</a></div>` : ""}
         </div>
         <div class="item-actions">
           <button class="mini del" onclick="deleteFeed('${p.id}')"><i class="fa-solid fa-trash"></i></button>
@@ -785,7 +780,7 @@ async function logout(){
     });
   }
 
-  // ===== EXPORT / IMPORT =====
+  // ===== Export / Import =====
   function exportAll(){
     const blob = new Blob([JSON.stringify({
       profile: safeJsonParse(localStorage.getItem(PROFILE_KEY) || "null", null),
@@ -799,6 +794,7 @@ async function logout(){
     a.click();
     URL.revokeObjectURL(url);
   }
+  window.exportAll = exportAll;
 
   function importAll(ev){
     const file = ev.target.files && ev.target.files[0];
@@ -818,63 +814,89 @@ async function logout(){
     reader.readAsText(file);
     ev.target.value = "";
   }
+  window.importAll = importAll;
 
-  function escapeHtml(str){
-    return String(str ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-  
+  // ===== Supabase sync down =====
   async function sbSyncDown(){
     if(!sb) return;
-    // models
+
     const { data: m, error: me } = await sb.from("models").select("*").order("created_at", { ascending:false });
     if(!me){
       const mapped = (m||[]).map(r=>({
-        id: r.id, title:r.title, link:r.roblox_link||"", thumbUrl:r.thumb_url||"", note:r.note||"",
-        fileUrl:r.file_url||"", fileName:r.file_name||"", fileSize:r.file_size||"",
+        id: r.id,
+        title: r.title,
+        link: r.roblox_link||"",
+        thumbUrl: r.thumb_url||"",
+        note: r.note||"",
+        fileUrl: r.file_url||"",
+        fileName: r.file_name||"",
+        fileSize: r.file_size||"",
         createdAt: r.created_at ? new Date(r.created_at).getTime() : Date.now()
       }));
       localStorage.setItem(MODELS_KEY, JSON.stringify(mapped));
     }
-    // feed
+
     const { data: f, error: fe } = await sb.from("feed_posts").select("*").order("created_at", { ascending:false });
     if(!fe){
       const mapped = (f||[]).map(r=>({
-        id:r.id, title:r.title, content:r.content, tag:r.tag||"info",
-        mediaUrl:r.media_url||"", musicUrl:r.music_url||"", pinned:!!r.pinned,
+        id:r.id,
+        title:r.title,
+        content:r.content,
+        tag:r.tag||"info",
+        mediaUrl:r.media_url||"",
+        musicUrl:r.music_url||"",
+        pinned:!!r.pinned,
         createdAt: r.created_at ? new Date(r.created_at).getTime() : Date.now(),
-        author:r.author||"Evo Studios", avatarUrl:r.avatar_url||"evo_logo.png"
+        author:r.author||"Evo Studios",
+        avatarUrl:r.avatar_url||"evo_logo.png"
       }));
       localStorage.setItem(FEED_KEY, JSON.stringify(mapped));
     }
   }
-async function boot(){
-  if(sb){
-    try{ await sbSyncDown(); }catch(e){ console.log(e); }
-  }
+
+  async function boot(){
+    if(sb){
+      try{ await sbSyncDown(); }catch(e){ console.log(e); }
+    }
     loadProfile();
     renderModels();
     renderFeed();
   }
 
-  // initial
-  if(sb){
-    const { data } = await sb.auth.getSession();
-    if(data?.session){
-      setAuthed(true);
+  // ===== Init =====
+  function wireEvents(){
+    $("logoutBtn").addEventListener("click", logout);
+
+    // Enter ile giriş
+    ["emailInput","passInput"].forEach(id=>{
+      const el = $(id);
+      if(!el) return;
+      el.addEventListener("keydown", (e)=>{ if(e.key==="Enter") login(); });
+    });
+  }
+
+  (async () => {
+    wireEvents();
+
+    if(sb){
+      try{
+        const { data } = await sb.auth.getSession();
+        if(data?.session){
+          setAuthed(true);
+        }
+      }catch(e){
+        console.log(e);
+      }
     }
-  }
-  if(isAuthed()){
-    show("dash");
-    boot();
-  }else{
-    show("login");
-  }
+
+    if(isAuthed()){
+      show("dash");
+      await boot();
+    }else{
+      show("login");
+    }
+  })();
+})();
 </script>
 </body>
 </html>
